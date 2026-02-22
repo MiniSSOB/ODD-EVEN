@@ -1,6 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniBOSSX - Submit Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #8B0000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-center {
+            text-align: center;
+            padding-top: 30px;
+        }
+        
+        h1 {
+            color: #8B0000;
+            font-size: 4rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .nav-bar {
+            text-align: center;
+            margin: 20px 0 30px 0;
+        }
+        
+        .nav-bar a {
+            color: #8B0000;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            padding: 8px 25px;
+            border: 2px solid #8B0000;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav-bar a:hover {
+            background-color: #8B0000;
+            color: black;
+        }
+        
+        .submit-container {
+            flex: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            width: 90%;
+            padding: 30px;
+            border: 1px solid #8B0000;
+            border-radius: 15px;
+            background-color: rgba(139, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #8B0000;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: black;
+            border: 1px solid #8B0000;
+            color: #8B0000;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        /* File upload styling */
+        .file-upload-area {
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: rgba(139, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+        
+        .file-upload-area:hover {
+            background: rgba(139, 0, 0, 0.2);
+            border-style: solid;
+        }
+        
+        .file-upload-icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #8B0000;
+        }
+        
+        .file-upload-text {
+            color: #8B0000;
+            font-size: 1.1rem;
+        }
+        
+        .file-upload-hint {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .file-info {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #8B0000;
+            border-radius: 5px;
+            background: rgba(139, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .file-info.show {
+            display: block;
+        }
+        
+        .file-name {
+            color: #8B0000;
+            font-weight: bold;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+        
+        .file-size {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .remove-file {
+            color: #8B0000;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: underline;
+            display: inline-block;
+        }
+        
+        .instructions {
+            background: rgba(139, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #8B0000;
+        }
+        
+        .instructions h3 {
+            margin-bottom: 10px;
+            color: #8B0000;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+            color: #ccc;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 15px;
+            background: transparent;
+            border: 2px solid #8B0000;
+            color: #8B0000;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background: #8B0000;
+            color: black;
+        }
+        
+        .btn-primary {
+            background: #8B0000;
+            color: black;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            border: 2px solid #8B0000;
+            border-radius: 10px;
+            background: rgba(139, 0, 0, 0.1);
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .success-message h3 {
+            color: #8B0000;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .success-message p {
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .bottom {
+            text-align: center;
+            padding: 20px 0;
+        }
+        
+        .copyright {
+            color: #8B0000;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    </style>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit Your Game</title>
@@ -91,9 +346,19 @@
   </style>
 </head>
 <body>
+    <div class="top-center">
+        <h1>MiniBOSSX</h1>
+    </div>
   <div class="container">
     <h1>🎮 SUBMIT YOUR GAME</h1>
+
+    <div class="nav-bar">
+        <a href="index.html">HOME</a>
+        <a href="submit.html">SUBMIT</a>
+    </div>
     
+    <div class="submit-container">
+        <h2>SUBMIT YOUR GAME</h2>
     <div class="form-container">
       <form id="submitForm" onsubmit="submitGame(event)">
         <!-- ALL FIELDS COMPLETELY EMPTY - NO PERSONAL INFO -->
@@ -101,30 +366,276 @@
           <label>Game Name</label>
           <input type="text" id="gameName" value="" placeholder="">
         </div>
-        
+
+        <div class="instructions">
+            <h3>📋 How to Submit:</h3>
+            <ol>
+                <li>Make sure your game's main file is named <strong>index.html</strong></li>
+                <li>Include all game files (JS, CSS, images, etc.) in a ZIP folder</li>
+                <li>Upload the ZIP file below</li>
+                <li>We'll review and add it within 24-48 hours</li>
+            </ol>
         <div class="form-group">
           <label>Your Email</label>
           <input type="email" id="gameEmail" value="" placeholder="">
-        </div>
-        
+</div>
+
+        <form id="submitForm">
+            <div class="form-group">
+                <label>Game Name *</label>
+                <input type="text" id="gameName" required placeholder="ODD EVEN">
+            </div>
+            
+            <div class="form-group">
+                <label>Developer Name *</label>
+                <input type="text" id="developerName" required placeholder="MiniBOSS">
+            </div>
+            
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" id="developerEmail" required placeholder="vilisalic@hotmail.com">
+            </div>
+            
+            <div class="form-group">
+                <label>Description *</label>
+                <textarea id="gameDescription" required placeholder="Guess the odd or even correctly!">Guess the odd or even correctly!</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Category *</label>
+                <select id="gameCategory" required>
+                    <option value="">Select...</option>
+                    <option value="ACTION">Action</option>
+                    <option value="PUZZLE" selected>Puzzle</option>
+                    <option value="ARCADE">Arcade</option>
+                    <option value="PLATFORMER">Platformer</option>
+                    <option value="OTHER">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Platform *</label>
+                <select id="gamePlatform" required>
+                    <option value="">Select...</option>
+                    <option value="DESKTOP">Desktop</option>
+                    <option value="MOBILE">Mobile</option>
+                    <option value="BOTH" selected>Both</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Upload Game Files (ZIP) *</label>
+                <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div class="file-upload-icon">📁</div>
+                    <div class="file-upload-text">Click to select ZIP file</div>
+                    <div class="file-upload-hint">or drag and drop here</div>
+                </div>
+                <input type="file" id="fileInput" accept=".zip" onchange="handleFileSelect(event)">
+                
+                <div id="fileInfo" class="file-info">
+                    <div id="fileName" class="file-name"></div>
+                    <div id="fileSize" class="file-size"></div>
+                    <a href="#" class="remove-file" onclick="removeFile()">Remove file</a>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" onclick="submitGame()">SUBMIT</button>
+                <button type="reset" class="btn" onclick="resetForm()">CLEAR</button>
+            </div>
+        </form>
         <div class="form-group">
           <label>Upload HTML File</label>
           <input type="file" id="gameFile" accept=".html">
         </div>
-        
+
+        <div id="successMessage" class="success-message">
+            <h3>✅ SUBMITTED!</h3>
+            <p>Your game files have been saved.<br>We'll review it and add it to the site soon.</p>
+            <button class="btn btn-primary" onclick="resetCompleteForm()">SUBMIT ANOTHER</button>
         <div class="form-group">
           <label>Or Paste HTML Code</label>
           <textarea id="gameCode" placeholder=""></textarea>
-        </div>
+</div>
         
         <button type="submit">SUBMIT GAME</button>
         <button type="button" onclick="clearForm()">CLEAR</button>
       </form>
       
       <p class="note">Games will appear on main page after admin approval</p>
+</div>
+    
+    <div class="bottom">
+        <p class="copyright">MiniBOSSX © 2026</p>
     </div>
   </div>
 
+    <script>
+        let selectedFile = null;
+        
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Check if it's a ZIP file
+                if (!file.name.toLowerCase().endsWith('.zip')) {
+                    alert('Please select a ZIP file');
+                    return;
+                }
+                
+                // Check file size (limit to 50MB)
+                if (file.size > 50 * 1024 * 1024) {
+                    alert('File too large. Maximum size is 50MB');
+                    return;
+                }
+                
+                selectedFile = file;
+                
+                // Display file info
+                document.getElementById('fileName').textContent = `File: ${file.name}`;
+                document.getElementById('fileSize').textContent = `Size: ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                document.getElementById('fileInfo').classList.add('show');
+            }
+        }
+        
+        function removeFile() {
+            selectedFile = null;
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileInfo').classList.remove('show');
+        }
+        
+        function submitGame() {
+            // Get values
+            const gameName = document.getElementById('gameName').value;
+            const developerName = document.getElementById('developerName').value;
+            const developerEmail = document.getElementById('developerEmail').value;
+            const gameDescription = document.getElementById('gameDescription').value;
+            const gameCategory = document.getElementById('gameCategory').value;
+            const gamePlatform = document.getElementById('gamePlatform').value;
+            
+            // Validate
+            if (!gameName || !developerName || !developerEmail || !gameDescription || !gameCategory || !gamePlatform) {
+                alert('Please fill all fields');
+                return;
+            }
+            
+            if (!selectedFile) {
+                alert('Please select a ZIP file');
+                return;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(developerEmail)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Read the file as base64
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result.split(',')[1]; // Remove the data:application/zip;base64, prefix
+                
+                // Create submission object
+                const submission = {
+                    id: Date.now(),
+                    name: gameName,
+                    developer: developerName,
+                    email: developerEmail,
+                    description: gameDescription,
+                    category: gameCategory,
+                    platform: gamePlatform,
+                    fileName: selectedFile.name,
+                    fileSize: selectedFile.size,
+                    fileData: base64Data, // Store the actual file data
+                    date: new Date().toLocaleString(),
+                    status: 'pending'
+                };
+                
+                // Save to pending
+                let pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
+                pending.push(submission);
+                localStorage.setItem('minibossx_pending', JSON.stringify(pending));
+                
+                // Show success
+                document.getElementById('submitForm').style.display = 'none';
+                document.getElementById('successMessage').classList.add('show');
+            };
+            
+            reader.readAsDataURL(selectedFile);
+        }
+        
+        function resetForm() {
+            document.getElementById('submitForm').reset();
+            removeFile();
+        }
+        
+        function resetCompleteForm() {
+            resetForm();
+            document.getElementById('submitForm').style.display = 'block';
+            document.getElementById('successMessage').classList.remove('show');
+        }
+        
+        // Drag and drop support
+        const dropArea = document.querySelector('.file-upload-area');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropArea.style.background = 'rgba(139, 0, 0, 0.3)';
+            dropArea.style.borderStyle = 'solid';
+        }
+        
+        function unhighlight() {
+            dropArea.style.background = 'rgba(139, 0, 0, 0.1)';
+            dropArea.style.borderStyle = 'dashed';
+        }
+        
+        dropArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                const file = files[0];
+                
+                // Check if it's a ZIP file
+                if (!file.name.toLowerCase().endsWith('.zip')) {
+                    alert('Please select a ZIP file');
+                    return;
+                }
+                
+                // Check file size (limit to 50MB)
+                if (file.size > 50 * 1024 * 1024) {
+                    alert('File too large. Maximum size is 50MB');
+                    return;
+                }
+                
+                selectedFile = file;
+                document.getElementById('fileInput').files = files;
+                
+                // Display file info
+                document.getElementById('fileName').textContent = `File: ${file.name}`;
+                document.getElementById('fileSize').textContent = `Size: ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+                document.getElementById('fileInfo').classList.add('show');
+            }
+        }
+    </script>
   <script>
     function submitGame(event) {
       event.preventDefault();
