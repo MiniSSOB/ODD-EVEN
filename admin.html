@@ -19,7 +19,7 @@
         }
         
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         
@@ -29,13 +29,6 @@
             text-align: center;
             margin-bottom: 30px;
             text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-        }
-        
-        h2 {
-            color: #8B0000;
-            margin: 30px 0 20px;
-            border-bottom: 1px solid #8B0000;
-            padding-bottom: 10px;
         }
         
         .nav-bar {
@@ -56,6 +49,13 @@
         .nav-bar a:hover {
             background: #8B0000;
             color: black;
+        }
+        
+        h2 {
+            color: #8B0000;
+            margin: 30px 0 20px;
+            border-bottom: 1px solid #8B0000;
+            padding-bottom: 10px;
         }
         
         .pending-game {
@@ -83,16 +83,6 @@
             display: inline-block;
         }
         
-        .game-link {
-            color: #8B0000;
-            word-break: break-all;
-            margin: 10px 0;
-            padding: 10px;
-            background: black;
-            border-radius: 5px;
-            border: 1px solid #8B0000;
-        }
-        
         .button-group {
             display: flex;
             gap: 10px;
@@ -107,7 +97,6 @@
             cursor: pointer;
             border-radius: 5px;
             font-size: 1rem;
-            transition: all 0.3s;
             flex: 1;
         }
         
@@ -121,19 +110,6 @@
             color: black;
         }
         
-        .btn-approve:hover {
-            background: transparent;
-            color: #8B0000;
-        }
-        
-        .no-pending {
-            text-align: center;
-            padding: 60px;
-            border: 2px dashed #8B0000;
-            border-radius: 10px;
-            color: #666;
-        }
-        
         .approved-game {
             border: 1px solid #333;
             border-radius: 5px;
@@ -142,11 +118,6 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(139, 0, 0, 0.02);
-        }
-        
-        .approved-game span {
-            color: #8B0000;
         }
         
         .remove-btn {
@@ -158,9 +129,12 @@
             border-radius: 3px;
         }
         
-        .remove-btn:hover {
-            background: #8B0000;
-            color: black;
+        .no-pending {
+            text-align: center;
+            padding: 60px;
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+            color: #666;
         }
         
         .quick-add {
@@ -173,15 +147,11 @@
         .quick-add input, .quick-add textarea, .quick-add select {
             width: 100%;
             padding: 10px;
+            margin-bottom: 10px;
             background: black;
             border: 1px solid #8B0000;
             color: #8B0000;
-            margin-bottom: 10px;
             border-radius: 5px;
-        }
-        
-        .quick-add textarea {
-            height: 80px;
         }
     </style>
 </head>
@@ -196,10 +166,14 @@
         </div>
         
         <h2>📥 PENDING GAMES</h2>
-        <div id="pendingList"></div>
+        <div id="pendingList">
+            <div class="no-pending">✨ No pending submissions</div>
+        </div>
         
         <h2>✅ APPROVED GAMES</h2>
-        <div id="approvedList"></div>
+        <div id="approvedList">
+            <div class="no-pending">📭 No approved games</div>
+        </div>
         
         <h2>➕ QUICK ADD GAME</h2>
         <div class="quick-add">
@@ -210,7 +184,6 @@
                 <option value="ACTION">Action</option>
                 <option value="PUZZLE">Puzzle</option>
                 <option value="ARCADE">Arcade</option>
-                <option value="PLATFORMER">Platformer</option>
                 <option value="OTHER">Other</option>
             </select>
             <select id="quickPlatform">
@@ -219,25 +192,22 @@
                 <option value="BOTH">Both</option>
             </select>
             <input type="text" id="quickUrl" placeholder="Game URL (e.g., /games/odd-even/)">
-            <button class="btn btn-approve" onclick="quickAddGame()" style="width: 100%;">ADD GAME</button>
+            <button class="btn btn-approve" onclick="quickAddGame()" style="width:100%">ADD GAME</button>
         </div>
     </div>
 
     <script>
-        // ==================== YOUR EXISTING approveGame FUNCTION ====================
+        // Your approveGame function
         function approveGame(index) {
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             const game = pending[index];
             
-            // Ask for the folder name
             const folderName = prompt('Enter folder name for this game (e.g., odd-even):',
                 game.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
             
             if (!folderName) return;
             
-            // Create download link for the ZIP file
             if (game.fileData) {
-                // Create a downloadable ZIP file
                 const byteCharacters = atob(game.fileData);
                 const byteNumbers = new Array(byteCharacters.length);
                 for (let i = 0; i < byteCharacters.length; i++) {
@@ -247,17 +217,14 @@
                 const blob = new Blob([byteArray], {type: 'application/zip'});
                 const url = URL.createObjectURL(blob);
                 
-                // Show instructions
                 alert(`✅ Game approved!\n\nNext steps:\n1. Download the ZIP file from the link that will open\n2. Extract to folder: /games/${folderName}/\n3. Upload all files to GitHub\n4. Make sure index.html is in the root\n\nGame will be live at: /games/${folderName}/`);
                 
-                // Open download link
                 window.open(url);
             } else {
                 alert('No file data found');
                 return;
             }
             
-            // Create approved game
             const approvedGame = {
                 id: Date.now(),
                 name: game.name,
@@ -269,21 +236,18 @@
                 dateApproved: new Date().toLocaleString()
             };
             
-            // Add to approved
             const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             approved.push(approvedGame);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
             
-            // Mark as approved in pending
             game.status = 'approved';
             localStorage.setItem('minibossx_pending', JSON.stringify(pending));
             
-            // Reload
             loadPending();
             loadApproved();
         }
 
-        // ==================== OTHER REQUIRED FUNCTIONS ====================
+        // Load pending games
         function loadPending() {
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             const list = document.getElementById('pendingList');
@@ -317,6 +281,7 @@
             list.innerHTML = html || '<div class="no-pending">✨ No pending submissions</div>';
         }
         
+        // Load approved games
         function loadApproved() {
             const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             const list = document.getElementById('approvedList');
@@ -330,7 +295,7 @@
             approved.forEach((game, index) => {
                 html += `
                     <div class="approved-game">
-                        <span><strong>${game.name}</strong> by ${game.developer} - <a href="${game.gameUrl}" target="_blank" style="color: #8B0000;">PLAY</a></span>
+                        <span><strong>${game.name}</strong> by ${game.developer} - <a href="${game.gameUrl}" target="_blank" style="color:#8B0000;">PLAY</a></span>
                         <button class="remove-btn" onclick="removeGame(${index})">REMOVE</button>
                     </div>
                 `;
@@ -339,24 +304,25 @@
             list.innerHTML = html;
         }
         
+        // Reject game
         function rejectGame(index) {
             if (!confirm('Reject this game?')) return;
-            
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             pending.splice(index, 1);
             localStorage.setItem('minibossx_pending', JSON.stringify(pending));
             loadPending();
         }
         
+        // Remove game
         function removeGame(index) {
-            if (!confirm('Remove this game from the site?')) return;
-            
+            if (!confirm('Remove this game?')) return;
             const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             approved.splice(index, 1);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
             loadApproved();
         }
         
+        // Quick add game
         function quickAddGame() {
             const game = {
                 id: Date.now(),
@@ -378,17 +344,16 @@
             approved.push(game);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
             
-            // Clear form
             document.getElementById('quickName').value = '';
             document.getElementById('quickDev').value = '';
             document.getElementById('quickDesc').value = '';
             document.getElementById('quickUrl').value = '';
             
             loadApproved();
-            alert('Game added to site!');
+            alert('Game added!');
         }
         
-        // Load everything on page load
+        // Load on page start
         window.onload = function() {
             loadPending();
             loadApproved();
