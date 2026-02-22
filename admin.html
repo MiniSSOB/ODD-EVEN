@@ -79,11 +79,6 @@
             font-size: 1rem;
         }
         
-        .login-input:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-        }
-        
         .login-btn {
             width: 100%;
             padding: 12px;
@@ -160,7 +155,7 @@
             border-radius: 5px;
             font-size: 1rem;
             flex: 1;
-            min-width: 120px;
+            min-width: 100px;
         }
         
         .btn:hover {
@@ -174,33 +169,30 @@
         }
         
         .btn-test {
-            background: #4a4a4a;
+            background: #333;
             border-color: #8B0000;
             color: #8B0000;
-        }
-        
-        .btn-test:hover {
-            background: #8B0000;
-            color: black;
         }
         
         .approved-game {
             border: 1px solid #333;
             border-radius: 5px;
-            padding: 10px;
+            padding: 15px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background: rgba(139, 0, 0, 0.02);
         }
         
         .remove-btn {
             color: #8B0000;
             background: transparent;
             border: 1px solid #8B0000;
-            padding: 5px 10px;
+            padding: 5px 15px;
             cursor: pointer;
             border-radius: 3px;
+            margin-left: 10px;
         }
         
         .quick-add {
@@ -208,6 +200,7 @@
             padding: 20px;
             border-radius: 10px;
             margin-top: 30px;
+            background: rgba(139, 0, 0, 0.02);
         }
         
         .quick-add input, .quick-add textarea, .quick-add select {
@@ -224,8 +217,9 @@
             border: 2px dashed #8B0000;
             padding: 20px;
             text-align: center;
-            margin-bottom: 10px;
+            margin: 10px 0;
             cursor: pointer;
+            border-radius: 5px;
         }
         
         .file-upload-area:hover {
@@ -240,13 +234,13 @@
             color: #8B0000;
             border-radius: 5px;
             font-family: monospace;
-            height: 200px;
-            margin-top: 10px;
+            height: 150px;
+            margin: 10px 0;
         }
         
         .logout-btn {
             float: right;
-            padding: 8px 15px;
+            padding: 8px 20px;
             background: transparent;
             border: 1px solid #8B0000;
             color: #8B0000;
@@ -318,7 +312,7 @@
     <div id="loginScreen" class="login-container">
         <h2>🔐 ADMIN LOGIN</h2>
         <input type="text" id="username" class="login-input" placeholder="Username" value="admin">
-        <input type="password" id="password" class="login-input" placeholder="Password">
+        <input type="password" id="password" class="login-input" placeholder="Password" value="minibossx2026">
         <button class="login-btn" onclick="login()">LOGIN</button>
         <div id="loginError" class="error-msg">Invalid username or password</div>
     </div>
@@ -335,8 +329,8 @@
                 <a href="admin.html">ADMIN</a>
             </div>
             
-            <!-- Pending Games Section - Only shows when there are games -->
-            <div id="pendingSection" style="display: none;">
+            <!-- Pending Games Section -->
+            <div id="pendingSection">
                 <h2>📥 PENDING GAMES</h2>
                 <div id="pendingList"></div>
             </div>
@@ -348,7 +342,7 @@
             
             <!-- Method 1: Upload HTML File -->
             <div class="quick-add">
-                <h3 style="margin-bottom: 15px;">📁 Method 1: Upload HTML File</h3>
+                <h3>📁 Method 1: Upload HTML File</h3>
                 <input type="text" id="quickName" placeholder="Game Name">
                 <input type="text" id="quickDev" placeholder="Developer Name">
                 <textarea id="quickDesc" placeholder="Description"></textarea>
@@ -375,7 +369,7 @@
             
             <!-- Method 2: Paste HTML Code -->
             <div class="quick-add">
-                <h3 style="margin-bottom: 15px;">⌨️ Method 2: Paste HTML Code</h3>
+                <h3>⌨️ Method 2: Paste HTML Code</h3>
                 <input type="text" id="quickName2" placeholder="Game Name">
                 <input type="text" id="quickDev2" placeholder="Developer Name">
                 <textarea id="quickDesc2" placeholder="Description"></textarea>
@@ -391,7 +385,9 @@
                     <option value="BOTH">Both</option>
                 </select>
                 
-                <textarea id="htmlCode" placeholder="Paste your HTML code here..."></textarea>
+                <div class="code-paste-area">
+                    <textarea id="htmlCode" placeholder="Paste your HTML code here..."></textarea>
+                </div>
                 
                 <button class="btn btn-approve" onclick="addGameFromCode()" style="width:100%">ADD GAME FROM CODE</button>
             </div>
@@ -402,7 +398,7 @@
     <div id="gameModal" class="game-modal">
         <div class="game-modal-content">
             <span class="close-modal" onclick="closeGame()">&times;</span>
-            <iframe id="gameFrame" class="game-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+            <iframe id="gameFrame" class="game-frame"></iframe>
         </div>
     </div>
 
@@ -420,8 +416,11 @@
                 document.getElementById('adminPanel').style.display = 'block';
                 document.getElementById('loginError').style.display = 'none';
                 
+                // Load all data
                 loadPending();
                 loadApproved();
+                
+                // Save login state
                 sessionStorage.setItem('adminLoggedIn', 'true');
             } else {
                 document.getElementById('loginError').style.display = 'block';
@@ -434,16 +433,17 @@
             sessionStorage.removeItem('adminLoggedIn');
         }
         
+        // Check login status on page load
         window.onload = function() {
             if (sessionStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                loadPending();
-                loadApproved();
             }
+            loadPending();
+            loadApproved();
         };
         
-        // ==================== GAME MANAGEMENT ====================
+        // ==================== GAME FUNCTIONS ====================
         let selectedFile = null;
         
         function handleFileSelect(input) {
@@ -452,10 +452,13 @@
         }
         
         function testGame(htmlContent) {
-            const gameFrame = document.getElementById('gameFrame');
+            if (!htmlContent) {
+                alert('No game content to test');
+                return;
+            }
+            const frame = document.getElementById('gameFrame');
             const modal = document.getElementById('gameModal');
-            
-            gameFrame.srcdoc = htmlContent;
+            frame.srcdoc = htmlContent;
             modal.style.display = 'block';
         }
         
@@ -464,23 +467,24 @@
             document.getElementById('gameFrame').srcdoc = '';
         }
         
+        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('gameModal');
             if (event.target === modal) {
                 closeGame();
             }
-        }
+        };
         
         function approveGame(index) {
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             const game = pending[index];
             
-            // Check if game has file content
-            if (!game.fileContent) {
-                alert('No game file content found!');
+            if (!game || !game.fileContent) {
+                alert('Error: Game file content missing');
                 return;
             }
             
+            // Create approved game with all data
             const approvedGame = {
                 id: Date.now(),
                 name: game.gameName,
@@ -488,10 +492,11 @@
                 description: game.gameDescription,
                 category: game.gameCategory,
                 platform: game.gamePlatform,
-                htmlContent: game.fileContent, // Use the file content from submission
+                htmlContent: game.fileContent,
                 dateApproved: new Date().toLocaleString()
             };
             
+            // Add to approved list
             const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             approved.push(approvedGame);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
@@ -500,89 +505,108 @@
             pending.splice(index, 1);
             localStorage.setItem('minibossx_pending', JSON.stringify(pending));
             
+            // Reload displays
             loadPending();
             loadApproved();
+            
             alert('Game approved and added to main page!');
+        }
+        
+        function rejectGame(index) {
+            if (!confirm('Reject this game?')) return;
+            
+            const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
+            pending.splice(index, 1);
+            localStorage.setItem('minibossx_pending', JSON.stringify(pending));
+            loadPending();
+        }
+        
+        function removeGame(index) {
+            if (!confirm('Remove this game from approved list?')) return;
+            
+            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
+            approved.splice(index, 1);
+            localStorage.setItem('minibossx_approved', JSON.stringify(approved));
+            loadApproved();
         }
         
         function addGameFromFile() {
             if (!selectedFile) {
-                alert('Please select an HTML file first');
+                alert('Please select an HTML file');
                 return;
             }
             
-            const gameName = document.getElementById('quickName').value;
-            const developer = document.getElementById('quickDev').value;
-            const description = document.getElementById('quickDesc').value;
-            const category = document.getElementById('quickCat').value;
+            const name = document.getElementById('quickName').value;
+            const dev = document.getElementById('quickDev').value;
+            const desc = document.getElementById('quickDesc').value;
+            const cat = document.getElementById('quickCat').value;
             const platform = document.getElementById('quickPlatform').value;
             
-            if (!gameName || !developer || !description) {
+            if (!name || !dev || !desc) {
                 alert('Please fill in all fields');
                 return;
             }
             
             const reader = new FileReader();
             reader.onload = function(e) {
-                const htmlContent = e.target.result;
-                
                 const game = {
                     id: Date.now(),
-                    name: gameName,
-                    developer: developer,
-                    description: description,
-                    category: category,
+                    name: name,
+                    developer: dev,
+                    description: desc,
+                    category: cat,
                     platform: platform,
-                    htmlContent: htmlContent,
+                    htmlContent: e.target.result,
                     dateApproved: new Date().toLocaleString()
                 };
                 
-                saveGame(game);
+                const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
+                approved.push(game);
+                localStorage.setItem('minibossx_approved', JSON.stringify(approved));
+                
+                // Clear form
+                document.getElementById('quickName').value = '';
+                document.getElementById('quickDev').value = '';
+                document.getElementById('quickDesc').value = '';
+                document.getElementById('htmlFile').value = '';
+                document.getElementById('fileName').textContent = '';
+                selectedFile = null;
+                
+                loadApproved();
+                alert('Game added successfully!');
             };
-            
             reader.readAsText(selectedFile);
         }
         
         function addGameFromCode() {
-            const gameName = document.getElementById('quickName2').value;
-            const developer = document.getElementById('quickDev2').value;
-            const description = document.getElementById('quickDesc2').value;
-            const category = document.getElementById('quickCat2').value;
+            const name = document.getElementById('quickName2').value;
+            const dev = document.getElementById('quickDev2').value;
+            const desc = document.getElementById('quickDesc2').value;
+            const cat = document.getElementById('quickCat2').value;
             const platform = document.getElementById('quickPlatform2').value;
-            const htmlCode = document.getElementById('htmlCode').value;
+            const code = document.getElementById('htmlCode').value;
             
-            if (!gameName || !developer || !description || !htmlCode) {
+            if (!name || !dev || !desc || !code) {
                 alert('Please fill in all fields and paste HTML code');
                 return;
             }
             
             const game = {
                 id: Date.now(),
-                name: gameName,
-                developer: developer,
-                description: description,
-                category: category,
+                name: name,
+                developer: dev,
+                description: desc,
+                category: cat,
                 platform: platform,
-                htmlContent: htmlCode,
+                htmlContent: code,
                 dateApproved: new Date().toLocaleString()
             };
             
-            saveGame(game);
-        }
-        
-        function saveGame(game) {
             const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             approved.push(game);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
             
-            // Clear forms
-            document.getElementById('quickName').value = '';
-            document.getElementById('quickDev').value = '';
-            document.getElementById('quickDesc').value = '';
-            document.getElementById('htmlFile').value = '';
-            document.getElementById('fileName').textContent = '';
-            selectedFile = null;
-            
+            // Clear form
             document.getElementById('quickName2').value = '';
             document.getElementById('quickDev2').value = '';
             document.getElementById('quickDesc2').value = '';
@@ -592,50 +616,29 @@
             alert('Game added successfully!');
         }
         
-        function rejectGame(index) {
-            if (!confirm('Reject this game?')) return;
-            const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
-            pending.splice(index, 1);
-            localStorage.setItem('minibossx_pending', JSON.stringify(pending));
-            loadPending();
-        }
-        
-        function removeGame(index) {
-            if (!confirm('Remove this game?')) return;
-            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
-            approved.splice(index, 1);
-            localStorage.setItem('minibossx_approved', JSON.stringify(approved));
-            loadApproved();
-        }
-        
         function loadPending() {
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             const list = document.getElementById('pendingList');
-            const section = document.getElementById('pendingSection');
             
             if (pending.length === 0) {
-                section.style.display = 'none';
+                list.innerHTML = '<div class="no-items">✨ No pending submissions</div>';
                 return;
             }
             
-            section.style.display = 'block';
             let html = '';
             pending.forEach((game, index) => {
                 html += `
                     <div class="pending-game">
-                        <h3>${game.gameName}</h3>
-                        <div class="game-detail"><strong>Developer:</strong> ${game.developerName}</div>
-                        <div class="game-detail"><strong>Email:</strong> ${game.developerEmail}</div>
-                        <div class="game-detail"><strong>Category:</strong> ${game.gameCategory}</div>
-                        <div class="game-detail"><strong>Platform:</strong> ${game.gamePlatform}</div>
-                        <div class="game-detail"><strong>Description:</strong> ${game.gameDescription}</div>
-                        <div class="game-detail"><strong>File:</strong> ${game.fileName || 'index.html'}</div>
+                        <h3>${game.gameName || 'Untitled'}</h3>
+                        <div class="game-detail"><strong>Developer:</strong> ${game.developerName || 'Unknown'}</div>
+                        <div class="game-detail"><strong>Email:</strong> ${game.developerEmail || 'No email'}</div>
+                        <div class="game-detail"><strong>Category:</strong> ${game.gameCategory || 'OTHER'}</div>
+                        <div class="game-detail"><strong>Platform:</strong> ${game.gamePlatform || 'BOTH'}</div>
+                        <div class="game-detail"><strong>Description:</strong> ${game.gameDescription || 'No description'}</div>
                         <div class="button-group">
-                            <button class="btn btn-test" onclick='testGame(`${
-                                game.fileContent ? game.fileContent.replace(/`/g, '\\`').replace(/\$/g, '\\$') : ''
-                            }`)'>🎮 TEST</button>
-                            <button class="btn btn-approve" onclick="approveGame(${index})">✓ APPROVE</button>
-                            <button class="btn" onclick="rejectGame(${index})">✗ REJECT</button>
+                            <button class="btn btn-test" onclick='testGame(${JSON.stringify(game.fileContent).replace(/'/g, "\\'")})'>TEST</button>
+                            <button class="btn btn-approve" onclick="approveGame(${index})">APPROVE</button>
+                            <button class="btn" onclick="rejectGame(${index})">REJECT</button>
                         </div>
                     </div>
                 `;
@@ -657,9 +660,11 @@
             approved.forEach((game, index) => {
                 html += `
                     <div class="approved-game">
-                        <span><strong>${game.name}</strong> by ${game.developer}</span>
                         <div>
-                            <button class="btn-test" style="padding:5px 10px; margin-right:5px;" onclick='testGame(\`${game.htmlContent ? game.htmlContent.replace(/`/g, '\\`').replace(/\$/g, '\\$') : ''}\`)'>TEST</button>
+                            <strong>${game.name || 'Untitled'}</strong> by ${game.developer || 'Unknown'}
+                        </div>
+                        <div>
+                            <button class="btn-test" style="padding:5px 15px; margin-right:5px;" onclick='testGame(${JSON.stringify(game.htmlContent).replace(/'/g, "\\'")})'>TEST</button>
                             <button class="remove-btn" onclick="removeGame(${index})">REMOVE</button>
                         </div>
                     </div>
