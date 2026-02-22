@@ -30,7 +30,6 @@
             font-size: 4rem;
             letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-            display: inline-block;
         }
         
         .nav-bar {
@@ -71,106 +70,54 @@
             text-align: center;
             margin-bottom: 30px;
             font-size: 2rem;
-            color: #8B0000;
         }
         
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 1rem;
+            margin-bottom: 5px;
             color: #8B0000;
             font-weight: bold;
         }
         
-        input[type="text"],
-        input[type="email"],
-        input[type="url"],
-        textarea,
-        select {
+        input, textarea, select {
             width: 100%;
-            padding: 12px 15px;
-            background-color: black;
+            padding: 12px;
+            background: black;
             border: 1px solid #8B0000;
             color: #8B0000;
+            border-radius: 5px;
             font-size: 1rem;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-        
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-            border-color: #8B0000;
         }
         
         textarea {
-            height: 120px;
+            height: 100px;
             resize: vertical;
         }
         
-        select {
-            cursor: pointer;
-        }
-        
-        option {
-            background-color: black;
-            color: #8B0000;
-        }
-        
         .instructions {
-            margin: 30px 0;
+            background: rgba(139, 0, 0, 0.1);
             padding: 20px;
-            border: 1px solid #8B0000;
             border-radius: 10px;
-            background-color: rgba(139, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid #8B0000;
         }
         
         .instructions h3 {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             color: #8B0000;
-            font-size: 1.2rem;
         }
         
         .instructions ol {
-            padding-left: 25px;
+            padding-left: 20px;
             color: #ccc;
         }
         
         .instructions li {
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-        
-        .instructions a {
-            color: #8B0000;
-            text-decoration: none;
-            border-bottom: 1px dotted #8B0000;
-        }
-        
-        .instructions a:hover {
-            border-bottom: 1px solid #8B0000;
-        }
-        
-        .note-box {
-            margin-top: 15px;
-            padding: 10px;
-            background-color: rgba(139, 0, 0, 0.2);
-            border-left: 4px solid #8B0000;
-            color: #8B0000;
-            font-size: 0.9rem;
-        }
-        
-        .note-box code {
-            background-color: black;
-            padding: 2px 5px;
-            border-radius: 3px;
-            color: #8B0000;
+            margin-bottom: 8px;
         }
         
         .button-group {
@@ -180,41 +127,35 @@
         }
         
         .btn {
-            padding: 15px 30px;
-            background-color: transparent;
-            color: #8B0000;
-            border: 2px solid #8B0000;
-            font-size: 1.1rem;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: all 0.3s;
             flex: 1;
+            padding: 15px;
+            background: transparent;
+            border: 2px solid #8B0000;
+            color: #8B0000;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
             font-weight: bold;
         }
         
         .btn:hover {
-            background-color: #8B0000;
+            background: #8B0000;
             color: black;
         }
         
         .btn-primary {
-            background-color: #8B0000;
+            background: #8B0000;
             color: black;
-        }
-        
-        .btn-primary:hover {
-            background-color: transparent;
-            color: #8B0000;
         }
         
         .success-message {
             display: none;
             text-align: center;
-            padding: 40px 20px;
+            padding: 40px;
             border: 2px solid #8B0000;
-            border-radius: 15px;
-            margin-top: 20px;
-            background-color: rgba(139, 0, 0, 0.1);
+            border-radius: 10px;
+            background: rgba(139, 0, 0, 0.1);
         }
         
         .success-message.show {
@@ -227,22 +168,9 @@
             margin-bottom: 20px;
         }
         
-        .success-message p {
-            color: #ccc;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-        
-        .success-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            color: #8B0000;
-        }
-        
         .bottom {
             text-align: center;
-            padding: 20px 0 30px 0;
+            padding: 20px 0;
         }
         
         .copyright {
@@ -259,92 +187,80 @@
     
     <div class="nav-bar">
         <a href="index.html">HOME</a>
-        <a href="submit.html">SUBMIT GAME</a>
+        <a href="submit.html">SUBMIT</a>
     </div>
     
     <div class="submit-container">
-        <h2>🎮 SUBMIT YOUR GAME</h2>
+        <h2>SUBMIT YOUR GAME</h2>
         
         <div class="instructions">
             <h3>📋 How to Submit:</h3>
             <ol>
-                <li>Package your game files into a ZIP folder (main file must be <strong>index.html</strong>)</li>
-                <li>Upload the ZIP to <a href="https://drive.google.com" target="_blank">Google Drive</a> or <a href="https://www.dropbox.com" target="_blank">Dropbox</a></li>
-                <li>Set sharing to <strong>"Anyone with the link can view"</strong></li>
-                <li>Fill out the form below with your game details</li>
-                <li>We'll review and add it to the site within 24-48 hours</li>
+                <li>Package your game into a ZIP file (main file must be index.html)</li>
+                <li>Upload to Google Drive or Dropbox</li>
+                <li>Set sharing to "Anyone with link can view"</li>
+                <li>Fill out the form below</li>
+                <li>We'll review and add it within 24-48 hours</li>
             </ol>
-            <div class="note-box">
-                ⚠️ <strong>Important:</strong> Your game's main file MUST be named <code>index.html</code>
-            </div>
         </div>
         
-        <form id="submissionForm">
+        <form id="submitForm">
             <div class="form-group">
-                <label for="gameName">🎲 Game Name *</label>
-                <input type="text" id="gameName" required placeholder="e.g., Super Platformer">
+                <label>Game Name *</label>
+                <input type="text" id="gameName" required>
             </div>
             
             <div class="form-group">
-                <label for="developerName">👤 Developer Name *</label>
-                <input type="text" id="developerName" required placeholder="Your name or studio">
+                <label>Developer Name *</label>
+                <input type="text" id="developerName" required>
             </div>
             
             <div class="form-group">
-                <label for="developerEmail">📧 Email Address *</label>
-                <input type="email" id="developerEmail" required placeholder="We'll notify you when approved">
+                <label>Email *</label>
+                <input type="email" id="developerEmail" required>
             </div>
             
             <div class="form-group">
-                <label for="gameDescription">📝 Game Description *</label>
-                <textarea id="gameDescription" required placeholder="Tell us about your game..."></textarea>
+                <label>Description *</label>
+                <textarea id="gameDescription" required></textarea>
             </div>
             
             <div class="form-group">
-                <label for="gameCategory">🏷️ Category *</label>
+                <label>Category *</label>
                 <select id="gameCategory" required>
-                    <option value="">Select a category</option>
-                    <option value="action">Action</option>
-                    <option value="arcade">Arcade</option>
-                    <option value="puzzle">Puzzle</option>
-                    <option value="platformer">Platformer</option>
-                    <option value="shooter">Shooter</option>
-                    <option value="sports">Sports</option>
-                    <option value="strategy">Strategy</option>
-                    <option value="other">Other</option>
+                    <option value="">Select...</option>
+                    <option value="ACTION">Action</option>
+                    <option value="PUZZLE">Puzzle</option>
+                    <option value="ARCADE">Arcade</option>
+                    <option value="PLATFORMER">Platformer</option>
+                    <option value="OTHER">Other</option>
                 </select>
             </div>
             
             <div class="form-group">
-                <label for="gamePlatform">📱 Platform *</label>
+                <label>Platform *</label>
                 <select id="gamePlatform" required>
-                    <option value="">Select platform</option>
-                    <option value="desktop">Desktop Only</option>
-                    <option value="mobile">Mobile Only</option>
-                    <option value="both">Works on Both</option>
+                    <option value="">Select...</option>
+                    <option value="DESKTOP">Desktop</option>
+                    <option value="MOBILE">Mobile</option>
+                    <option value="BOTH">Both</option>
                 </select>
             </div>
             
             <div class="form-group">
-                <label for="gameLink">🔗 Download Link (Google Drive/Dropbox) *</label>
+                <label>Download Link *</label>
                 <input type="url" id="gameLink" required placeholder="https://drive.google.com/...">
             </div>
             
-            <div class="form-group">
-                <label for="screenshotLink">🖼️ Screenshot Link (Optional)</label>
-                <input type="url" id="screenshotLink" placeholder="Link to a screenshot">
-            </div>
-            
             <div class="button-group">
-                <button type="button" class="btn btn-primary" onclick="handleSubmit()">SUBMIT GAME</button>
+                <button type="button" class="btn btn-primary" onclick="submitGame()">SUBMIT</button>
                 <button type="reset" class="btn">CLEAR</button>
             </div>
         </form>
         
         <div id="successMessage" class="success-message">
-            <div class="success-icon">✅</div>
-            <h3>GAME SUBMITTED!</h3>
-            <p>Thank you for submitting to MiniBOSSX!<br>We'll review your game and notify you via email when it's live.</p>
+            <h3>✅ SUBMITTED!</h3>
+            <p>Your game is pending review. We'll email you when it's approved.</p>
             <button class="btn btn-primary" onclick="resetForm()">SUBMIT ANOTHER</button>
         </div>
     </div>
@@ -354,63 +270,40 @@
     </div>
 
     <script>
-        function handleSubmit() {
-            // Get form values
-            const gameName = document.getElementById('gameName').value;
-            const developerName = document.getElementById('developerName').value;
-            const developerEmail = document.getElementById('developerEmail').value;
-            const gameDescription = document.getElementById('gameDescription').value;
-            const gameCategory = document.getElementById('gameCategory').value;
-            const gamePlatform = document.getElementById('gamePlatform').value;
-            const gameLink = document.getElementById('gameLink').value;
-            
-            // Validate
-            if (!gameName || !developerName || !developerEmail || !gameDescription || !gameCategory || !gamePlatform || !gameLink) {
-                alert('Please fill in all required fields');
-                return;
-            }
-            
-            // Validate email
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(developerEmail)) {
-                alert('Please enter a valid email address');
-                return;
-            }
-            
-            // Create submission
-            const submission = {
+        function submitGame() {
+            // Get values
+            const game = {
                 id: Date.now(),
-                gameName,
-                developerName,
-                developerEmail,
-                gameDescription,
-                gameCategory,
-                gamePlatform,
-                gameLink,
-                dateSubmitted: new Date().toLocaleString(),
+                name: document.getElementById('gameName').value,
+                developer: document.getElementById('developerName').value,
+                email: document.getElementById('developerEmail').value,
+                description: document.getElementById('gameDescription').value,
+                category: document.getElementById('gameCategory').value,
+                platform: document.getElementById('gamePlatform').value,
+                link: document.getElementById('gameLink').value,
+                date: new Date().toLocaleString(),
                 status: 'pending'
             };
             
-            // Save to localStorage
-            let submissions = JSON.parse(localStorage.getItem('minibossx_submissions')) || [];
-            submissions.push(submission);
-            localStorage.setItem('minibossx_submissions', JSON.stringify(submissions));
+            // Validate
+            if (!game.name || !game.developer || !game.email || !game.description || !game.category || !game.platform || !game.link) {
+                alert('Fill all fields');
+                return;
+            }
             
-            // Create email link (for you)
-            const mailtoLink = `mailto:YOUR_EMAIL@gmail.com?subject=New Game: ${gameName}&body=Game: ${gameName}%0ADeveloper: ${developerName}%0AEmail: ${developerEmail}%0ACategory: ${gameCategory}%0APlatform: ${gamePlatform}%0ADownload: ${gameLink}%0ADescription: ${gameDescription}`;
+            // Save to pending
+            let pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
+            pending.push(game);
+            localStorage.setItem('minibossx_pending', JSON.stringify(pending));
             
             // Show success
-            document.getElementById('submissionForm').style.display = 'none';
+            document.getElementById('submitForm').style.display = 'none';
             document.getElementById('successMessage').classList.add('show');
-            
-            // Log for debugging
-            console.log('Submission saved!');
-            console.log('Email link:', mailtoLink);
         }
         
         function resetForm() {
-            document.getElementById('submissionForm').reset();
-            document.getElementById('submissionForm').style.display = 'block';
+            document.getElementById('submitForm').reset();
+            document.getElementById('submitForm').style.display = 'block';
             document.getElementById('successMessage').classList.remove('show');
         }
     </script>
