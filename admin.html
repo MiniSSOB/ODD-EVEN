@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - MiniBOSSX</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #8B0000;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #8B0000;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        h2 {
+            color: #8B0000;
+            margin: 30px 0 20px;
+            border-bottom: 1px solid #8B0000;
+            padding-bottom: 10px;
+        }
+        
+        .pending-game {
+            border: 1px solid #8B0000;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: rgba(139, 0, 0, 0.05);
+        }
+        
+        .pending-game h3 {
+            color: #8B0000;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .game-detail {
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+        
+        .game-detail strong {
+            color: #8B0000;
+            width: 100px;
+            display: inline-block;
+        }
+        
+        .game-link {
+            color: #8B0000;
+            word-break: break-all;
+            margin: 10px 0;
+            padding: 10px;
+            background: black;
+            border-radius: 5px;
+            border: 1px solid #8B0000;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: 2px solid #8B0000;
+            background: transparent;
+            color: #8B0000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            flex: 1;
+        }
+        
+        .btn:hover {
+            background: #8B0000;
+            color: black;
+        }
+        
+        .btn-approve {
+            background: #8B0000;
+            color: black;
+        }
+        
+        .btn-approve:hover {
+            background: transparent;
+            color: #8B0000;
+        }
+        
+        .no-pending {
+            text-align: center;
+            padding: 60px;
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+            color: #666;
+        }
+        
+        .approved-game {
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(139, 0, 0, 0.02);
+        }
+        
+        .approved-game span {
+            color: #8B0000;
+        }
+        
+        .remove-btn {
+            color: #8B0000;
+            background: transparent;
+            border: 1px solid #8B0000;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        
+        .remove-btn:hover {
+            background: #8B0000;
+            color: black;
+        }
+        
+        .nav-bar {
+            text-align: center;
+            margin: 20px 0 40px;
+        }
+        
+        .nav-bar a {
+            color: #8B0000;
+            text-decoration: none;
+            margin: 0 10px;
+            padding: 8px 25px;
+            border: 2px solid #8B0000;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .nav-bar a:hover {
+            background: #8B0000;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ ADMIN PANEL ⚡</h1>
+        
+        <div class="nav-bar">
+            <a href="index.html">HOME</a>
+            <a href="submit.html">SUBMIT</a>
+            <a href="admin.html">ADMIN</a>
+        </div>
+        
+        <h2>📥 PENDING GAMES (Waiting for Approval)</h2>
+        <div id="pendingList"></div>
+        
+        <h2>✅ APPROVED GAMES (Live on Site)</h2>
+        <div id="approvedList"></div>
+        
+        <h2>➕ QUICK ADD YOUR OWN GAME</h2>
+        <div style="border: 1px solid #8B0000; padding: 20px; border-radius: 10px;">
+            <div style="margin-bottom: 10px;">
+                <input type="text" id="quickName" placeholder="Game Name" style="width: 100%; padding: 10px; background: black; border: 1px solid #8B0000; color: #8B0000; margin-bottom: 10px;">
+                <input type="text" id="quickDev" placeholder="Developer Name" style="width: 100%; padding: 10px; background: black; border: 1px solid #8B0000; color: #8B0000; margin-bottom: 10px;">
+                <textarea id="quickDesc" placeholder="Description" style="width: 100%; padding: 10px; background: black; border: 1px solid #8B0000; color: #8B0000; margin-bottom: 10px;"></textarea>
+                <select id="quickCat" style="width: 100%; padding: 10px; background: black; border: 1px solid #8B0000; color: #8B0000; margin-bottom: 10px;">
+                    <option value="ACTION">Action</option>
+                    <option value="PUZZLE">Puzzle</option>
+                    <option value="ARCADE">Arcade</option>
+                    <option value="PLATFORMER">Platformer</option>
+                    <option value="OTHER">Other</option>
+                </select>
+                <select id="quickPlatform" style="width: 100%; padding: 10px; background: black; border: 1px solid #8B0000; color: #8B0000; margin-bottom: 10px;">
+                    <option value="DESKTOP">Desktop</option>
+                    <option value="MOBILE">Mobile</option>
+                    <option value="BOTH">Both</option>
+                </select>
+                <input type="text" id="quickUrl" placeholder="Game URL (e.g., /games/odd-even/)" style="width: 100%; padding: 10px; background: black; border: 1px solid #8B0000; color: #8B0000; margin-bottom: 10px;">
+            </div>
+            <button class="btn btn-approve" onclick="quickAddGame()" style="width: 100%;">ADD GAME TO SITE</button>
+        </div>
+    </div>
+
+    <script>
+        // Load everything on page load
+        window.onload = function() {
+            loadPending();
+            loadApproved();
+        };
+        
+        // Load pending games
+        function loadPending() {
+            const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
+            const list = document.getElementById('pendingList');
+            
+            if (pending.length === 0) {
+                list.innerHTML = '<div class="no-pending">✨ No pending submissions</div>';
+                return;
+            }
+            
+            let html = '';
+            pending.forEach((game, index) => {
+                if (game.status !== 'approved') {
+                    html += `
+                        <div class="pending-game">
+                            <h3>${game.name}</h3>
+                            <div class="game-detail"><strong>Developer:</strong> ${game.developer}</div>
+                            <div class="game-detail"><strong>Email:</strong> ${game.email}</div>
+                            <div class="game-detail"><strong>Category:</strong> ${game.category}</div>
+                            <div class="game-detail"><strong>Platform:</strong> ${game.platform}</div>
+                            <div class="game-detail"><strong>Submitted:</strong> ${game.date}</div>
+                            <div class="game-detail"><strong>Description:</strong> ${game.description}</div>
+                            <div class="game-link"><strong>DOWNLOAD:</strong> <a href="${game.link}" target="_blank" style="color: #8B0000;">${game.link}</a></div>
+                            <div class="button-group">
+                                <button class="btn btn-approve" onclick="approveGame(${index})">✓ APPROVE GAME</button>
+                                <button class="btn" onclick="rejectGame(${index})">✗ REJECT</button>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            list.innerHTML = html || '<div class="no-pending">✨ No pending submissions</div>';
+        }
+        
+        // Load approved games
+        function loadApproved() {
+            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
+            const list = document.getElementById('approvedList');
+            
+            if (approved.length === 0) {
+                list.innerHTML = '<div class="no-pending">📭 No approved games yet</div>';
+                return;
+            }
+            
+            let html = '';
+            approved.forEach((game, index) => {
+                html += `
+                    <div class="approved-game">
+                        <span><strong>${game.name}</strong> by ${game.developer} - <a href="${game.gameUrl}" target="_blank" style="color: #8B0000;">PLAY</a></span>
+                        <button class="remove-btn" onclick="removeGame(${index})">REMOVE</button>
+                    </div>
+                `;
+            });
+            
+            list.innerHTML = html;
+        }
+        
+        // Approve a game
+        function approveGame(index) {
+            const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
+            const game = pending[index];
+            
+            // Ask for the URL where game will be hosted
+            const gameUrl = prompt('Enter the game URL (e.g., /games/game-name/):', '/games/' + game.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '/');
+            
+            if (!gameUrl) return;
+            
+            // Create approved game
+            const approvedGame = {
+                id: Date.now(),
+                name: game.name,
+                developer: game.developer,
+                description: game.description,
+                category: game.category,
+                platform: game.platform,
+                gameUrl: gameUrl,
+                dateApproved: new Date().toLocaleString()
+            };
+            
+            // Add to approved
+            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
+            approved.push(approvedGame);
+            localStorage.setItem('minibossx_approved', JSON.stringify(approved));
+            
+            // Mark as approved in pending
+            game.status = 'approved';
+            localStorage.setItem('minibossx_pending', JSON.stringify(pending));
+            
+            // Reload
+            loadPending();
+            loadApproved();
+            
+            alert(`✅ Game approved!\n\nNext step: Create folder on GitHub at ${gameUrl} and upload the game files from:\n${game.link}`);
+        }
+        
+        // Reject a game
+        function rejectGame(index) {
+            if (!confirm('Reject this game?')) return;
+            
+            const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
+            pending.splice(index, 1);
+            localStorage.setItem('minibossx_pending', JSON.stringify(pending));
+            
+            loadPending();
+        }
+        
+        // Remove a game from approved
+        function removeGame(index) {
+            if (!confirm('Remove this game from the site?')) return;
+            
+            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
+            approved.splice(index, 1);
+            localStorage.setItem('minibossx_approved', JSON.stringify(approved));
+            
+            loadApproved();
+        }
+        
+        // Quick add your own game
+        function quickAddGame() {
+            const game = {
+                id: Date.now(),
+                name: document.getElementById('quickName').value,
+                developer: document.getElementById('quickDev').value,
+                description: document.getElementById('quickDesc').value,
+                category: document.getElementById('quickCat').value,
+                platform: document.getElementById('quickPlatform').value,
+                gameUrl: document.getElementById('quickUrl').value,
+                dateApproved: new Date().toLocaleString()
+            };
+            
+            if (!game.name || !game.developer || !game.description || !game.gameUrl) {
+                alert('Fill all fields');
+                return;
+            }
+            
+            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
+            approved.push(game);
+            localStorage.setItem('minibossx_approved', JSON.stringify(approved));
+            
+            // Clear form
+            document.getElementById('quickName').value = '';
+            document.getElementById('quickDev').value = '';
+            document.getElementById('quickDesc').value = '';
+            document.getElementById('quickUrl').value = '';
+            
+            loadApproved();
+            alert('Game added to site!');
+        }
+    </script>
+</body>
+</html>
