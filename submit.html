@@ -304,14 +304,14 @@
                 <label for="gameCategory">🏷️ Category *</label>
                 <select id="gameCategory" required>
                     <option value="">Select a category</option>
-                    <option value="action">Action</option>
-                    <option value="arcade">Arcade</option>
-                    <option value="puzzle">Puzzle</option>
-                    <option value="platformer">Platformer</option>
-                    <option value="shooter">Shooter</option>
-                    <option value="sports">Sports</option>
-                    <option value="strategy">Strategy</option>
-                    <option value="other">Other</option>
+                    <option value="ACTION">Action</option>
+                    <option value="ARCADE">Arcade</option>
+                    <option value="PUZZLE">Puzzle</option>
+                    <option value="PLATFORMER">Platformer</option>
+                    <option value="SHOOTER">Shooter</option>
+                    <option value="SPORTS">Sports</option>
+                    <option value="STRATEGY">Strategy</option>
+                    <option value="OTHER">Other</option>
                 </select>
             </div>
             
@@ -319,9 +319,9 @@
                 <label for="gamePlatform">📱 Platform *</label>
                 <select id="gamePlatform" required>
                     <option value="">Select platform</option>
-                    <option value="desktop">Desktop Only</option>
-                    <option value="mobile">Mobile Only</option>
-                    <option value="both">Works on Both</option>
+                    <option value="DESKTOP">Desktop Only</option>
+                    <option value="MOBILE">Mobile Only</option>
+                    <option value="BOTH">Works on Both</option>
                 </select>
             </div>
             
@@ -392,12 +392,9 @@
             };
             
             // Save to localStorage
-            let submissions = JSON.parse(localStorage.getItem('minibossx_submissions')) || [];
+            let submissions = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             submissions.push(submission);
-            localStorage.setItem('minibossx_submissions', JSON.stringify(submissions));
-            
-            // Create email link (for you)
-            const mailtoLink = `mailto:YOUR_EMAIL@gmail.com?subject=New Game: ${gameName}&body=Game: ${gameName}%0ADeveloper: ${developerName}%0AEmail: ${developerEmail}%0ACategory: ${gameCategory}%0APlatform: ${gamePlatform}%0ADownload: ${gameLink}%0ADescription: ${gameDescription}`;
+            localStorage.setItem('minibossx_pending', JSON.stringify(submissions));
             
             // Show success
             document.getElementById('submissionForm').style.display = 'none';
@@ -405,7 +402,6 @@
             
             // Log for debugging
             console.log('Submission saved!');
-            console.log('Email link:', mailtoLink);
         }
         
         function resetForm() {
