@@ -51,7 +51,7 @@
             color: black;
         }
         
-        /* Login Screen - ADD THIS */
+        /* Login Screen */
         .login-container {
             max-width: 400px;
             margin: 100px auto;
@@ -107,8 +107,8 @@
             display: none;
         }
         
-        /* Hide admin panel by default */
-        #adminPanel {
+        /* Admin Panel */
+        .admin-panel {
             display: none;
         }
         
@@ -148,6 +148,7 @@
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
         
         .btn {
@@ -159,6 +160,7 @@
             border-radius: 5px;
             font-size: 1rem;
             flex: 1;
+            min-width: 120px;
         }
         
         .btn:hover {
@@ -167,6 +169,17 @@
         }
         
         .btn-approve {
+            background: #8B0000;
+            color: black;
+        }
+        
+        .btn-test {
+            background: #4a4a4a;
+            border-color: #8B0000;
+            color: #8B0000;
+        }
+        
+        .btn-test:hover {
             background: #8B0000;
             color: black;
         }
@@ -188,14 +201,6 @@
             padding: 5px 10px;
             cursor: pointer;
             border-radius: 3px;
-        }
-        
-        .no-pending {
-            text-align: center;
-            padding: 60px;
-            border: 2px dashed #8B0000;
-            border-radius: 10px;
-            color: #666;
         }
         
         .quick-add {
@@ -253,10 +258,63 @@
             background: #8B0000;
             color: black;
         }
+        
+        /* Game Test Modal */
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+        }
+        
+        .game-modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            margin: 2% auto;
+            background-color: black;
+            border: 2px solid #8B0000;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #8B0000;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+        
+        .close-modal:hover {
+            color: #ff0000;
+        }
+        
+        .game-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: white;
+        }
+        
+        .no-items {
+            text-align: center;
+            padding: 40px;
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+            color: #666;
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
-    <!-- Login Screen - ADD THIS -->
+    <!-- Login Screen -->
     <div id="loginScreen" class="login-container">
         <h2>🔐 ADMIN LOGIN</h2>
         <input type="text" id="username" class="login-input" placeholder="Username" value="admin">
@@ -265,8 +323,8 @@
         <div id="loginError" class="error-msg">Invalid username or password</div>
     </div>
 
-    <!-- Admin Panel (hidden initially) -->
-    <div id="adminPanel">
+    <!-- Admin Panel -->
+    <div id="adminPanel" class="admin-panel">
         <div class="container">
             <button class="logout-btn" onclick="logout()">LOGOUT</button>
             <h1>⚡ ADMIN PANEL ⚡</h1>
@@ -277,15 +335,14 @@
                 <a href="admin.html">ADMIN</a>
             </div>
             
-            <h2>📥 PENDING GAMES</h2>
-            <div id="pendingList">
-                <div class="no-pending">✨ No pending submissions</div>
+            <!-- Pending Games Section - Only shows when there are games -->
+            <div id="pendingSection" style="display: none;">
+                <h2>📥 PENDING GAMES</h2>
+                <div id="pendingList"></div>
             </div>
             
             <h2>✅ APPROVED GAMES</h2>
-            <div id="approvedList">
-                <div class="no-pending">📭 No approved games</div>
-            </div>
+            <div id="approvedList"></div>
             
             <h2>➕ QUICK ADD GAME</h2>
             
@@ -341,9 +398,16 @@
         </div>
     </div>
 
+    <!-- Game Test Modal -->
+    <div id="gameModal" class="game-modal">
+        <div class="game-modal-content">
+            <span class="close-modal" onclick="closeGame()">&times;</span>
+            <iframe id="gameFrame" class="game-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+        </div>
+    </div>
+
     <script>
-        // ==================== ADD THIS LOGIN CODE ====================
-        // Set your username and password here
+        // ==================== LOGIN SYSTEM ====================
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "minibossx2026";
         
@@ -356,9 +420,9 @@
                 document.getElementById('adminPanel').style.display = 'block';
                 document.getElementById('loginError').style.display = 'none';
                 
-                // Load your existing data
                 loadPending();
                 loadApproved();
+                sessionStorage.setItem('adminLoggedIn', 'true');
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
@@ -367,14 +431,78 @@
         function logout() {
             document.getElementById('loginScreen').style.display = 'block';
             document.getElementById('adminPanel').style.display = 'none';
+            sessionStorage.removeItem('adminLoggedIn');
         }
         
-        // ==================== YOUR EXISTING CODE BELOW (unchanged) ====================
+        window.onload = function() {
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadPending();
+                loadApproved();
+            }
+        };
+        
+        // ==================== GAME MANAGEMENT ====================
         let selectedFile = null;
         
         function handleFileSelect(input) {
             selectedFile = input.files[0];
             document.getElementById('fileName').textContent = selectedFile ? `Selected: ${selectedFile.name}` : '';
+        }
+        
+        function testGame(htmlContent) {
+            const gameFrame = document.getElementById('gameFrame');
+            const modal = document.getElementById('gameModal');
+            
+            gameFrame.srcdoc = htmlContent;
+            modal.style.display = 'block';
+        }
+        
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+            document.getElementById('gameFrame').srcdoc = '';
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('gameModal');
+            if (event.target === modal) {
+                closeGame();
+            }
+        }
+        
+        function approveGame(index) {
+            const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
+            const game = pending[index];
+            
+            // Check if game has file content
+            if (!game.fileContent) {
+                alert('No game file content found!');
+                return;
+            }
+            
+            const approvedGame = {
+                id: Date.now(),
+                name: game.gameName,
+                developer: game.developerName,
+                description: game.gameDescription,
+                category: game.gameCategory,
+                platform: game.gamePlatform,
+                htmlContent: game.fileContent, // Use the file content from submission
+                dateApproved: new Date().toLocaleString()
+            };
+            
+            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
+            approved.push(approvedGame);
+            localStorage.setItem('minibossx_approved', JSON.stringify(approved));
+            
+            // Remove from pending
+            pending.splice(index, 1);
+            localStorage.setItem('minibossx_pending', JSON.stringify(pending));
+            
+            loadPending();
+            loadApproved();
+            alert('Game approved and added to main page!');
         }
         
         function addGameFromFile() {
@@ -447,7 +575,7 @@
             approved.push(game);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
             
-            // Clear form
+            // Clear forms
             document.getElementById('quickName').value = '';
             document.getElementById('quickDev').value = '';
             document.getElementById('quickDesc').value = '';
@@ -462,34 +590,6 @@
             
             loadApproved();
             alert('Game added successfully!');
-        }
-        
-        function approveGame(index) {
-            const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
-            const game = pending[index];
-            
-            const approvedGame = {
-                id: Date.now(),
-                name: game.gameName,
-                developer: game.developerName,
-                description: game.gameDescription,
-                category: game.gameCategory,
-                platform: game.gamePlatform,
-                htmlContent: null,
-                dateApproved: new Date().toLocaleString()
-            };
-            
-            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
-            approved.push(approvedGame);
-            localStorage.setItem('minibossx_approved', JSON.stringify(approved));
-            
-            pending.splice(index, 1);
-            localStorage.setItem('minibossx_pending', JSON.stringify(pending));
-            
-            loadPending();
-            loadApproved();
-            
-            alert('Game approved! You can now add the HTML file or code in the Quick Add section.');
         }
         
         function rejectGame(index) {
@@ -511,12 +611,14 @@
         function loadPending() {
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             const list = document.getElementById('pendingList');
+            const section = document.getElementById('pendingSection');
             
             if (pending.length === 0) {
-                list.innerHTML = '<div class="no-pending">✨ No pending submissions</div>';
+                section.style.display = 'none';
                 return;
             }
             
+            section.style.display = 'block';
             let html = '';
             pending.forEach((game, index) => {
                 html += `
@@ -527,8 +629,11 @@
                         <div class="game-detail"><strong>Category:</strong> ${game.gameCategory}</div>
                         <div class="game-detail"><strong>Platform:</strong> ${game.gamePlatform}</div>
                         <div class="game-detail"><strong>Description:</strong> ${game.gameDescription}</div>
-                        <div class="game-detail"><strong>Download Link:</strong> <a href="${game.gameLink}" target="_blank" style="color:#8B0000;">View File</a></div>
+                        <div class="game-detail"><strong>File:</strong> ${game.fileName || 'index.html'}</div>
                         <div class="button-group">
+                            <button class="btn btn-test" onclick='testGame(`${
+                                game.fileContent ? game.fileContent.replace(/`/g, '\\`').replace(/\$/g, '\\$') : ''
+                            }`)'>🎮 TEST</button>
                             <button class="btn btn-approve" onclick="approveGame(${index})">✓ APPROVE</button>
                             <button class="btn" onclick="rejectGame(${index})">✗ REJECT</button>
                         </div>
@@ -544,7 +649,7 @@
             const list = document.getElementById('approvedList');
             
             if (approved.length === 0) {
-                list.innerHTML = '<div class="no-pending">📭 No approved games</div>';
+                list.innerHTML = '<div class="no-items">📭 No approved games</div>';
                 return;
             }
             
@@ -553,24 +658,16 @@
                 html += `
                     <div class="approved-game">
                         <span><strong>${game.name}</strong> by ${game.developer}</span>
-                        <button class="remove-btn" onclick="removeGame(${index})">REMOVE</button>
+                        <div>
+                            <button class="btn-test" style="padding:5px 10px; margin-right:5px;" onclick='testGame(\`${game.htmlContent ? game.htmlContent.replace(/`/g, '\\`').replace(/\$/g, '\\$') : ''}\`)'>TEST</button>
+                            <button class="remove-btn" onclick="removeGame(${index})">REMOVE</button>
+                        </div>
                     </div>
                 `;
             });
             
             list.innerHTML = html;
         }
-        
-        // Initialize on page load
-        window.onload = function() {
-            // Admin panel starts hidden, login screen visible
-            document.getElementById('loginScreen').style.display = 'block';
-            document.getElementById('adminPanel').style.display = 'none';
-            
-            // Load data (but don't show until login)
-            loadPending();
-            loadApproved();
-        };
     </script>
 </body>
 </html>
