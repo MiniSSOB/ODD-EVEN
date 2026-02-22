@@ -269,10 +269,6 @@
             border: none;
             background-color: white;
         }
-        
-        .admin-secret {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -311,9 +307,6 @@
         </div>
     </div>
 
-    <!-- Secret admin link -->
-    <div style="display: none;">admin</div>
-
     <script>
         function loadGames() {
             const gamesGrid = document.getElementById('gamesGrid');
@@ -332,11 +325,13 @@
             
             let html = '';
             approvedGames.forEach(game => {
-                // Make sure we have HTML content
                 if (!game.htmlContent) {
                     console.warn('Game missing HTML content:', game.name);
                     return;
                 }
+                
+                // Escape the HTML content for the button click
+                const escapedContent = JSON.stringify(game.htmlContent).replace(/'/g, "\\'");
                 
                 html += `
                     <div class="game-card">
@@ -347,7 +342,7 @@
                             <span class="game-category">${game.category || 'OTHER'}</span>
                             <span class="game-platform">${game.platform || 'BOTH'}</span>
                         </div>
-                        <button onclick='playGame(${JSON.stringify(game.htmlContent).replace(/'/g, "\\'")})' class="play-button">▶ PLAY</button>
+                        <button onclick='playGame(${escapedContent})' class="play-button">▶ PLAY</button>
                     </div>
                 `;
             });
@@ -378,7 +373,7 @@
             if (event.target === modal) {
                 closeGame();
             }
-        }
+        };
         
         function updateCounter() {
             let count = localStorage.getItem('minibossx_visitors') || '0';
