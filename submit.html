@@ -256,102 +256,12 @@
             opacity: 0.7;
         }
     </style>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Submit Your Game</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1e1e2f, #16213e);
-      color: white;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      padding: 40px 20px;
-    }
-    .container {
-      max-width: 800px;
-      width: 100%;
-    }
-    h1 {
-      color: #ff3c41;
-      font-size: 48px;
-      margin-bottom: 30px;
-      text-align: center;
-    }
-    .form-container {
-      background: #0f3460;
-      padding: 40px;
-      border-radius: 20px;
-      border: 2px solid #ffb86b;
-    }
-    .form-group {
-      margin-bottom: 25px;
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #ffd966;
-      font-size: 18px;
-      font-weight: bold;
-    }
-    input[type="text"],
-    input[type="email"] {
-      width: 100%;
-      padding: 15px;
-      background: #1a1a2e;
-      border: 2px solid #ff3c41;
-      border-radius: 10px;
-      color: white;
-      font-size: 16px;
-    }
-    input[type="file"] {
-      width: 100%;
-      padding: 15px;
-      background: #1a1a2e;
-      border: 2px dashed #ff3c41;
-      border-radius: 10px;
-      color: white;
-    }
-    textarea {
-      width: 100%;
-      height: 200px;
-      padding: 15px;
-      background: #1a1a2e;
-      border: 2px solid #ff3c41;
-      border-radius: 10px;
-      color: #00ff00;
-      font-family: 'Courier New', monospace;
-    }
-    button {
-      background: #ff3c41;
-      color: white;
-      border: none;
-      padding: 15px 40px;
-      font-size: 20px;
-      border-radius: 50px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-right: 15px;
-    }
-    button:hover {
-      background: #ff6266;
-    }
-    .note {
-      color: #888;
-      margin-top: 20px;
-      text-align: center;
-    }
-  </style>
 </head>
 <body>
     <div class="top-center">
         <h1>MiniBOSSX</h1>
     </div>
-  <div class="container">
-    <h1>🎮 SUBMIT YOUR GAME</h1>
-
+    
     <div class="nav-bar">
         <a href="index.html">HOME</a>
         <a href="submit.html">SUBMIT</a>
@@ -359,14 +269,7 @@
     
     <div class="submit-container">
         <h2>SUBMIT YOUR GAME</h2>
-    <div class="form-container">
-      <form id="submitForm" onsubmit="submitGame(event)">
-        <!-- ALL FIELDS COMPLETELY EMPTY - NO PERSONAL INFO -->
-        <div class="form-group">
-          <label>Game Name</label>
-          <input type="text" id="gameName" value="" placeholder="">
-        </div>
-
+        
         <div class="instructions">
             <h3>📋 How to Submit:</h3>
             <ol>
@@ -375,11 +278,8 @@
                 <li>Upload the ZIP file below</li>
                 <li>We'll review and add it within 24-48 hours</li>
             </ol>
-        <div class="form-group">
-          <label>Your Email</label>
-          <input type="email" id="gameEmail" value="" placeholder="">
-</div>
-
+        </div>
+        
         <form id="submitForm">
             <div class="form-group">
                 <label>Game Name *</label>
@@ -444,31 +344,17 @@
                 <button type="reset" class="btn" onclick="resetForm()">CLEAR</button>
             </div>
         </form>
-        <div class="form-group">
-          <label>Upload HTML File</label>
-          <input type="file" id="gameFile" accept=".html">
-        </div>
-
+        
         <div id="successMessage" class="success-message">
             <h3>✅ SUBMITTED!</h3>
             <p>Your game files have been saved.<br>We'll review it and add it to the site soon.</p>
             <button class="btn btn-primary" onclick="resetCompleteForm()">SUBMIT ANOTHER</button>
-        <div class="form-group">
-          <label>Or Paste HTML Code</label>
-          <textarea id="gameCode" placeholder=""></textarea>
-</div>
-        
-        <button type="submit">SUBMIT GAME</button>
-        <button type="button" onclick="clearForm()">CLEAR</button>
-      </form>
-      
-      <p class="note">Games will appear on main page after admin approval</p>
-</div>
+        </div>
+    </div>
     
     <div class="bottom">
         <p class="copyright">MiniBOSSX © 2026</p>
     </div>
-  </div>
 
     <script>
         let selectedFile = null;
@@ -636,58 +522,5 @@
             }
         }
     </script>
-  <script>
-    function submitGame(event) {
-      event.preventDefault();
-      
-      const gameName = document.getElementById('gameName').value.trim() || 'Untitled Game';
-      const gameEmail = document.getElementById('gameEmail').value.trim() || 'anonymous';
-      const gameFile = document.getElementById('gameFile').files[0];
-      const gameCode = document.getElementById('gameCode').value.trim();
-      
-      if (!gameFile && !gameCode) {
-        alert('Please upload a file or paste your game code');
-        return;
-      }
-      
-      if (gameFile) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          saveGame(gameName, gameEmail, e.target.result);
-        };
-        reader.readAsText(gameFile);
-      } else {
-        saveGame(gameName, gameEmail, gameCode);
-      }
-    }
-    
-    function saveGame(name, email, code) {
-      // Get pending games from localStorage
-      let pendingGames = JSON.parse(localStorage.getItem('pendingGames')) || [];
-      
-      // Add new game
-      pendingGames.push({
-        id: Date.now(),
-        name: name,
-        email: email,
-        code: code,
-        submitted: new Date().toISOString(),
-        status: 'pending'
-      });
-      
-      // Save back
-      localStorage.setItem('pendingGames', JSON.stringify(pendingGames));
-      
-      alert('Game submitted successfully! Waiting for admin approval.');
-      clearForm();
-    }
-    
-    function clearForm() {
-      document.getElementById('gameName').value = '';
-      document.getElementById('gameEmail').value = '';
-      document.getElementById('gameFile').value = '';
-      document.getElementById('gameCode').value = '';
-    }
-  </script>
 </body>
 </html>
