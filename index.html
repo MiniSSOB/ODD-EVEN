@@ -14,35 +14,44 @@
         body {
             background-color: black;
             font-family: Arial, Helvetica, sans-serif;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
         }
         
-        .container {
+        .top-center {
             text-align: center;
+            padding-top: 40px;
+            flex: 1;
         }
         
         h1 {
-            color: #8B0000;  /* Dark red */
-            font-size: 4rem;
+            color: #8B0000;
+            font-size: 5rem;
             letter-spacing: 2px;
-            text-transform: uppercase;
             text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            display: inline-block;
         }
         
-        p {
-            color: #666;
-            margin-top: 20px;
-            font-size: 1.2rem;
+        .bottom {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        
+        .copyright {
+            color: #8B0000;
+            font-size: 0.8rem;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="top-center">
         <h1>MiniBOSSX</h1>
-        <p>Coming soon...</p>
+    </div>
+    
+    <div class="bottom">
+        <p class="copyright">MiniBOSSX © 2026</p>
     </div>
 </body>
 </html>
