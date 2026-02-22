@@ -22,12 +22,12 @@
         
         .top-center {
             text-align: center;
-            padding-top: 40px;
+            padding-top: 30px;
         }
         
         h1 {
             color: #8B0000;
-            font-size: 3rem;
+            font-size: 4rem;
             letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
             display: inline-block;
@@ -35,18 +35,19 @@
         
         .nav-bar {
             text-align: center;
-            margin-top: 20px;
-            margin-bottom: 40px;
+            margin: 20px 0 30px 0;
         }
         
         .nav-bar a {
             color: #8B0000;
             text-decoration: none;
-            margin: 0 15px;
+            margin: 0 10px;
             font-size: 1.2rem;
-            padding: 5px 10px;
-            border: 1px solid #8B0000;
+            padding: 8px 25px;
+            border: 2px solid #8B0000;
             border-radius: 5px;
+            transition: all 0.3s;
+            display: inline-block;
         }
         
         .nav-bar a:hover {
@@ -56,30 +57,33 @@
         
         .submit-container {
             flex: 1;
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             width: 90%;
-            padding: 20px;
+            padding: 30px;
             border: 1px solid #8B0000;
-            border-radius: 10px;
-            background-color: rgba(139, 0, 0, 0.1);
+            border-radius: 15px;
+            background-color: rgba(139, 0, 0, 0.05);
+            margin-bottom: 40px;
         }
         
         h2 {
             text-align: center;
             margin-bottom: 30px;
             font-size: 2rem;
+            color: #8B0000;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         label {
             display: block;
             margin-bottom: 8px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #8B0000;
+            font-weight: bold;
         }
         
         input[type="text"],
@@ -88,66 +92,104 @@
         textarea,
         select {
             width: 100%;
-            padding: 12px;
+            padding: 12px 15px;
             background-color: black;
             border: 1px solid #8B0000;
             color: #8B0000;
             font-size: 1rem;
-            border-radius: 5px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            border-color: #8B0000;
         }
         
         textarea {
-            height: 100px;
+            height: 120px;
             resize: vertical;
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        option {
+            background-color: black;
+            color: #8B0000;
         }
         
         .instructions {
             margin: 30px 0;
             padding: 20px;
             border: 1px solid #8B0000;
-            border-radius: 5px;
-            background-color: rgba(139, 0, 0, 0.05);
+            border-radius: 10px;
+            background-color: rgba(139, 0, 0, 0.1);
         }
         
         .instructions h3 {
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             color: #8B0000;
+            font-size: 1.2rem;
         }
         
         .instructions ol {
-            padding-left: 20px;
+            padding-left: 25px;
             color: #ccc;
         }
         
         .instructions li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            line-height: 1.5;
         }
         
         .instructions a {
             color: #8B0000;
             text-decoration: none;
+            border-bottom: 1px dotted #8B0000;
         }
         
         .instructions a:hover {
-            text-decoration: underline;
+            border-bottom: 1px solid #8B0000;
+        }
+        
+        .note-box {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(139, 0, 0, 0.2);
+            border-left: 4px solid #8B0000;
+            color: #8B0000;
+            font-size: 0.9rem;
+        }
+        
+        .note-box code {
+            background-color: black;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #8B0000;
         }
         
         .button-group {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 30px;
         }
         
         .btn {
-            padding: 12px 24px;
+            padding: 15px 30px;
             background-color: transparent;
             color: #8B0000;
             border: 2px solid #8B0000;
             font-size: 1.1rem;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: all 0.3s;
             flex: 1;
+            font-weight: bold;
         }
         
         .btn:hover {
@@ -168,11 +210,11 @@
         .success-message {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
             border: 2px solid #8B0000;
-            border-radius: 10px;
+            border-radius: 15px;
             margin-top: 20px;
-            background-color: rgba(139, 0, 0, 0.2);
+            background-color: rgba(139, 0, 0, 0.1);
         }
         
         .success-message.show {
@@ -181,18 +223,26 @@
         
         .success-message h3 {
             color: #8B0000;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
         
         .success-message p {
             color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
             margin-bottom: 20px;
+            color: #8B0000;
         }
         
         .bottom {
             text-align: center;
-            padding: 20px 0;
-            margin-top: 40px;
+            padding: 20px 0 30px 0;
         }
         
         .copyright {
@@ -209,48 +259,49 @@
     
     <div class="nav-bar">
         <a href="index.html">HOME</a>
-        <a href="games.html">GAMES</a>
         <a href="submit.html">SUBMIT GAME</a>
     </div>
     
     <div class="submit-container">
-        <h2>SUBMIT YOUR GAME</h2>
+        <h2>🎮 SUBMIT YOUR GAME</h2>
         
         <div class="instructions">
             <h3>📋 How to Submit:</h3>
             <ol>
-                <li>Package your game files into a ZIP folder</li>
-                <li>Upload the ZIP file to <a href="https://drive.google.com" target="_blank">Google Drive</a> or <a href="https://www.dropbox.com" target="_blank">Dropbox</a></li>
-                <li>Make sure the sharing link is set to "Anyone with the link can view"</li>
-                <li>Fill out the form below with your game details and the download link</li>
-                <li>We'll review your game and add it to the site within 24-48 hours</li>
+                <li>Package your game files into a ZIP folder (main file must be <strong>index.html</strong>)</li>
+                <li>Upload the ZIP to <a href="https://drive.google.com" target="_blank">Google Drive</a> or <a href="https://www.dropbox.com" target="_blank">Dropbox</a></li>
+                <li>Set sharing to <strong>"Anyone with the link can view"</strong></li>
+                <li>Fill out the form below with your game details</li>
+                <li>We'll review and add it to the site within 24-48 hours</li>
             </ol>
-            <p style="color: #8B0000; margin-top: 10px;"><strong>⚠️ Important:</strong> Your game's main file MUST be named <code>index.html</code></p>
+            <div class="note-box">
+                ⚠️ <strong>Important:</strong> Your game's main file MUST be named <code>index.html</code>
+            </div>
         </div>
         
-        <form id="gameSubmissionForm">
+        <form id="submissionForm">
             <div class="form-group">
-                <label for="gameName">Game Name *</label>
-                <input type="text" id="gameName" required placeholder="Enter your game's title">
+                <label for="gameName">🎲 Game Name *</label>
+                <input type="text" id="gameName" required placeholder="e.g., Super Platformer">
             </div>
             
             <div class="form-group">
-                <label for="developerName">Developer Name *</label>
-                <input type="text" id="developerName" required placeholder="Your name or studio name">
+                <label for="developerName">👤 Developer Name *</label>
+                <input type="text" id="developerName" required placeholder="Your name or studio">
             </div>
             
             <div class="form-group">
-                <label for="developerEmail">Email Address *</label>
+                <label for="developerEmail">📧 Email Address *</label>
                 <input type="email" id="developerEmail" required placeholder="We'll notify you when approved">
             </div>
             
             <div class="form-group">
-                <label for="gameDescription">Game Description *</label>
-                <textarea id="gameDescription" required placeholder="Tell players about your game..."></textarea>
+                <label for="gameDescription">📝 Game Description *</label>
+                <textarea id="gameDescription" required placeholder="Tell us about your game..."></textarea>
             </div>
             
             <div class="form-group">
-                <label for="gameCategory">Category *</label>
+                <label for="gameCategory">🏷️ Category *</label>
                 <select id="gameCategory" required>
                     <option value="">Select a category</option>
                     <option value="action">Action</option>
@@ -265,7 +316,7 @@
             </div>
             
             <div class="form-group">
-                <label for="gamePlatform">Platform *</label>
+                <label for="gamePlatform">📱 Platform *</label>
                 <select id="gamePlatform" required>
                     <option value="">Select platform</option>
                     <option value="desktop">Desktop Only</option>
@@ -275,26 +326,26 @@
             </div>
             
             <div class="form-group">
-                <label for="gameLink">Game Download Link (Google Drive/Dropbox) *</label>
-                <input type="url" id="gameLink" required placeholder="https://drive.google.com/your-game-file">
+                <label for="gameLink">🔗 Download Link (Google Drive/Dropbox) *</label>
+                <input type="url" id="gameLink" required placeholder="https://drive.google.com/...">
             </div>
             
             <div class="form-group">
-                <label for="screenshotLink">Screenshot Link (Optional)</label>
-                <input type="url" id="screenshotLink" placeholder="Link to a screenshot of your game">
+                <label for="screenshotLink">🖼️ Screenshot Link (Optional)</label>
+                <input type="url" id="screenshotLink" placeholder="Link to a screenshot">
             </div>
             
             <div class="button-group">
-                <button type="button" class="btn btn-primary" onclick="submitGame()">SUBMIT GAME</button>
-                <button type="reset" class="btn">CLEAR FORM</button>
+                <button type="button" class="btn btn-primary" onclick="handleSubmit()">SUBMIT GAME</button>
+                <button type="reset" class="btn">CLEAR</button>
             </div>
         </form>
         
         <div id="successMessage" class="success-message">
-            <h3>✅ SUBMISSION RECEIVED!</h3>
-            <p>Thank you for submitting your game to MiniBOSSX! We'll review it and notify you via email when it's approved.</p>
-            <p style="color: #8B0000;">Please allow 24-48 hours for review.</p>
-            <button class="btn btn-primary" onclick="resetForm()">SUBMIT ANOTHER GAME</button>
+            <div class="success-icon">✅</div>
+            <h3>GAME SUBMITTED!</h3>
+            <p>Thank you for submitting to MiniBOSSX!<br>We'll review your game and notify you via email when it's live.</p>
+            <button class="btn btn-primary" onclick="resetForm()">SUBMIT ANOTHER</button>
         </div>
     </div>
     
@@ -303,7 +354,8 @@
     </div>
 
     <script>
-        function submitGame() {
+        function handleSubmit() {
+            // Get form values
             const gameName = document.getElementById('gameName').value;
             const developerName = document.getElementById('developerName').value;
             const developerEmail = document.getElementById('developerEmail').value;
@@ -312,17 +364,20 @@
             const gamePlatform = document.getElementById('gamePlatform').value;
             const gameLink = document.getElementById('gameLink').value;
             
+            // Validate
             if (!gameName || !developerName || !developerEmail || !gameDescription || !gameCategory || !gamePlatform || !gameLink) {
                 alert('Please fill in all required fields');
                 return;
             }
             
+            // Validate email
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(developerEmail)) {
                 alert('Please enter a valid email address');
                 return;
             }
             
+            // Create submission
             const submission = {
                 id: Date.now(),
                 gameName,
@@ -336,21 +391,26 @@
                 status: 'pending'
             };
             
-            let submissions = JSON.parse(localStorage.getItem('gameSubmissions')) || [];
+            // Save to localStorage
+            let submissions = JSON.parse(localStorage.getItem('minibossx_submissions')) || [];
             submissions.push(submission);
-            localStorage.setItem('gameSubmissions', JSON.stringify(submissions));
+            localStorage.setItem('minibossx_submissions', JSON.stringify(submissions));
             
-            const mailtoLink = `mailto:YOUR_EMAIL@gmail.com?subject=New Game Submission: ${submission.gameName}&body=Game: ${submission.gameName}%0ADeveloper: ${submission.developerName}%0AEmail: ${submission.developerEmail}%0ADownload: ${submission.gameLink}%0ADescription: ${submission.gameDescription}`;
+            // Create email link (for you)
+            const mailtoLink = `mailto:YOUR_EMAIL@gmail.com?subject=New Game: ${gameName}&body=Game: ${gameName}%0ADeveloper: ${developerName}%0AEmail: ${developerEmail}%0ACategory: ${gameCategory}%0APlatform: ${gamePlatform}%0ADownload: ${gameLink}%0ADescription: ${gameDescription}`;
             
-            document.getElementById('gameSubmissionForm').style.display = 'none';
+            // Show success
+            document.getElementById('submissionForm').style.display = 'none';
             document.getElementById('successMessage').classList.add('show');
             
-            console.log('Submission saved. Email link:', mailtoLink);
+            // Log for debugging
+            console.log('Submission saved!');
+            console.log('Email link:', mailtoLink);
         }
         
         function resetForm() {
-            document.getElementById('gameSubmissionForm').reset();
-            document.getElementById('gameSubmissionForm').style.display = 'block';
+            document.getElementById('submissionForm').reset();
+            document.getElementById('submissionForm').style.display = 'block';
             document.getElementById('successMessage').classList.remove('show');
         }
     </script>
