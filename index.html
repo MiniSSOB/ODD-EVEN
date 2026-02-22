@@ -30,7 +30,6 @@
             font-size: 4rem;
             letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-            display: inline-block;
         }
         
         .nav-bar {
@@ -89,7 +88,6 @@
         .game-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 20px rgba(139, 0, 0, 0.3);
-            border-color: #8B0000;
         }
         
         .game-title {
@@ -149,7 +147,6 @@
             border-radius: 5px;
             transition: all 0.3s;
             font-weight: bold;
-            font-size: 1.1rem;
         }
         
         .play-button:hover {
@@ -227,6 +224,10 @@
             font-size: 0.8rem;
             opacity: 0.7;
         }
+        
+        .admin-secret {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -236,7 +237,7 @@
     
     <div class="nav-bar">
         <a href="index.html">HOME</a>
-        <a href="submit.html">SUBMIT GAME</a>
+        <a href="submit.html">SUBMIT</a>
     </div>
     
     <div class="games-container">
@@ -249,7 +250,7 @@
     
     <div class="counter-section">
         <div class="visitor-counter">
-            👁️ <span id="visitorCount">0</span> visitors have explored MiniBOSSX
+            👁️ <span id="visitorCount">0</span> visitors
         </div>
     </div>
     
@@ -257,56 +258,38 @@
         <p class="copyright">MiniBOSSX © 2026</p>
     </div>
 
+    <!-- Secret admin link (only you know to add /admin to URL) -->
+    <div style="display: none;">admin</div>
+
     <script>
-        // ==================== GAMES DATA ====================
-        // This is where you'll add games when you approve them
-        let games = [
-            // Example game format (uncomment and add your games):
-            // {
-            //     id: 1,
-            //     name: "ODD-EVEN",
-            //     developer: "MiniBOSSX",
-            //     description: "A simple number guessing game - odd or even?",
-            //     category: "puzzle",
-            //     platform: "both",
-            //     gameUrl: "/games/odd-even/",
-            //     dateAdded: "2026-02-23"
-            // }
-        ];
-        
-        // ==================== LOAD GAMES ====================
+        // ==================== LOAD APPROVED GAMES ====================
         function loadGames() {
             const gamesGrid = document.getElementById('gamesGrid');
+            const approvedGames = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             
-            // Try to load from localStorage first (for dynamic updates)
-            const savedGames = localStorage.getItem('minibossx_games');
-            if (savedGames) {
-                games = JSON.parse(savedGames);
-            }
-            
-            if (games.length === 0) {
+            if (approvedGames.length === 0) {
                 gamesGrid.innerHTML = `
                     <div class="no-games">
                         <p>🚀 NO GAMES YET</p>
-                        <div class="sub-text">Be the first to share your creation with the world</div>
-                        <a href="submit.html" class="submit-link">SUBMIT YOUR GAME</a>
+                        <div class="sub-text">Be the first to submit your game</div>
+                        <a href="submit.html" class="submit-link">SUBMIT GAME</a>
                     </div>
                 `;
                 return;
             }
             
             let html = '';
-            games.forEach(game => {
+            approvedGames.forEach(game => {
                 html += `
                     <div class="game-card">
                         <h3 class="game-title">${game.name}</h3>
                         <div class="game-developer">by ${game.developer}</div>
                         <div class="game-description">${game.description}</div>
                         <div class="game-meta">
-                            <span class="game-category">${game.category.toUpperCase()}</span>
-                            <span class="game-platform">${game.platform.toUpperCase()}</span>
+                            <span class="game-category">${game.category}</span>
+                            <span class="game-platform">${game.platform}</span>
                         </div>
-                        <a href="${game.gameUrl}" class="play-button" target="_blank">▶ PLAY NOW</a>
+                        <a href="${game.gameUrl}" class="play-button" target="_blank">▶ PLAY</a>
                     </div>
                 `;
             });
@@ -315,59 +298,17 @@
         }
         
         // ==================== VISITOR COUNTER ====================
-        function updateVisitorCounter() {
-            let count = localStorage.getItem('minibossx_visitors');
-            
-            if (count) {
-                count = parseInt(count) + 1;
-            } else {
-                count = 1;
-            }
-            
+        function updateCounter() {
+            let count = localStorage.getItem('minibossx_visitors') || '0';
+            count = parseInt(count) + 1;
             localStorage.setItem('minibossx_visitors', count);
-            document.getElementById('visitorCount').textContent = count.toLocaleString();
+            document.getElementById('visitorCount').textContent = count;
         }
         
-        // ==================== ADMIN FUNCTIONS (for your use only) ====================
-        // This function lets you add games easily
-        window.addGame = function(gameData) {
-            games.push({
-                id: Date.now(),
-                ...gameData,
-                dateAdded: new Date().toISOString().split('T')[0]
-            });
-            localStorage.setItem('minibossx_games', JSON.stringify(games));
-            loadGames();
-            console.log('Game added successfully!');
-        };
-        
-        // This function removes a game by ID
-        window.removeGame = function(gameId) {
-            games = games.filter(g => g.id !== gameId);
-            localStorage.setItem('minibossx_games', JSON.stringify(games));
-            loadGames();
-            console.log('Game removed');
-        };
-        
-        // This function lists all games in console (for you to see)
-        window.listGames = function() {
-            console.table(games);
-        };
-        
-        // ==================== INITIALIZE ====================
-        // Load games and update counter when page loads
+        // ==================== INIT ====================
         window.onload = function() {
             loadGames();
-            updateVisitorCounter();
-            
-            // Check if this is your first visit and add sample data?
-            const hasVisited = sessionStorage.getItem('visited');
-            if (!hasVisited && games.length === 0) {
-                // This is just to show you the format - comment out when ready
-                console.log('Ready to add games! Use window.addGame() to add games');
-                console.log('Example: addGame({name:"My Game", developer:"You", description:"Cool game", category:"action", platform:"both", gameUrl:"/games/my-game/"})');
-                sessionStorage.setItem('visited', 'true');
-            }
+            updateCounter();
         };
     </script>
 </body>
