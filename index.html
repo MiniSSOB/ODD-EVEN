@@ -1,301 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Number Rush · arrow keys</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Roboto, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background: linear-gradient(145deg, #0d0d1a, #12122b);
-      color: #f0f0f0;
-    }
-    .container {
-      text-align: center;
-      background: rgba(8, 8, 18, 0.95);
-      backdrop-filter: blur(4px);
-      padding: 2rem 2rem 2.8rem;
-      border-radius: 3rem;
-      box-shadow: 0 25px 40px rgba(255, 60, 65, 0.3), 0 0 0 2px #ff3c4140 inset;
-      max-width: 90%;
-      width: 520px;
-      border: 1px solid #ff8a8c;
-    }
-    h1 {
-      margin-bottom: 1.2rem;
-      font-size: 3rem;
-      font-weight: 800;
-      letter-spacing: 3px;
-      background: linear-gradient(135deg, #ff416c, #ff914d);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px #ff3c41;
-    }
-    .key-hint {
-      font-size: 1.3rem;
-      background: #1e1e38;
-      padding: 0.5rem 1.5rem;
-      border-radius: 3rem;
-      display: inline-block;
-      margin-bottom: 1rem;
-      border: 1px solid #ffb86b;
-      color: #ffdb8e;
-    }
-    .key-hint span {
-      font-weight: bold;
-      background: #2a2a4a;
-      padding: 0.3rem 1rem;
-      border-radius: 2rem;
-      margin: 0 0.5rem;
-      border: 1px solid gold;
-    }
-    #timer-bar {
-      width: 90%;
-      height: 1.3rem;
-      background: #24243c;
-      margin: 1.8rem auto 2.2rem;
-      border-radius: 3rem;
-      overflow: hidden;
-      border: 2px solid #ffb86b80;
-      box-shadow: 0 0 10px #ffb86b;
-    }
-    #timer-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #b5ff7a, #3eff9e);
-      width: 100%;
-      transition: width linear;
-      border-radius: 3rem;
-    }
-    #number-display {
-      font-size: 9rem;
-      font-weight: 900;
-      margin: 0.5rem 0 0.2rem;
-      color: #fde16d;
-      text-shadow: 0 0 35px #ffb347, 0 8px 0 #9b5114;
-      line-height: 1.1;
-    }
-    .score-display {
-      font-size: 2.4rem;
-      background: #1f1f35;
-      display: inline-block;
-      padding: 0.6rem 2.8rem;
-      border-radius: 4rem;
-      border: 2px solid #ffd966;
-      color: #ffdb7c;
-      font-weight: bold;
-      margin-top: 0.2rem;
-      box-shadow: 0 5px 0 #0a0a14;
-    }
-    .button-panel {
-      display: flex;
-      gap: 1.5rem;
-      justify-content: center;
-      margin: 2rem 0 1.5rem;
-    }
-    .button-panel button {
-      flex: 1;
-      padding: 1.8rem 0.5rem;
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin: 0;
-      border-radius: 3rem;
-      background: linear-gradient(145deg, #2d2d5a, #1c1c38);
-      box-shadow: 0 10px 0 #0e0e1c, 0 15px 30px #000000b0;
-      border: 2px solid #ffc107;
-      color: #ffe484;
-      cursor: pointer;
-      transition: 0.1s ease;
-      letter-spacing: 2px;
-    }
-    .button-panel button:hover {
-      background: linear-gradient(145deg, #3d3d7a, #2c2c52);
-      transform: translateY(-3px);
-      box-shadow: 0 13px 0 #0e0e1c, 0 20px 35px black;
-    }
-    .button-panel button:active {
-      transform: translateY(5px);
-      box-shadow: 0 5px 0 #0e0e1c;
-    }
-    .key-info {
-      font-size: 1.3rem;
-      background: #2a2a42;
-      padding: 0.5rem 2rem;
-      border-radius: 3rem;
-      display: inline-block;
-      border: 1px solid #ffb86b;
-    }
-    .menu-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.2rem;
-      margin-top: 2rem;
-    }
-    .menu-buttons button {
-      padding: 1.2rem 2.5rem;
-      font-size: 2rem;
-      min-width: 180px;
-      border-radius: 4rem;
-    }
-    .hidden { display: none !important; }
-    .instruction {
-      font-size: 1.3rem;
-      color: #b0b0d0;
-      margin-top: 1.5rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniBOSSX - Game Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #8B0000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-center {
+            text-align: center;
+            padding-top: 30px;
+        }
+        
+        h1 {
+            color: #8B0000;
+            font-size: 4rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+        }
+        
+        .nav-bar {
+            text-align: center;
+            margin: 20px 0 30px 0;
+        }
+        
+        .nav-bar a {
+            color: #8B0000;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            padding: 8px 25px;
+            border: 2px solid #8B0000;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav-bar a:hover {
+            background-color: #8B0000;
+            color: black;
+        }
+        
+        .games-container {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 90%;
+            padding: 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            border-bottom: 1px solid #8B0000;
+            padding-bottom: 10px;
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .game-card {
+            border: 1px solid #8B0000;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: rgba(139, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.3);
+        }
+        
+        .game-title {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: #8B0000;
+        }
+        
+        .game-developer {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .game-description {
+            color: #ccc;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .game-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .game-category {
+            background-color: #8B0000;
+            color: black;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .game-platform {
+            background-color: transparent;
+            color: #8B0000;
+            border: 1px solid #8B0000;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .play-button {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background-color: transparent;
+            color: #8B0000;
+            border: 2px solid #8B0000;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .play-button:hover {
+            background-color: #8B0000;
+            color: black;
+        }
+        
+        .no-games {
+            text-align: center;
+            padding: 80px 20px;
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+            margin: 40px 0;
+            grid-column: 1 / -1;
+        }
+        
+        .no-games p {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #8B0000;
+        }
+        
+        .no-games .sub-text {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .submit-link {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #8B0000;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid #8B0000;
+        }
+        
+        .submit-link:hover {
+            background-color: transparent;
+            color: #8B0000;
+        }
+        
+        .counter-section {
+            text-align: center;
+            padding: 15px 0;
+            border-top: 1px solid #333;
+            margin-top: 20px;
+        }
+        
+        .visitor-counter {
+            color: #8B0000;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+        
+        .visitor-counter span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #8B0000;
+            opacity: 1;
+            margin: 0 5px;
+        }
+        
+        .bottom {
+            text-align: center;
+            padding: 20px 0 30px 0;
+        }
+        
+        .copyright {
+            color: #8B0000;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .admin-secret {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="container" id="menu-screen">
-    <h1>⚡ NUMBER RUSH</h1>
-    <div class="key-hint">
-      <span>← ODD</span>   <span>EVEN →</span>
+    <div class="top-center">
+        <h1>MiniBOSSX</h1>
     </div>
-    <div style="font-size: 1.8rem; margin: 2rem 0 1rem;">🔢 odds & evens</div>
-    <div class="menu-buttons">
-      <button onclick="startGame()">🎮 PLAY</button>
-    </div>
-    <div class="instruction">use arrow keys — left = odd, right = even</div>
-  </div>
-
-  <div class="container hidden" id="game-screen">
-    <div class="score-display"><span id="score">0</span></div>
-    <div id="number-display">0</div>
-    <div id="timer-bar"><div id="timer-fill"></div></div>
     
-    <div class="button-panel">
-      <button id="oddButton" onclick="checkAnswer(true)">← ODD</button>
-      <button id="evenButton" onclick="checkAnswer(false)">EVEN →</button>
+    <div class="nav-bar">
+        <a href="index.html">HOME</a>
+        <a href="submit.html">SUBMIT</a>
     </div>
-    <div class="key-info">←  /  →  keys</div>
-  </div>
-
-  <div class="container hidden" id="game-over-screen">
-    <h1>⏰ GAME OVER</h1>
-    <div class="score-display" style="margin: 2rem auto; font-size: 3rem;">
-      🏆 <span id="final-score">0</span>
-    </div>
-    <div class="menu-buttons">
-      <button onclick="playAgain()">🔄 AGAIN</button>
-      <button onclick="backToMenu()">🏠 MENU</button>
-    </div>
-  </div>
-
-  <script>
-    (function() {
-      const menuScreen = document.getElementById('menu-screen');
-      const gameScreen = document.getElementById('game-screen');
-      const gameOverScreen = document.getElementById('game-over-screen');
-      
-      const scoreSpan = document.getElementById('score');
-      const finalScoreSpan = document.getElementById('final-score');
-      const numberDisplay = document.getElementById('number-display');
-      const timerFill = document.getElementById('timer-fill');
-
-      let currentNumber = 0;
-      let score = 0;
-      let timer;
-      let timeLeft = 5;
-      const BASE_TIME = 5;
-
-      function computeTimeForScore(currentScore) {
-        const raw = BASE_TIME * Math.pow(0.85, currentScore);
-        return Math.max(1.3, raw);
-      }
-
-      function generateNumber() {
-        currentNumber = Math.floor(Math.random() * 100) + 1;
-        numberDisplay.textContent = currentNumber;
-      }
-
-      function startTimer() {
-        clearTimeout(timer);
-        timerFill.style.transition = 'none';
-        timerFill.style.width = '100%';
-        void timerFill.offsetWidth;
-        timerFill.style.transition = `width ${timeLeft}s linear`;
-        timerFill.style.width = '0%';
+    
+    <div class="games-container">
+        <h2 class="section-title">🎮 GAMES</h2>
         
-        timer = setTimeout(() => gameOver(), timeLeft * 1000);
-      }
+        <div id="gamesGrid" class="games-grid">
+            <!-- Games will be loaded here -->
+        </div>
+    </div>
+    
+    <div class="counter-section">
+        <div class="visitor-counter">
+            👁️ <span id="visitorCount">0</span> visitors
+        </div>
+    </div>
+    
+    <div class="bottom">
+        <p class="copyright">MiniBOSSX © 2026</p>
+    </div>
 
-      function handleAnswer(isOdd) {
-        const numberIsOdd = (currentNumber % 2 !== 0);
-        if (isOdd === numberIsOdd) {
-          score++;
-          scoreSpan.textContent = score;
-          timeLeft = computeTimeForScore(score);
-          generateNumber();
-          startTimer();
-        } else {
-          gameOver();
+    <!-- Secret admin link (only you know to add /admin to URL) -->
+    <div style="display: none;">admin</div>
+
+    <script>
+        // ==================== LOAD APPROVED GAMES ====================
+        function loadGames() {
+            const gamesGrid = document.getElementById('gamesGrid');
+            const approvedGames = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
+            
+            if (approvedGames.length === 0) {
+                gamesGrid.innerHTML = `
+                    <div class="no-games">
+                        <p>🚀 NO GAMES YET</p>
+                        <div class="sub-text">Be the first to submit your game</div>
+                        <a href="submit.html" class="submit-link">SUBMIT GAME</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            approvedGames.forEach(game => {
+                html += `
+                    <div class="game-card">
+                        <h3 class="game-title">${game.name}</h3>
+                        <div class="game-developer">by ${game.developer}</div>
+                        <div class="game-description">${game.description}</div>
+                        <div class="game-meta">
+                            <span class="game-category">${game.category}</span>
+                            <span class="game-platform">${game.platform}</span>
+                        </div>
+                        <a href="${game.gameUrl}" class="play-button" target="_blank">▶ PLAY</a>
+                    </div>
+                `;
+            });
+            
+            gamesGrid.innerHTML = html;
         }
-      }
-
-      window.checkAnswer = handleAnswer;
-
-      function gameOver() {
-        clearTimeout(timer);
-        gameScreen.classList.add('hidden');
-        gameOverScreen.classList.remove('hidden');
-        finalScoreSpan.textContent = score;
-      }
-
-      function startGame() {
-        score = 0;
-        timeLeft = BASE_TIME;
-        scoreSpan.textContent = '0';
         
-        menuScreen.classList.add('hidden');
-        gameScreen.classList.remove('hidden');
-        
-        generateNumber();
-        startTimer();
-      }
-
-      function playAgain() {
-        score = 0;
-        timeLeft = BASE_TIME;
-        scoreSpan.textContent = '0';
-        
-        gameOverScreen.classList.add('hidden');
-        gameScreen.classList.remove('hidden');
-        
-        generateNumber();
-        startTimer();
-      }
-
-      function backToMenu() {
-        clearTimeout(timer);
-        gameScreen.classList.add('hidden');
-        gameOverScreen.classList.add('hidden');
-        menuScreen.classList.remove('hidden');
-      }
-
-      function keydownHandler(e) {
-        if (!gameScreen.classList.contains('hidden')) {
-          if (e.key === 'ArrowLeft') {
-            e.preventDefault();
-            handleAnswer(true);
-          } else if (e.key === 'ArrowRight') {
-            e.preventDefault();
-            handleAnswer(false);
-          }
+        // ==================== VISITOR COUNTER ====================
+        function updateCounter() {
+            let count = localStorage.getItem('minibossx_visitors') || '0';
+            count = parseInt(count) + 1;
+            localStorage.setItem('minibossx_visitors', count);
+            document.getElementById('visitorCount').textContent = count;
         }
-      }
-
-      window.addEventListener('keydown', keydownHandler);
-
-      window.startGame = startGame;
-      window.playAgain = playAgain;
-      window.backToMenu = backToMenu;
-    })();
-  </script>
+        
+        // ==================== INIT ====================
+        window.onload = function() {
+            loadGames();
+            updateCounter();
+        };
+    </script>
 </body>
 </html>
