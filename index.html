@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniBOSSX</title>
+    <title>MiniBOSSX - Game Portal</title>
     <style>
         * {
             margin: 0;
@@ -14,6 +14,7 @@
         body {
             background-color: black;
             font-family: Arial, Helvetica, sans-serif;
+            color: #8B0000;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -21,12 +22,12 @@
         
         .top-center {
             text-align: center;
-            padding-top: 40px;
+            padding-top: 30px;
         }
         
         h1 {
             color: #8B0000;
-            font-size: 5rem;
+            font-size: 4rem;
             letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
             display: inline-block;
@@ -34,19 +35,19 @@
         
         .nav-bar {
             text-align: center;
-            margin-top: 30px;
-            margin-bottom: 60px;
+            margin: 20px 0 30px 0;
         }
         
         .nav-bar a {
             color: #8B0000;
             text-decoration: none;
-            margin: 0 15px;
+            margin: 0 10px;
             font-size: 1.2rem;
-            padding: 8px 20px;
+            padding: 8px 25px;
             border: 2px solid #8B0000;
             border-radius: 5px;
             transition: all 0.3s;
+            display: inline-block;
         }
         
         .nav-bar a:hover {
@@ -54,96 +55,171 @@
             color: black;
         }
         
-        .hero {
+        .games-container {
             flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 90%;
+            padding: 20px;
+        }
+        
+        .section-title {
             text-align: center;
-            padding: 40px 20px;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            border-bottom: 1px solid #8B0000;
+            padding-bottom: 10px;
         }
         
-        .hero h2 {
-            color: #8B0000;
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
         }
         
-        .hero p {
-            color: #ccc;
-            font-size: 1.2rem;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            line-height: 1.6;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            padding: 15px 40px;
-            font-size: 1.3rem;
-            text-decoration: none;
-            border: 2px solid #8B0000;
-            border-radius: 5px;
+        .game-card {
+            border: 1px solid #8B0000;
+            border-radius: 10px;
+            padding: 20px;
+            background-color: rgba(139, 0, 0, 0.05);
             transition: all 0.3s;
         }
         
-        .cta-primary {
-            background-color: #8B0000;
-            color: black;
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.3);
+            border-color: #8B0000;
         }
         
-        .cta-primary:hover {
-            background-color: transparent;
+        .game-title {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
             color: #8B0000;
         }
         
-        .cta-secondary {
-            background-color: transparent;
-            color: #8B0000;
-        }
-        
-        .cta-secondary:hover {
-            background-color: #8B0000;
-            color: black;
-        }
-        
-        .features {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-top: 60px;
-            flex-wrap: wrap;
-        }
-        
-        .feature {
-            text-align: center;
-            max-width: 250px;
-        }
-        
-        .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            color: #8B0000;
-        }
-        
-        .feature h3 {
-            color: #8B0000;
-            margin-bottom: 10px;
-        }
-        
-        .feature p {
+        .game-developer {
             color: #666;
             font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .game-description {
+            color: #ccc;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .game-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .game-category {
+            background-color: #8B0000;
+            color: black;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .game-platform {
+            background-color: transparent;
+            color: #8B0000;
+            border: 1px solid #8B0000;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .play-button {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background-color: transparent;
+            color: #8B0000;
+            border: 2px solid #8B0000;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .play-button:hover {
+            background-color: #8B0000;
+            color: black;
+        }
+        
+        .no-games {
+            text-align: center;
+            padding: 80px 20px;
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+            margin: 40px 0;
+            grid-column: 1 / -1;
+        }
+        
+        .no-games p {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #8B0000;
+        }
+        
+        .no-games .sub-text {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .submit-link {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #8B0000;
+            color: black;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: 2px solid #8B0000;
+        }
+        
+        .submit-link:hover {
+            background-color: transparent;
+            color: #8B0000;
+        }
+        
+        .counter-section {
+            text-align: center;
+            padding: 15px 0;
+            border-top: 1px solid #333;
+            margin-top: 20px;
+        }
+        
+        .visitor-counter {
+            color: #8B0000;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            letter-spacing: 1px;
+        }
+        
+        .visitor-counter span {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #8B0000;
+            opacity: 1;
+            margin: 0 5px;
         }
         
         .bottom {
             text-align: center;
-            padding: 20px 0;
-            margin-top: 40px;
+            padding: 20px 0 30px 0;
         }
         
         .copyright {
@@ -160,40 +236,139 @@
     
     <div class="nav-bar">
         <a href="index.html">HOME</a>
-        <a href="games.html">GAMES</a>
         <a href="submit.html">SUBMIT GAME</a>
     </div>
     
-    <div class="hero">
-        <h2>INDIE GAME HOSTING</h2>
-        <p>Upload your games, share with the world. Simple, free, and built for developers.</p>
+    <div class="games-container">
+        <h2 class="section-title">🎮 GAMES</h2>
         
-        <div class="cta-buttons">
-            <a href="games.html" class="cta-button cta-primary">PLAY GAMES</a>
-            <a href="submit.html" class="cta-button cta-secondary">SUBMIT YOUR GAME</a>
+        <div id="gamesGrid" class="games-grid">
+            <!-- Games will be loaded here -->
         </div>
-        
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">🎮</div>
-                <h3>Free Hosting</h3>
-                <p>Upload your HTML5 games for free</p>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">👨‍💻</div>
-                <h3>For Devs</h3>
-                <p>Built by developers, for developers</p>
-            </div>
-            <div class="feature">
-                <div class="feature-icon">🚀</div>
-                <h3>Fast & Simple</h3>
-                <p>Get your game online in minutes</p>
-            </div>
+    </div>
+    
+    <div class="counter-section">
+        <div class="visitor-counter">
+            👁️ <span id="visitorCount">0</span> visitors have explored MiniBOSSX
         </div>
     </div>
     
     <div class="bottom">
         <p class="copyright">MiniBOSSX © 2026</p>
     </div>
+
+    <script>
+        // ==================== GAMES DATA ====================
+        // This is where you'll add games when you approve them
+        let games = [
+            // Example game format (uncomment and add your games):
+            // {
+            //     id: 1,
+            //     name: "ODD-EVEN",
+            //     developer: "MiniBOSSX",
+            //     description: "A simple number guessing game - odd or even?",
+            //     category: "puzzle",
+            //     platform: "both",
+            //     gameUrl: "/games/odd-even/",
+            //     dateAdded: "2026-02-23"
+            // }
+        ];
+        
+        // ==================== LOAD GAMES ====================
+        function loadGames() {
+            const gamesGrid = document.getElementById('gamesGrid');
+            
+            // Try to load from localStorage first (for dynamic updates)
+            const savedGames = localStorage.getItem('minibossx_games');
+            if (savedGames) {
+                games = JSON.parse(savedGames);
+            }
+            
+            if (games.length === 0) {
+                gamesGrid.innerHTML = `
+                    <div class="no-games">
+                        <p>🚀 NO GAMES YET</p>
+                        <div class="sub-text">Be the first to share your creation with the world</div>
+                        <a href="submit.html" class="submit-link">SUBMIT YOUR GAME</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            games.forEach(game => {
+                html += `
+                    <div class="game-card">
+                        <h3 class="game-title">${game.name}</h3>
+                        <div class="game-developer">by ${game.developer}</div>
+                        <div class="game-description">${game.description}</div>
+                        <div class="game-meta">
+                            <span class="game-category">${game.category.toUpperCase()}</span>
+                            <span class="game-platform">${game.platform.toUpperCase()}</span>
+                        </div>
+                        <a href="${game.gameUrl}" class="play-button" target="_blank">▶ PLAY NOW</a>
+                    </div>
+                `;
+            });
+            
+            gamesGrid.innerHTML = html;
+        }
+        
+        // ==================== VISITOR COUNTER ====================
+        function updateVisitorCounter() {
+            let count = localStorage.getItem('minibossx_visitors');
+            
+            if (count) {
+                count = parseInt(count) + 1;
+            } else {
+                count = 1;
+            }
+            
+            localStorage.setItem('minibossx_visitors', count);
+            document.getElementById('visitorCount').textContent = count.toLocaleString();
+        }
+        
+        // ==================== ADMIN FUNCTIONS (for your use only) ====================
+        // This function lets you add games easily
+        window.addGame = function(gameData) {
+            games.push({
+                id: Date.now(),
+                ...gameData,
+                dateAdded: new Date().toISOString().split('T')[0]
+            });
+            localStorage.setItem('minibossx_games', JSON.stringify(games));
+            loadGames();
+            console.log('Game added successfully!');
+        };
+        
+        // This function removes a game by ID
+        window.removeGame = function(gameId) {
+            games = games.filter(g => g.id !== gameId);
+            localStorage.setItem('minibossx_games', JSON.stringify(games));
+            loadGames();
+            console.log('Game removed');
+        };
+        
+        // This function lists all games in console (for you to see)
+        window.listGames = function() {
+            console.table(games);
+        };
+        
+        // ==================== INITIALIZE ====================
+        // Load games and update counter when page loads
+        window.onload = function() {
+            loadGames();
+            updateVisitorCounter();
+            
+            // Check if this is your first visit and add sample data?
+            const hasVisited = sessionStorage.getItem('visited');
+            if (!hasVisited && games.length === 0) {
+                // This is just to show you the format - comment out when ready
+                console.log('Ready to add games! Use window.addGame() to add games');
+                console.log('Example: addGame({name:"My Game", developer:"You", description:"Cool game", category:"action", platform:"both", gameUrl:"/games/my-game/"})');
+                sessionStorage.setItem('visited', 'true');
+            }
+        };
+    </script>
 </body>
 </html>
