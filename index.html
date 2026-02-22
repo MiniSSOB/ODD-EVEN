@@ -311,11 +311,10 @@
         </div>
     </div>
 
-    <!-- Secret admin link (only you know to add /admin to URL) -->
+    <!-- Secret admin link -->
     <div style="display: none;">admin</div>
 
     <script>
-        // ==================== LOAD APPROVED GAMES ====================
         function loadGames() {
             const gamesGrid = document.getElementById('gamesGrid');
             const approvedGames = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
@@ -333,16 +332,22 @@
             
             let html = '';
             approvedGames.forEach(game => {
+                // Make sure we have HTML content
+                if (!game.htmlContent) {
+                    console.warn('Game missing HTML content:', game.name);
+                    return;
+                }
+                
                 html += `
                     <div class="game-card">
-                        <h3 class="game-title">${game.name}</h3>
-                        <div class="game-developer">by ${game.developer}</div>
-                        <div class="game-description">${game.description}</div>
+                        <h3 class="game-title">${game.name || 'Untitled'}</h3>
+                        <div class="game-developer">by ${game.developer || 'Unknown'}</div>
+                        <div class="game-description">${game.description || 'No description'}</div>
                         <div class="game-meta">
-                            <span class="game-category">${game.category}</span>
-                            <span class="game-platform">${game.platform}</span>
+                            <span class="game-category">${game.category || 'OTHER'}</span>
+                            <span class="game-platform">${game.platform || 'BOTH'}</span>
                         </div>
-                        <button onclick="playGame(${game.id})" class="play-button">▶ PLAY</button>
+                        <button onclick='playGame(${JSON.stringify(game.htmlContent).replace(/'/g, "\\'")})' class="play-button">▶ PLAY</button>
                     </div>
                 `;
             });
@@ -350,20 +355,17 @@
             gamesGrid.innerHTML = html;
         }
         
-        // ==================== PLAY GAME ====================
-        function playGame(gameId) {
-            const approvedGames = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
-            const game = approvedGames.find(g => g.id === gameId);
-            
-            if (game && game.htmlContent) {
-                const gameFrame = document.getElementById('gameFrame');
-                const modal = document.getElementById('gameModal');
-                
-                gameFrame.srcdoc = game.htmlContent;
-                modal.style.display = 'block';
-            } else {
+        function playGame(htmlContent) {
+            if (!htmlContent) {
                 alert('Game content not found');
+                return;
             }
+            
+            const gameFrame = document.getElementById('gameFrame');
+            const modal = document.getElementById('gameModal');
+            
+            gameFrame.srcdoc = htmlContent;
+            modal.style.display = 'block';
         }
         
         function closeGame() {
@@ -378,7 +380,6 @@
             }
         }
         
-        // ==================== VISITOR COUNTER ====================
         function updateCounter() {
             let count = localStorage.getItem('minibossx_visitors') || '0';
             count = parseInt(count) + 1;
@@ -386,7 +387,6 @@
             document.getElementById('visitorCount').textContent = count;
         }
         
-        // ==================== INIT ====================
         window.onload = function() {
             loadGames();
             updateCounter();
