@@ -5,153 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiniBOSSX - Submit Game</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: black; color: #8B0000; font-family: Arial; min-height: 100vh; display: flex; flex-direction: column; }
+        .top-center { text-align: center; padding: 30px 0 20px; }
+        h1 { font-size: 4rem; text-shadow: 0 0 10px rgba(139,0,0,0.5); }
+        .nav-bar { text-align: center; margin: 20px 0 30px; }
+        .nav-bar a { color: #8B0000; text-decoration: none; margin: 0 10px; padding: 8px 25px; border: 2px solid #8B0000; border-radius: 5px; display: inline-block; }
+        .nav-bar a:hover { background: #8B0000; color: black; }
         
-        body {
-            background-color: black;
-            font-family: Arial, Helvetica, sans-serif;
-            color: #8B0000;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+        .submit-container { max-width: 600px; margin: 0 auto; width: 90%; padding: 30px; border: 1px solid #8B0000; border-radius: 15px; background: rgba(139,0,0,0.05); }
+        h2 { text-align: center; margin-bottom: 30px; }
         
-        .top-center {
-            text-align: center;
-            padding-top: 30px;
-        }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 10px; background: black; border: 1px solid #8B0000; color: #8B0000; border-radius: 5px; }
+        textarea { height: 100px; }
         
-        h1 {
-            color: #8B0000;
-            font-size: 4rem;
-            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-        }
+        .file-area { border: 2px dashed #8B0000; padding: 20px; text-align: center; margin: 20px 0; cursor: pointer; border-radius: 5px; }
+        .file-area:hover { background: rgba(139,0,0,0.1); }
+        .file-name { margin-top: 10px; color: #8B0000; }
         
-        .nav-bar {
-            text-align: center;
-            margin: 20px 0 30px;
-        }
+        .btn { width: 100%; padding: 15px; background: transparent; border: 2px solid #8B0000; color: #8B0000; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn:hover { background: #8B0000; color: black; }
+        .btn-primary { background: #8B0000; color: black; }
         
-        .nav-bar a {
-            color: #8B0000;
-            text-decoration: none;
-            margin: 0 10px;
-            padding: 8px 25px;
-            border: 2px solid #8B0000;
-            border-radius: 5px;
-            display: inline-block;
-        }
+        .success { display: none; text-align: center; padding: 40px; border: 2px solid #8B0000; border-radius: 15px; margin-top: 20px; }
+        .success.show { display: block; }
+        .success-icon { font-size: 4rem; margin-bottom: 20px; }
         
-        .nav-bar a:hover {
-            background: #8B0000;
-            color: black;
-        }
-        
-        .submit-container {
-            max-width: 600px;
-            margin: 0 auto;
-            width: 90%;
-            padding: 30px;
-            border: 1px solid #8B0000;
-            border-radius: 15px;
-            background: rgba(139, 0, 0, 0.05);
-        }
-        
-        h2 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            background: black;
-            border: 1px solid #8B0000;
-            color: #8B0000;
-            border-radius: 5px;
-        }
-        
-        textarea {
-            height: 100px;
-        }
-        
-        .file-area {
-            border: 2px dashed #8B0000;
-            padding: 30px;
-            text-align: center;
-            margin: 20px 0;
-            cursor: pointer;
-            border-radius: 10px;
-        }
-        
-        .file-area:hover {
-            background: rgba(139, 0, 0, 0.1);
-        }
-        
-        .file-name {
-            margin-top: 10px;
-            color: #8B0000;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            flex: 1;
-            padding: 15px;
-            background: transparent;
-            border: 2px solid #8B0000;
-            color: #8B0000;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        
-        .btn:hover {
-            background: #8B0000;
-            color: black;
-        }
-        
-        .btn-primary {
-            background: #8B0000;
-            color: black;
-        }
-        
-        .success {
-            display: none;
-            text-align: center;
-            padding: 40px;
-            border: 2px solid #8B0000;
-            border-radius: 15px;
-            margin-top: 20px;
-        }
-        
-        .success.show {
-            display: block;
-        }
-        
-        .bottom {
-            text-align: center;
-            padding: 20px;
-            margin-top: auto;
-        }
+        .bottom { text-align: center; padding: 20px; margin-top: auto; }
+        .copyright { opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -213,17 +96,14 @@
             </div>
             <div id="fileName" class="file-name"></div>
             
-            <div class="button-group">
-                <button type="button" class="btn btn-primary" onclick="submitGame()">SUBMIT</button>
-                <button type="reset" class="btn">CLEAR</button>
-            </div>
+            <button type="button" class="btn btn-primary" onclick="submitGame()" style="margin-top:20px;">SUBMIT GAME</button>
         </form>
         
         <div id="successMessage" class="success">
-            <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
+            <div class="success-icon">✅</div>
             <h3>GAME SUBMITTED!</h3>
-            <p>We'll review it and notify you.</p>
-            <button class="btn btn-primary" onclick="resetForm()">SUBMIT ANOTHER</button>
+            <p>We'll review it and add it to the site.</p>
+            <button class="btn" onclick="resetForm()">SUBMIT ANOTHER</button>
         </div>
     </div>
     
@@ -236,23 +116,19 @@
         
         function handleFile(input) {
             selectedFile = input.files[0];
-            if (selectedFile) {
-                document.getElementById('fileName').textContent = `Selected: ${selectedFile.name}`;
-            }
+            document.getElementById('fileName').textContent = selectedFile ? `Selected: ${selectedFile.name}` : '';
         }
         
         function submitGame() {
-            // Get form data
             const gameData = {
-                gameName: document.getElementById('gameName').value,
-                developerName: document.getElementById('developerName').value,
+                name: document.getElementById('gameName').value,
+                developer: document.getElementById('developerName').value,
                 email: document.getElementById('email').value,
                 description: document.getElementById('description').value,
                 category: document.getElementById('category').value,
                 platform: document.getElementById('platform').value
             };
             
-            // Validate
             for (let key in gameData) {
                 if (!gameData[key]) {
                     alert('Please fill all fields');
@@ -261,27 +137,23 @@
             }
             
             if (!selectedFile) {
-                alert('Please select a file');
+                alert('Please select your HTML file');
                 return;
             }
             
-            // Read file
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Create submission object
                 const submission = {
                     id: Date.now(),
                     ...gameData,
-                    fileContent: e.target.result,  // This is the ONLY place HTML goes
-                    date: new Date().toISOString()
+                    html: e.target.result,
+                    date: new Date().toLocaleString()
                 };
                 
-                // Save to pending
                 const pending = JSON.parse(localStorage.getItem('pending_games')) || [];
                 pending.push(submission);
                 localStorage.setItem('pending_games', JSON.stringify(pending));
                 
-                // Show success
                 document.getElementById('submitForm').style.display = 'none';
                 document.getElementById('successMessage').classList.add('show');
             };
