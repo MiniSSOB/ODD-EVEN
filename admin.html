@@ -5,24 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - MiniBOSSX</title>
     <style>
+        /* ... keep all your existing styles ... */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             background-color: black;
             font-family: Arial, Helvetica, sans-serif;
             color: #8B0000;
             padding: 20px;
         }
-        
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
-        
         h1 {
             color: #8B0000;
             font-size: 3rem;
@@ -30,12 +28,10 @@
             margin-bottom: 30px;
             text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
         }
-        
         .nav-bar {
             text-align: center;
             margin: 20px 0 40px;
         }
-        
         .nav-bar a {
             color: #8B0000;
             text-decoration: none;
@@ -45,12 +41,10 @@
             border-radius: 5px;
             display: inline-block;
         }
-        
         .nav-bar a:hover {
             background: #8B0000;
             color: black;
         }
-        
         /* Login Screen */
         .login-container {
             max-width: 400px;
@@ -61,13 +55,11 @@
             background: rgba(139, 0, 0, 0.05);
             text-align: center;
         }
-        
         .login-container h2 {
             color: #8B0000;
             margin-bottom: 30px;
             font-size: 2rem;
         }
-        
         .login-input {
             width: 100%;
             padding: 12px;
@@ -78,7 +70,6 @@
             border-radius: 5px;
             font-size: 1rem;
         }
-        
         .login-btn {
             width: 100%;
             padding: 12px;
@@ -90,30 +81,25 @@
             border-radius: 5px;
             font-weight: bold;
         }
-        
         .login-btn:hover {
             background: #8B0000;
             color: black;
         }
-        
         .error-msg {
             color: #ff0000;
             margin-top: 10px;
             display: none;
         }
-        
         /* Admin Panel */
         .admin-panel {
             display: none;
         }
-        
         h2 {
             color: #8B0000;
             margin: 30px 0 20px;
             border-bottom: 1px solid #8B0000;
             padding-bottom: 10px;
         }
-        
         .pending-game {
             border: 1px solid #8B0000;
             border-radius: 10px;
@@ -121,31 +107,26 @@
             margin-bottom: 20px;
             background: rgba(139, 0, 0, 0.05);
         }
-        
         .pending-game h3 {
             color: #8B0000;
             font-size: 1.5rem;
             margin-bottom: 10px;
         }
-        
         .game-detail {
             color: #ccc;
             margin-bottom: 5px;
         }
-        
         .game-detail strong {
             color: #8B0000;
             width: 100px;
             display: inline-block;
         }
-        
         .button-group {
             display: flex;
             gap: 10px;
             margin-top: 15px;
             flex-wrap: wrap;
         }
-        
         .btn {
             padding: 10px 20px;
             border: 2px solid #8B0000;
@@ -157,23 +138,19 @@
             flex: 1;
             min-width: 100px;
         }
-        
         .btn:hover {
             background: #8B0000;
             color: black;
         }
-        
         .btn-approve {
             background: #8B0000;
             color: black;
         }
-        
         .btn-test {
             background: #333;
             border-color: #8B0000;
             color: #8B0000;
         }
-        
         .approved-game {
             border: 1px solid #333;
             border-radius: 5px;
@@ -184,7 +161,6 @@
             align-items: center;
             background: rgba(139, 0, 0, 0.02);
         }
-        
         .remove-btn {
             color: #8B0000;
             background: transparent;
@@ -194,7 +170,6 @@
             border-radius: 3px;
             margin-left: 10px;
         }
-        
         .quick-add {
             border: 1px solid #8B0000;
             padding: 20px;
@@ -202,7 +177,6 @@
             margin-top: 30px;
             background: rgba(139, 0, 0, 0.02);
         }
-        
         .quick-add input, .quick-add textarea, .quick-add select {
             width: 100%;
             padding: 10px;
@@ -212,7 +186,6 @@
             color: #8B0000;
             border-radius: 5px;
         }
-        
         .file-upload-area {
             border: 2px dashed #8B0000;
             padding: 20px;
@@ -221,11 +194,9 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        
         .file-upload-area:hover {
             background: rgba(139, 0, 0, 0.1);
         }
-        
         .code-paste-area textarea {
             width: 100%;
             padding: 10px;
@@ -237,7 +208,6 @@
             height: 150px;
             margin: 10px 0;
         }
-        
         .logout-btn {
             float: right;
             padding: 8px 20px;
@@ -247,12 +217,10 @@
             cursor: pointer;
             border-radius: 3px;
         }
-        
         .logout-btn:hover {
             background: #8B0000;
             color: black;
         }
-        
         /* Game Test Modal */
         .game-modal {
             display: none;
@@ -264,7 +232,6 @@
             background-color: rgba(0, 0, 0, 0.95);
             z-index: 1000;
         }
-        
         .game-modal-content {
             position: relative;
             width: 90%;
@@ -275,7 +242,6 @@
             border-radius: 10px;
             padding: 20px;
         }
-        
         .close-modal {
             position: absolute;
             top: 10px;
@@ -285,18 +251,15 @@
             cursor: pointer;
             z-index: 1001;
         }
-        
         .close-modal:hover {
             color: #ff0000;
         }
-        
         .game-frame {
             width: 100%;
             height: 100%;
             border: none;
             background-color: white;
         }
-        
         .no-items {
             text-align: center;
             padding: 40px;
@@ -398,7 +361,7 @@
     <div id="gameModal" class="game-modal">
         <div class="game-modal-content">
             <span class="close-modal" onclick="closeGame()">&times;</span>
-            <iframe id="gameFrame" class="game-frame"></iframe>
+            <iframe id="gameFrame" class="game-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
         </div>
     </div>
 
@@ -416,11 +379,9 @@
                 document.getElementById('adminPanel').style.display = 'block';
                 document.getElementById('loginError').style.display = 'none';
                 
-                // Load all data
                 loadPending();
                 loadApproved();
                 
-                // Save login state
                 sessionStorage.setItem('adminLoggedIn', 'true');
             } else {
                 document.getElementById('loginError').style.display = 'block';
@@ -433,7 +394,6 @@
             sessionStorage.removeItem('adminLoggedIn');
         }
         
-        // Check login status on page load
         window.onload = function() {
             if (sessionStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('loginScreen').style.display = 'none';
@@ -467,7 +427,6 @@
             document.getElementById('gameFrame').srcdoc = '';
         }
         
-        // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('gameModal');
             if (event.target === modal) {
@@ -484,7 +443,7 @@
                 return;
             }
             
-            // Create approved game with all data
+            // Create approved game object with proper field names
             const approvedGame = {
                 id: Date.now(),
                 name: game.gameName,
@@ -505,7 +464,6 @@
             pending.splice(index, 1);
             localStorage.setItem('minibossx_pending', JSON.stringify(pending));
             
-            // Reload displays
             loadPending();
             loadApproved();
             
@@ -514,7 +472,6 @@
         
         function rejectGame(index) {
             if (!confirm('Reject this game?')) return;
-            
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             pending.splice(index, 1);
             localStorage.setItem('minibossx_pending', JSON.stringify(pending));
@@ -523,7 +480,6 @@
         
         function removeGame(index) {
             if (!confirm('Remove this game from approved list?')) return;
-            
             const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             approved.splice(index, 1);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
@@ -627,6 +583,8 @@
             
             let html = '';
             pending.forEach((game, index) => {
+                // Escape the file content for the test button
+                const escapedContent = JSON.stringify(game.fileContent).replace(/'/g, "\\'");
                 html += `
                     <div class="pending-game">
                         <h3>${game.gameName || 'Untitled'}</h3>
@@ -636,7 +594,7 @@
                         <div class="game-detail"><strong>Platform:</strong> ${game.gamePlatform || 'BOTH'}</div>
                         <div class="game-detail"><strong>Description:</strong> ${game.gameDescription || 'No description'}</div>
                         <div class="button-group">
-                            <button class="btn btn-test" onclick='testGame(${JSON.stringify(game.fileContent).replace(/'/g, "\\'")})'>TEST</button>
+                            <button class="btn btn-test" onclick='testGame(${escapedContent})'>TEST</button>
                             <button class="btn btn-approve" onclick="approveGame(${index})">APPROVE</button>
                             <button class="btn" onclick="rejectGame(${index})">REJECT</button>
                         </div>
@@ -658,13 +616,15 @@
             
             let html = '';
             approved.forEach((game, index) => {
+                // Escape the HTML content for the test button
+                const escapedContent = JSON.stringify(game.htmlContent).replace(/'/g, "\\'");
                 html += `
                     <div class="approved-game">
                         <div>
                             <strong>${game.name || 'Untitled'}</strong> by ${game.developer || 'Unknown'}
                         </div>
                         <div>
-                            <button class="btn-test" style="padding:5px 15px; margin-right:5px;" onclick='testGame(${JSON.stringify(game.htmlContent).replace(/'/g, "\\'")})'>TEST</button>
+                            <button class="btn-test" style="padding:5px 15px; margin-right:5px;" onclick='testGame(${escapedContent})'>TEST</button>
                             <button class="remove-btn" onclick="removeGame(${index})">REMOVE</button>
                         </div>
                     </div>
