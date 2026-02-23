@@ -200,19 +200,26 @@
             margin-top: 20px;
         }
         
-        .visitor-counter {
+        .visitor-counters {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
             color: #8B0000;
-            font-size: 0.8rem;
-            opacity: 0.7;
-            letter-spacing: 1px;
+            font-size: 0.9rem;
         }
         
-        .visitor-counter span {
-            font-size: 0.9rem;
+        .counter-item {
+            background: rgba(139, 0, 0, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #8B0000;
+        }
+        
+        .counter-item span {
             font-weight: bold;
-            color: #8B0000;
-            opacity: 1;
-            margin: 0 5px;
+            font-size: 1.1rem;
+            margin-left: 5px;
         }
         
         .bottom {
@@ -290,8 +297,10 @@
     </div>
     
     <div class="counter-section">
-        <div class="visitor-counter">
-            👁️ <span id="visitorCount">0</span> visitors
+        <div class="visitor-counters">
+            <div class="counter-item">📊 Total visits: <span id="totalVisits">0</span></div>
+            <div class="counter-item">👤 Unique visitors: <span id="uniqueVisits">0</span></div>
+            <div class="counter-item">⏳ Last 24h: <span id="last24h">0</span></div>
         </div>
     </div>
     
@@ -308,6 +317,7 @@
     </div>
 
     <script>
+        // ==================== LOAD GAMES ====================
         function loadGames() {
             const gamesGrid = document.getElementById('gamesGrid');
             const approvedGames = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
@@ -335,12 +345,12 @@
                 
                 html += `
                     <div class="game-card">
-                        <h3 class="game-title">${game.name || 'Untitled'}</h3>
-                        <div class="game-developer">by ${game.developer || 'Unknown'}</div>
-                        <div class="game-description">${game.description || 'No description'}</div>
+                        <h3 class="game-title">${escapeHtml(game.name) || 'Untitled'}</h3>
+                        <div class="game-developer">by ${escapeHtml(game.developer) || 'Unknown'}</div>
+                        <div class="game-description">${escapeHtml(game.description) || 'No description'}</div>
                         <div class="game-meta">
-                            <span class="game-category">${game.category || 'OTHER'}</span>
-                            <span class="game-platform">${game.platform || 'BOTH'}</span>
+                            <span class="game-category">${escapeHtml(game.category) || 'OTHER'}</span>
+                            <span class="game-platform">${escapeHtml(game.platform) || 'BOTH'}</span>
                         </div>
                         <button onclick='playGame(${escapedContent})' class="play-button">▶ PLAY</button>
                     </div>
@@ -348,6 +358,18 @@
             });
             
             gamesGrid.innerHTML = html;
+        }
+        
+        // Simple escape to prevent XSS
+        function escapeHtml(text) {
+            if (!text) return text;
+            return String(text).replace(/[&<>"]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                if (m === '"') return '&quot;';
+                return m;
+            });
         }
         
         function playGame(htmlContent) {
@@ -375,16 +397,40 @@
             }
         };
         
-        function updateCounter() {
-            let count = localStorage.getItem('minibossx_visitors') || '0';
-            count = parseInt(count) + 1;
-            localStorage.setItem('minibossx_visitors', count);
-            document.getElementById('visitorCount').textContent = count;
+        // ==================== THREE VISITOR COUNTERS ====================
+        function updateCounters() {
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+            // 1. Total visits
+            let total = localStorage.getItem('minibossx_total_visits');
+            total = total ? parseInt(total) + 1 : 1;
+            localStorage.setItem('minibossx_total_visits', total);
+            document.getElementById('totalVisits').textContent = total;
+
+            // 2. Unique visitors
+            let unique = localStorage.getItem('minibossx_unique_visits') || '0';
+            const hasVisitedBefore = localStorage.getItem('minibossx_visitor_id');
+            if (!hasVisitedBefore) {
+                unique = parseInt(unique) + 1;
+                localStorage.setItem('minibossx_unique_visits', unique);
+                localStorage.setItem('minibossx_visitor_id', 'visited');
+            }
+            document.getElementById('uniqueVisits').textContent = unique;
+
+            // 3. Last 24h visits
+            let timestamps = localStorage.getItem('minibossx_24h_timestamps');
+            timestamps = timestamps ? JSON.parse(timestamps) : [];
+            timestamps.push(now);
+            timestamps = timestamps.filter(ts => now - ts < oneDay);
+            localStorage.setItem('minibossx_24h_timestamps', JSON.stringify(timestamps));
+            document.getElementById('last24h').textContent = timestamps.length;
         }
         
+        // ==================== INIT ====================
         window.onload = function() {
             loadGames();
-            updateCounter();
+            updateCounters();
         };
     </script>
 </body>
