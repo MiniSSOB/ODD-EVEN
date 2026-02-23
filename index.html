@@ -6,62 +6,95 @@
         body { 
             background: black; 
             color: #8B0000; 
-            font-family: Arial; 
+            font-family: Arial, sans-serif; 
             padding: 20px; 
             text-align: center;
+            margin: 0;
         }
         h1 { 
             font-size: 4rem; 
             text-shadow: 0 0 10px #8B0000;
             margin-bottom: 30px;
+            color: #8B0000;
         }
         .button {
             background: transparent;
             color: #8B0000;
             border: 2px solid #8B0000;
-            padding: 10px 30px;
+            padding: 12px 30px;
             margin: 10px;
             font-size: 1.2rem;
             cursor: pointer;
             border-radius: 5px;
+            font-weight: bold;
         }
         .button:hover {
             background: #8B0000;
             color: black;
         }
-        textarea {
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        input, textarea, select {
             width: 100%;
             max-width: 600px;
-            height: 200px;
+            padding: 12px;
+            margin: 10px auto;
             background: black;
             border: 2px solid #8B0000;
             color: #8B0000;
-            padding: 10px;
-            margin: 20px auto;
+            border-radius: 5px;
             display: block;
             font-family: monospace;
+            font-size: 1rem;
         }
-        input {
-            width: 100%;
-            max-width: 600px;
-            padding: 10px;
+        textarea {
+            height: 200px;
+            resize: vertical;
+        }
+        select {
             background: black;
-            border: 2px solid #8B0000;
+        }
+        select option {
+            background: black;
             color: #8B0000;
-            margin: 10px auto;
-            display: block;
         }
         .game-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
             max-width: 1200px;
             margin: 30px auto;
         }
         .game-card {
             border: 2px solid #8B0000;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
+            background: rgba(139, 0, 0, 0.05);
+            text-align: left;
+        }
+        .game-card h3 {
+            color: #8B0000;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+        }
+        .game-card p {
+            margin: 5px 0;
+        }
+        .game-dev {
+            color: #666;
+            font-style: italic;
+        }
+        .game-desc {
+            color: #ccc;
+            font-size: 0.9rem;
+            margin: 10px 0;
+        }
+        .game-tags {
+            color: #8B0000;
+            font-size: 0.8rem;
+            margin: 10px 0;
         }
         .modal {
             display: none;
@@ -70,7 +103,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 1000;
         }
         .modal-content {
@@ -79,7 +112,7 @@
             height: 90%;
             margin: 2% auto;
             background: white;
-            border: 2px solid #8B0000;
+            border: 3px solid #8B0000;
             border-radius: 10px;
         }
         .close {
@@ -90,66 +123,96 @@
             font-size: 30px;
             cursor: pointer;
         }
+        .close:hover {
+            color: white;
+        }
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
+        .no-games {
+            grid-column: 1 / -1;
+            padding: 50px;
+            text-align: center;
+            color: #666;
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+        }
+        .or-divider {
+            margin: 20px;
+            color: #8B0000;
+            font-weight: bold;
+        }
+        .file-zone {
+            border: 2px dashed #8B0000;
+            padding: 30px;
+            max-width: 600px;
+            margin: 20px auto;
+            cursor: pointer;
+            border-radius: 5px;
+            color: #8B0000;
+        }
+        .file-zone:hover {
+            background: rgba(139, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
-    <h1>⚡ MiniBOSSX ⚡</h1>
-    
-    <div>
-        <button class="button" onclick="showHome()">HOME</button>
-        <button class="button" onclick="showAddGame()">ADD GAME</button>
-    </div>
-
-    <!-- HOME PAGE -->
-    <div id="homePage">
-        <h2>🎮 GAMES</h2>
-        <div id="gamesList" class="game-list"></div>
-    </div>
-
-    <!-- ADD GAME PAGE (hidden by default) -->
-    <div id="addGamePage" style="display: none;">
-        <h2>✏️ ADD NEW GAME</h2>
+    <div class="container">
+        <h1>⚡ MiniBOSSX ⚡</h1>
         
-        <input type="text" id="gameName" placeholder="Game Name">
-        <input type="text" id="gameDev" placeholder="Your Name">
-        <textarea id="gameDesc" placeholder="Description"></textarea>
-        
-        <select id="gameCat" style="width:100%; max-width:600px; padding:10px; margin:10px auto; display:block; background:black; color:#8B0000; border:2px solid #8B0000;">
-            <option value="ACTION">Action</option>
-            <option value="PUZZLE">Puzzle</option>
-            <option value="ARCADE">Arcade</option>
-            <option value="OTHER">Other</option>
-        </select>
-        
-        <select id="gamePlatform" style="width:100%; max-width:600px; padding:10px; margin:10px auto; display:block; background:black; color:#8B0000; border:2px solid #8B0000;">
-            <option value="DESKTOP">Desktop</option>
-            <option value="MOBILE">Mobile</option>
-            <option value="BOTH">Both</option>
-        </select>
-        
-        <h3 style="margin:20px 0;">Paste HTML code:</h3>
-        <textarea id="gameCode" placeholder="<h1>My Game</h1>"></textarea>
-        
-        <div style="margin:20px;">— OR —</div>
-        
-        <div style="border:2px dashed #8B0000; padding:20px; max-width:600px; margin:20px auto; cursor:pointer;" onclick="document.getElementById('fileInput').click()">
-            📁 Upload HTML file
-            <input type="file" id="fileInput" accept=".html,.htm" style="display: none;" onchange="loadFile(this)">
+        <div>
+            <button class="button" onclick="showHome()">🏠 HOME</button>
+            <button class="button" onclick="showAddGame()">✏️ ADD GAME</button>
         </div>
-        
-        <button class="button" onclick="saveGame()" style="margin-top:20px;">💾 SAVE GAME</button>
+
+        <!-- HOME PAGE -->
+        <div id="homePage">
+            <h2 style="margin: 40px 0 20px;">🎮 GAMES</h2>
+            <div id="gamesList" class="game-list"></div>
+        </div>
+
+        <!-- ADD GAME PAGE (hidden by default) -->
+        <div id="addGamePage" style="display: none;">
+            <h2 style="margin: 40px 0 20px;">✏️ ADD NEW GAME</h2>
+            
+            <input type="text" id="gameName" placeholder="Game Name">
+            <input type="text" id="gameDev" placeholder="Your Name">
+            <textarea id="gameDesc" placeholder="Description"></textarea>
+            
+            <select id="gameCat">
+                <option value="ACTION">Action</option>
+                <option value="PUZZLE">Puzzle</option>
+                <option value="ARCADE">Arcade</option>
+                <option value="OTHER">Other</option>
+            </select>
+            
+            <select id="gamePlatform">
+                <option value="DESKTOP">Desktop</option>
+                <option value="MOBILE">Mobile</option>
+                <option value="BOTH">Both</option>
+            </select>
+            
+            <h3 style="margin: 20px 0 10px; color: #8B0000;">Paste HTML code:</h3>
+            <textarea id="gameCode" placeholder="<h1>My Game</h1>"></textarea>
+            
+            <div class="or-divider">— OR —</div>
+            
+            <div class="file-zone" onclick="document.getElementById('fileInput').click()">
+                📁 Click to upload HTML file
+                <input type="file" id="fileInput" accept=".html,.htm" style="display: none;" onchange="loadFile(this)">
+            </div>
+            
+            <button class="button" onclick="saveGame()" style="margin: 30px auto; width: 200px;">💾 SAVE GAME</button>
+        </div>
     </div>
 
     <!-- GAME MODAL -->
-    <div id="gameModal" class="modal">
+    <div id="gameModal" class="modal" onclick="if(event.target===this) closeGame()">
         <div class="modal-content">
             <span class="close" onclick="closeGame()">&times;</span>
-            <iframe id="gameFrame"></iframe>
+            <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
         </div>
     </div>
 
@@ -181,12 +244,12 @@
         
         // Save game
         function saveGame() {
-            const name = document.getElementById('gameName').value;
-            const dev = document.getElementById('gameDev').value;
-            const desc = document.getElementById('gameDesc').value;
+            const name = document.getElementById('gameName').value.trim();
+            const dev = document.getElementById('gameDev').value.trim();
+            const desc = document.getElementById('gameDesc').value.trim();
             const cat = document.getElementById('gameCat').value;
             const platform = document.getElementById('gamePlatform').value;
-            const code = document.getElementById('gameCode').value;
+            const code = document.getElementById('gameCode').value.trim();
             
             if (!name || !dev || !desc || !code) {
                 alert('Please fill all fields');
@@ -212,8 +275,9 @@
             document.getElementById('gameDev').value = '';
             document.getElementById('gameDesc').value = '';
             document.getElementById('gameCode').value = '';
+            document.getElementById('fileInput').value = '';
             
-            alert('Game saved!');
+            alert('Game saved successfully!');
             showHome();
         }
         
@@ -223,7 +287,7 @@
             const list = document.getElementById('gamesList');
             
             if (games.length === 0) {
-                list.innerHTML = '<div style="grid-column:1/-1; padding:50px;">🚀 No games yet. Click ADD GAME to create one!</div>';
+                list.innerHTML = '<div class="no-games">🚀 No games yet. Click ADD GAME to create one!</div>';
                 return;
             }
             
@@ -231,11 +295,11 @@
             games.forEach(game => {
                 html += `
                     <div class="game-card">
-                        <h3>${game.name}</h3>
-                        <p style="color:#666;">by ${game.developer}</p>
-                        <p style="color:#ccc;">${game.description}</p>
-                        <p style="color:#8B0000; font-size:0.8rem;">${game.category} • ${game.platform}</p>
-                        <button class="button" style="width:100%;" onclick="playGame('${game.id}')">▶ PLAY</button>
+                        <h3>${escapeHtml(game.name)}</h3>
+                        <p class="game-dev">by ${escapeHtml(game.developer)}</p>
+                        <p class="game-desc">${escapeHtml(game.description)}</p>
+                        <p class="game-tags">${escapeHtml(game.category)} • ${escapeHtml(game.platform)}</p>
+                        <button class="button" style="width:100%; margin:0;" onclick="playGame('${game.id}')">▶ PLAY</button>
                     </div>
                 `;
             });
@@ -250,6 +314,8 @@
             if (game && game.html) {
                 document.getElementById('gameFrame').srcdoc = game.html;
                 document.getElementById('gameModal').style.display = 'block';
+            } else {
+                alert('Game not found');
             }
         }
         
@@ -257,6 +323,17 @@
         function closeGame() {
             document.getElementById('gameModal').style.display = 'none';
             document.getElementById('gameFrame').srcdoc = '';
+        }
+        
+        // Escape HTML for safety
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
         
         // Load home page on start
