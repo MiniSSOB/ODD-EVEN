@@ -5,33 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - MiniBOSSX</title>
     <style>
-        /* ... keep all your existing styles ... */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             background-color: black;
             font-family: Arial, Helvetica, sans-serif;
             color: #8B0000;
             padding: 20px;
         }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
         }
+        
         h1 {
             color: #8B0000;
             font-size: 3rem;
             text-align: center;
             margin-bottom: 30px;
-            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
         }
+        
         .nav-bar {
             text-align: center;
             margin: 20px 0 40px;
         }
+        
         .nav-bar a {
             color: #8B0000;
             text-decoration: none;
@@ -41,10 +44,12 @@
             border-radius: 5px;
             display: inline-block;
         }
+        
         .nav-bar a:hover {
             background: #8B0000;
             color: black;
         }
+        
         /* Login Screen */
         .login-container {
             max-width: 400px;
@@ -52,14 +57,13 @@
             padding: 40px;
             border: 2px solid #8B0000;
             border-radius: 15px;
-            background: rgba(139, 0, 0, 0.05);
             text-align: center;
         }
+        
         .login-container h2 {
-            color: #8B0000;
             margin-bottom: 30px;
-            font-size: 2rem;
         }
+        
         .login-input {
             width: 100%;
             padding: 12px;
@@ -68,65 +72,66 @@
             border: 1px solid #8B0000;
             color: #8B0000;
             border-radius: 5px;
-            font-size: 1rem;
         }
+        
         .login-btn {
             width: 100%;
             padding: 12px;
             background: transparent;
             border: 2px solid #8B0000;
             color: #8B0000;
-            font-size: 1.2rem;
             cursor: pointer;
             border-radius: 5px;
             font-weight: bold;
         }
+        
         .login-btn:hover {
             background: #8B0000;
             color: black;
         }
+        
         .error-msg {
             color: #ff0000;
             margin-top: 10px;
             display: none;
         }
+        
         /* Admin Panel */
         .admin-panel {
             display: none;
         }
+        
         h2 {
-            color: #8B0000;
             margin: 30px 0 20px;
             border-bottom: 1px solid #8B0000;
             padding-bottom: 10px;
         }
-        .pending-game {
+        
+        .pending-game, .approved-game {
             border: 1px solid #8B0000;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
             background: rgba(139, 0, 0, 0.05);
         }
-        .pending-game h3 {
-            color: #8B0000;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
+        
         .game-detail {
             color: #ccc;
             margin-bottom: 5px;
         }
+        
         .game-detail strong {
             color: #8B0000;
             width: 100px;
             display: inline-block;
         }
+        
         .button-group {
             display: flex;
             gap: 10px;
             margin-top: 15px;
-            flex-wrap: wrap;
         }
+        
         .btn {
             padding: 10px 20px;
             border: 2px solid #8B0000;
@@ -134,80 +139,23 @@
             color: #8B0000;
             cursor: pointer;
             border-radius: 5px;
-            font-size: 1rem;
             flex: 1;
-            min-width: 100px;
         }
+        
         .btn:hover {
             background: #8B0000;
             color: black;
         }
+        
         .btn-approve {
             background: #8B0000;
             color: black;
         }
+        
         .btn-test {
             background: #333;
-            border-color: #8B0000;
-            color: #8B0000;
         }
-        .approved-game {
-            border: 1px solid #333;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(139, 0, 0, 0.02);
-        }
-        .remove-btn {
-            color: #8B0000;
-            background: transparent;
-            border: 1px solid #8B0000;
-            padding: 5px 15px;
-            cursor: pointer;
-            border-radius: 3px;
-            margin-left: 10px;
-        }
-        .quick-add {
-            border: 1px solid #8B0000;
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            background: rgba(139, 0, 0, 0.02);
-        }
-        .quick-add input, .quick-add textarea, .quick-add select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: black;
-            border: 1px solid #8B0000;
-            color: #8B0000;
-            border-radius: 5px;
-        }
-        .file-upload-area {
-            border: 2px dashed #8B0000;
-            padding: 20px;
-            text-align: center;
-            margin: 10px 0;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        .file-upload-area:hover {
-            background: rgba(139, 0, 0, 0.1);
-        }
-        .code-paste-area textarea {
-            width: 100%;
-            padding: 10px;
-            background: black;
-            border: 1px solid #8B0000;
-            color: #8B0000;
-            border-radius: 5px;
-            font-family: monospace;
-            height: 150px;
-            margin: 10px 0;
-        }
+        
         .logout-btn {
             float: right;
             padding: 8px 20px;
@@ -217,10 +165,7 @@
             cursor: pointer;
             border-radius: 3px;
         }
-        .logout-btn:hover {
-            background: #8B0000;
-            color: black;
-        }
+        
         /* Game Test Modal */
         .game-modal {
             display: none;
@@ -229,19 +174,21 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
+            background: rgba(0, 0, 0, 0.95);
             z-index: 1000;
         }
+        
         .game-modal-content {
             position: relative;
             width: 90%;
             height: 90%;
             margin: 2% auto;
-            background-color: black;
+            background: black;
             border: 2px solid #8B0000;
             border-radius: 10px;
             padding: 20px;
         }
+        
         .close-modal {
             position: absolute;
             top: 10px;
@@ -249,24 +196,21 @@
             color: #8B0000;
             font-size: 30px;
             cursor: pointer;
-            z-index: 1001;
         }
-        .close-modal:hover {
-            color: #ff0000;
-        }
+        
         .game-frame {
             width: 100%;
             height: 100%;
             border: none;
-            background-color: white;
+            background: white;
         }
+        
         .no-items {
             text-align: center;
             padding: 40px;
             border: 2px dashed #8B0000;
             border-radius: 10px;
             color: #666;
-            margin: 20px 0;
         }
     </style>
 </head>
@@ -292,68 +236,11 @@
                 <a href="admin.html">ADMIN</a>
             </div>
             
-            <!-- Pending Games Section -->
-            <div id="pendingSection">
-                <h2>📥 PENDING GAMES</h2>
-                <div id="pendingList"></div>
-            </div>
+            <h2>📥 PENDING GAMES</h2>
+            <div id="pendingList"></div>
             
             <h2>✅ APPROVED GAMES</h2>
             <div id="approvedList"></div>
-            
-            <h2>➕ QUICK ADD GAME</h2>
-            
-            <!-- Method 1: Upload HTML File -->
-            <div class="quick-add">
-                <h3>📁 Method 1: Upload HTML File</h3>
-                <input type="text" id="quickName" placeholder="Game Name">
-                <input type="text" id="quickDev" placeholder="Developer Name">
-                <textarea id="quickDesc" placeholder="Description"></textarea>
-                <select id="quickCat">
-                    <option value="ACTION">Action</option>
-                    <option value="PUZZLE">Puzzle</option>
-                    <option value="ARCADE">Arcade</option>
-                    <option value="OTHER">Other</option>
-                </select>
-                <select id="quickPlatform">
-                    <option value="DESKTOP">Desktop</option>
-                    <option value="MOBILE">Mobile</option>
-                    <option value="BOTH">Both</option>
-                </select>
-                
-                <div class="file-upload-area" onclick="document.getElementById('htmlFile').click()">
-                    📂 Click to select HTML file
-                    <input type="file" id="htmlFile" accept=".html,.htm" style="display: none;" onchange="handleFileSelect(this)">
-                </div>
-                <div id="fileName" style="color: #ccc; margin-bottom: 10px;"></div>
-                
-                <button class="btn btn-approve" onclick="addGameFromFile()" style="width:100%">ADD GAME FROM FILE</button>
-            </div>
-            
-            <!-- Method 2: Paste HTML Code -->
-            <div class="quick-add">
-                <h3>⌨️ Method 2: Paste HTML Code</h3>
-                <input type="text" id="quickName2" placeholder="Game Name">
-                <input type="text" id="quickDev2" placeholder="Developer Name">
-                <textarea id="quickDesc2" placeholder="Description"></textarea>
-                <select id="quickCat2">
-                    <option value="ACTION">Action</option>
-                    <option value="PUZZLE">Puzzle</option>
-                    <option value="ARCADE">Arcade</option>
-                    <option value="OTHER">Other</option>
-                </select>
-                <select id="quickPlatform2">
-                    <option value="DESKTOP">Desktop</option>
-                    <option value="MOBILE">Mobile</option>
-                    <option value="BOTH">Both</option>
-                </select>
-                
-                <div class="code-paste-area">
-                    <textarea id="htmlCode" placeholder="Paste your HTML code here..."></textarea>
-                </div>
-                
-                <button class="btn btn-approve" onclick="addGameFromCode()" style="width:100%">ADD GAME FROM CODE</button>
-            </div>
         </div>
     </div>
 
@@ -366,7 +253,7 @@
     </div>
 
     <script>
-        // ==================== LOGIN SYSTEM ====================
+        // ==================== LOGIN ====================
         const ADMIN_USER = "admin";
         const ADMIN_PASS = "minibossx2026";
         
@@ -378,10 +265,8 @@
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 document.getElementById('loginError').style.display = 'none';
-                
                 loadPending();
                 loadApproved();
-                
                 sessionStorage.setItem('adminLoggedIn', 'true');
             } else {
                 document.getElementById('loginError').style.display = 'block';
@@ -398,41 +283,25 @@
             if (sessionStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
+                loadPending();
+                loadApproved();
             }
-            loadPending();
-            loadApproved();
         };
         
         // ==================== GAME FUNCTIONS ====================
-        let selectedFile = null;
-        
-        function handleFileSelect(input) {
-            selectedFile = input.files[0];
-            document.getElementById('fileName').textContent = selectedFile ? `Selected: ${selectedFile.name}` : '';
-        }
-        
         function testGame(htmlContent) {
             if (!htmlContent) {
-                alert('No game content to test');
+                alert('No game content');
                 return;
             }
-            const frame = document.getElementById('gameFrame');
-            const modal = document.getElementById('gameModal');
-            frame.srcdoc = htmlContent;
-            modal.style.display = 'block';
+            document.getElementById('gameFrame').srcdoc = htmlContent;
+            document.getElementById('gameModal').style.display = 'block';
         }
         
         function closeGame() {
             document.getElementById('gameModal').style.display = 'none';
             document.getElementById('gameFrame').srcdoc = '';
         }
-        
-        window.onclick = function(event) {
-            const modal = document.getElementById('gameModal');
-            if (event.target === modal) {
-                closeGame();
-            }
-        };
         
         function approveGame(index) {
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
@@ -443,7 +312,7 @@
                 return;
             }
             
-            // Create approved game object with proper field names
+            // Create approved game - use SIMPLE field names
             const approvedGame = {
                 id: Date.now(),
                 name: game.gameName,
@@ -451,11 +320,10 @@
                 description: game.gameDescription,
                 category: game.gameCategory,
                 platform: game.gamePlatform,
-                htmlContent: game.fileContent,
-                dateApproved: new Date().toLocaleString()
+                html: game.fileContent  // Store as 'html' not 'htmlContent'
             };
             
-            // Add to approved list
+            // Save to approved
             const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             approved.push(approvedGame);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
@@ -466,12 +334,11 @@
             
             loadPending();
             loadApproved();
-            
-            alert('Game approved and added to main page!');
+            alert('Game approved!');
         }
         
         function rejectGame(index) {
-            if (!confirm('Reject this game?')) return;
+            if (!confirm('Reject?')) return;
             const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
             pending.splice(index, 1);
             localStorage.setItem('minibossx_pending', JSON.stringify(pending));
@@ -479,97 +346,11 @@
         }
         
         function removeGame(index) {
-            if (!confirm('Remove this game from approved list?')) return;
+            if (!confirm('Remove?')) return;
             const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
             approved.splice(index, 1);
             localStorage.setItem('minibossx_approved', JSON.stringify(approved));
             loadApproved();
-        }
-        
-        function addGameFromFile() {
-            if (!selectedFile) {
-                alert('Please select an HTML file');
-                return;
-            }
-            
-            const name = document.getElementById('quickName').value;
-            const dev = document.getElementById('quickDev').value;
-            const desc = document.getElementById('quickDesc').value;
-            const cat = document.getElementById('quickCat').value;
-            const platform = document.getElementById('quickPlatform').value;
-            
-            if (!name || !dev || !desc) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const game = {
-                    id: Date.now(),
-                    name: name,
-                    developer: dev,
-                    description: desc,
-                    category: cat,
-                    platform: platform,
-                    htmlContent: e.target.result,
-                    dateApproved: new Date().toLocaleString()
-                };
-                
-                const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
-                approved.push(game);
-                localStorage.setItem('minibossx_approved', JSON.stringify(approved));
-                
-                // Clear form
-                document.getElementById('quickName').value = '';
-                document.getElementById('quickDev').value = '';
-                document.getElementById('quickDesc').value = '';
-                document.getElementById('htmlFile').value = '';
-                document.getElementById('fileName').textContent = '';
-                selectedFile = null;
-                
-                loadApproved();
-                alert('Game added successfully!');
-            };
-            reader.readAsText(selectedFile);
-        }
-        
-        function addGameFromCode() {
-            const name = document.getElementById('quickName2').value;
-            const dev = document.getElementById('quickDev2').value;
-            const desc = document.getElementById('quickDesc2').value;
-            const cat = document.getElementById('quickCat2').value;
-            const platform = document.getElementById('quickPlatform2').value;
-            const code = document.getElementById('htmlCode').value;
-            
-            if (!name || !dev || !desc || !code) {
-                alert('Please fill in all fields and paste HTML code');
-                return;
-            }
-            
-            const game = {
-                id: Date.now(),
-                name: name,
-                developer: dev,
-                description: desc,
-                category: cat,
-                platform: platform,
-                htmlContent: code,
-                dateApproved: new Date().toLocaleString()
-            };
-            
-            const approved = JSON.parse(localStorage.getItem('minibossx_approved')) || [];
-            approved.push(game);
-            localStorage.setItem('minibossx_approved', JSON.stringify(approved));
-            
-            // Clear form
-            document.getElementById('quickName2').value = '';
-            document.getElementById('quickDev2').value = '';
-            document.getElementById('quickDesc2').value = '';
-            document.getElementById('htmlCode').value = '';
-            
-            loadApproved();
-            alert('Game added successfully!');
         }
         
         function loadPending() {
@@ -583,25 +364,22 @@
             
             let html = '';
             pending.forEach((game, index) => {
-                // Escape the file content for the test button
-                const escapedContent = JSON.stringify(game.fileContent).replace(/'/g, "\\'");
                 html += `
                     <div class="pending-game">
                         <h3>${game.gameName || 'Untitled'}</h3>
-                        <div class="game-detail"><strong>Developer:</strong> ${game.developerName || 'Unknown'}</div>
-                        <div class="game-detail"><strong>Email:</strong> ${game.developerEmail || 'No email'}</div>
-                        <div class="game-detail"><strong>Category:</strong> ${game.gameCategory || 'OTHER'}</div>
-                        <div class="game-detail"><strong>Platform:</strong> ${game.gamePlatform || 'BOTH'}</div>
-                        <div class="game-detail"><strong>Description:</strong> ${game.gameDescription || 'No description'}</div>
+                        <div class="game-detail"><strong>Developer:</strong> ${game.developerName}</div>
+                        <div class="game-detail"><strong>Email:</strong> ${game.developerEmail}</div>
+                        <div class="game-detail"><strong>Category:</strong> ${game.gameCategory}</div>
+                        <div class="game-detail"><strong>Platform:</strong> ${game.gamePlatform}</div>
+                        <div class="game-detail"><strong>Description:</strong> ${game.gameDescription}</div>
                         <div class="button-group">
-                            <button class="btn btn-test" onclick='testGame(${escapedContent})'>TEST</button>
+                            <button class="btn btn-test" onclick='testGame(${JSON.stringify(game.fileContent)})'>TEST</button>
                             <button class="btn btn-approve" onclick="approveGame(${index})">APPROVE</button>
                             <button class="btn" onclick="rejectGame(${index})">REJECT</button>
                         </div>
                     </div>
                 `;
             });
-            
             list.innerHTML = html;
         }
         
@@ -616,21 +394,20 @@
             
             let html = '';
             approved.forEach((game, index) => {
-                // Escape the HTML content for the test button
-                const escapedContent = JSON.stringify(game.htmlContent).replace(/'/g, "\\'");
                 html += `
-                    <div class="approved-game">
-                        <div>
-                            <strong>${game.name || 'Untitled'}</strong> by ${game.developer || 'Unknown'}
-                        </div>
-                        <div>
-                            <button class="btn-test" style="padding:5px 15px; margin-right:5px;" onclick='testGame(${escapedContent})'>TEST</button>
-                            <button class="remove-btn" onclick="removeGame(${index})">REMOVE</button>
+                    <div class="pending-game">
+                        <h3>${game.name || 'Untitled'}</h3>
+                        <div class="game-detail"><strong>Developer:</strong> ${game.developer}</div>
+                        <div class="game-detail"><strong>Category:</strong> ${game.category}</div>
+                        <div class="game-detail"><strong>Platform:</strong> ${game.platform}</div>
+                        <div class="game-detail"><strong>Description:</strong> ${game.description}</div>
+                        <div class="button-group">
+                            <button class="btn btn-test" onclick='testGame(${JSON.stringify(game.html)})'>TEST</button>
+                            <button class="btn" onclick="removeGame(${index})">REMOVE</button>
                         </div>
                     </div>
                 `;
             });
-            
             list.innerHTML = html;
         }
     </script>
