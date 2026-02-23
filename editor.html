@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniBOSSX - Game Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: black;
+            color: #8B0000;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .nav {
+            text-align: center;
+            margin: 30px 0 40px;
+        }
+        
+        .nav button {
+            background: transparent;
+            color: #8B0000;
+            border: 2px solid #8B0000;
+            padding: 10px 30px;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+        
+        .nav button:hover {
+            background: #8B0000;
+            color: black;
+        }
+        
+        /* Home Page */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .game-card {
+            border: 2px solid #8B0000;
+            border-radius: 10px;
+            padding: 20px;
+            background: rgba(139, 0, 0, 0.05);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.3);
+        }
+        
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #8B0000;
+        }
+        
+        .game-dev {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .game-desc {
+            color: #ccc;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .game-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .category {
+            background: #8B0000;
+            color: black;
+        }
+        
+        .platform {
+            border: 1px solid #8B0000;
+            color: #8B0000;
+        }
+        
+        .play-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 2px solid #8B0000;
+            color: #8B0000;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+        
+        .play-btn:hover {
+            background: #8B0000;
+            color: black;
+        }
+        
+        .no-games {
+            text-align: center;
+            padding: 80px 20px;
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+            color: #666;
+            grid-column: 1 / -1;
+        }
+        
+        /* Editor Page */
+        .editor-box {
+            border: 2px solid #8B0000;
+            border-radius: 10px;
+            padding: 30px;
+            background: rgba(139, 0, 0, 0.05);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .editor-box h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            background: black;
+            border: 1px solid #8B0000;
+            color: #8B0000;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            height: 250px;
+            resize: vertical;
+        }
+        
+        .file-zone {
+            border: 2px dashed #8B0000;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .file-zone:hover {
+            background: rgba(139, 0, 0, 0.1);
+        }
+        
+        .or-divider {
+            text-align: center;
+            margin: 20px 0;
+            color: #8B0000;
+            font-weight: bold;
+        }
+        
+        .save-btn {
+            width: 100%;
+            padding: 15px;
+            background: #8B0000;
+            color: black;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        .save-btn:hover {
+            background: transparent;
+            border: 2px solid #8B0000;
+            color: #8B0000;
+        }
+        
+        /* Game Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            margin: 2% auto;
+            background: white;
+            border: 3px solid #8B0000;
+            border-radius: 10px;
+        }
+        
+        .close {
+            position: absolute;
+            top: -30px;
+            right: 0;
+            color: #8B0000;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: white;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .status {
+            margin-top: 10px;
+            color: #8B0000;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ MiniBOSSX ⚡</h1>
+        
+        <div class="nav">
+            <button onclick="showHome()">🏠 HOME</button>
+            <button onclick="showEditor()">✏️ ADD GAME</button>
+        </div>
+
+        <!-- HOME SECTION -->
+        <div id="homeSection">
+            <h2 style="text-align: center; margin-bottom: 30px;">🎮 GAMES</h2>
+            <div id="gamesGrid" class="games-grid"></div>
+        </div>
+
+        <!-- EDITOR SECTION (hidden by default) -->
+        <div id="editorSection" style="display: none;">
+            <div class="editor-box">
+                <h2>✏️ ADD NEW GAME</h2>
+                
+                <div class="form-group">
+                    <label>Game Name</label>
+                    <input type="text" id="gameName" placeholder="e.g., Space Invaders">
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="gameDev" placeholder="e.g., John Doe">
+                </div>
+                
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="gameDesc" placeholder="Tell us about your game..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="gameCat">
+                        <option value="ACTION">Action</option>
+                        <option value="PUZZLE">Puzzle</option>
+                        <option value="ARCADE">Arcade</option>
+                        <option value="OTHER">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Platform</label>
+                    <select id="gamePlatform">
+                        <option value="DESKTOP">Desktop</option>
+                        <option value="MOBILE">Mobile</option>
+                        <option value="BOTH">Both</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Paste your HTML code here:</label>
+                    <textarea id="gameCode" placeholder="<html><body><h1>My Game</h1></body></html>"></textarea>
+                </div>
+                
+                <div class="or-divider">————— OR —————</div>
+                
+                <div class="file-zone" onclick="document.getElementById('fileInput').click()">
+                    📁 Click to upload an HTML file
+                    <input type="file" id="fileInput" accept=".html,.htm" style="display: none;" onchange="handleFile(this)">
+                </div>
+                <div id="fileStatus" class="status"></div>
+                
+                <button class="save-btn" onclick="saveGame()">💾 SAVE GAME</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGame()">&times;</span>
+            <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Show home section
+        function showHome() {
+            document.getElementById('homeSection').style.display = 'block';
+            document.getElementById('editorSection').style.display = 'none';
+            loadGames();
+        }
+        
+        // Show editor section
+        function showEditor() {
+            document.getElementById('homeSection').style.display = 'none';
+            document.getElementById('editorSection').style.display = 'block';
+        }
+        
+        // Handle file upload
+        function handleFile(input) {
+            const file = input.files[0];
+            if (file) {
+                document.getElementById('fileStatus').textContent = `Selected: ${file.name}`;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('gameCode').value = e.target.result;
+                };
+                reader.readAsText(file);
+            }
+        }
+        
+        // Save game
+        function saveGame() {
+            // Get all values
+            const name = document.getElementById('gameName').value.trim();
+            const dev = document.getElementById('gameDev').value.trim();
+            const desc = document.getElementById('gameDesc').value.trim();
+            const cat = document.getElementById('gameCat').value;
+            const platform = document.getElementById('gamePlatform').value;
+            const code = document.getElementById('gameCode').value.trim();
+            
+            // Validate
+            if (!name || !dev || !desc || !code) {
+                alert('Please fill in all fields and add game code');
+                return;
+            }
+            
+            // Get existing games
+            let games = JSON.parse(localStorage.getItem('minibossx_games')) || [];
+            
+            // Add new game
+            games.push({
+                id: Date.now(),
+                name: name,
+                developer: dev,
+                description: desc,
+                category: cat,
+                platform: platform,
+                html: code,
+                date: new Date().toLocaleString()
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('minibossx_games', JSON.stringify(games));
+            
+            // Clear form
+            document.getElementById('gameName').value = '';
+            document.getElementById('gameDev').value = '';
+            document.getElementById('gameDesc').value = '';
+            document.getElementById('gameCode').value = '';
+            document.getElementById('fileStatus').textContent = '';
+            document.getElementById('fileInput').value = '';
+            
+            alert('Game saved successfully!');
+            showHome();
+        }
+        
+        // Load games on home page
+        function loadGames() {
+            const games = JSON.parse(localStorage.getItem('minibossx_games')) || [];
+            const grid = document.getElementById('gamesGrid');
+            
+            if (games.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-games">
+                        <p style="font-size: 2rem; margin-bottom: 20px;">🚀 NO GAMES YET</p>
+                        <p style="margin-bottom: 30px;">Click ADD GAME to create your first game!</p>
+                        <button onclick="showEditor()" style="padding: 15px 30px; background: #8B0000; color: black; border: none; border-radius: 5px; font-size: 1.2rem; cursor: pointer;">✏️ ADD GAME</button>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            games.forEach(game => {
+                html += `
+                    <div class="game-card">
+                        <div class="game-title">${escapeText(game.name)}</div>
+                        <div class="game-dev">by ${escapeText(game.developer)}</div>
+                        <div class="game-desc">${escapeText(game.description)}</div>
+                        <div class="game-tags">
+                            <span class="tag category">${escapeText(game.category)}</span>
+                            <span class="tag platform">${escapeText(game.platform)}</span>
+                        </div>
+                        <button class="play-btn" onclick="playGame('${game.id}')">▶ PLAY</button>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+        
+        // Play game
+        function playGame(id) {
+            const games = JSON.parse(localStorage.getItem('minibossx_games')) || [];
+            const game = games.find(g => g.id == id);
+            
+            if (game && game.html) {
+                document.getElementById('gameFrame').srcdoc = game.html;
+                document.getElementById('gameModal').style.display = 'block';
+            } else {
+                alert('Game not found');
+            }
+        }
+        
+        // Close game modal
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+            document.getElementById('gameFrame').srcdoc = '';
+        }
+        
+        // Escape HTML special characters
+        function escapeText(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('gameModal');
+            if (event.target === modal) {
+                closeGame();
+            }
+        };
+        
+        // Load home page on start
+        window.onload = function() {
+            showHome();
+        };
+    </script>
+</body>
+</html>
