@@ -26,11 +26,13 @@
         h1 {
             text-align: center;
             margin-bottom: 30px;
+            font-size: 3rem;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
         }
         
         .nav-bar {
             text-align: center;
-            margin: 20px 0;
+            margin: 20px 0 40px;
         }
         
         .nav-bar a {
@@ -48,44 +50,52 @@
             color: black;
         }
         
-        /* Login */
-        .login-box {
+        /* Login Screen */
+        .login-container {
             max-width: 400px;
             margin: 100px auto;
             padding: 40px;
             border: 2px solid #8B0000;
             border-radius: 15px;
+            background: rgba(139, 0, 0, 0.05);
             text-align: center;
         }
         
-        .login-box input {
+        .login-container h2 {
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .login-input {
             width: 100%;
             padding: 12px;
-            margin: 10px 0;
+            margin-bottom: 20px;
             background: black;
             border: 1px solid #8B0000;
             color: #8B0000;
             border-radius: 5px;
+            font-size: 1rem;
         }
         
-        .login-box button {
+        .login-btn {
             width: 100%;
             padding: 12px;
             background: transparent;
             border: 2px solid #8B0000;
             color: #8B0000;
+            font-size: 1.2rem;
             cursor: pointer;
             border-radius: 5px;
             font-weight: bold;
         }
         
-        .login-box button:hover {
+        .login-btn:hover {
             background: #8B0000;
             color: black;
         }
         
-        .error {
-            color: red;
+        .error-msg {
+            color: #ff0000;
             margin-top: 10px;
             display: none;
         }
@@ -110,21 +120,23 @@
         }
         
         .game-card h3 {
+            color: #8B0000;
+            font-size: 1.5rem;
             margin-bottom: 10px;
         }
         
-        .info {
+        .game-detail {
             color: #ccc;
-            margin: 5px 0;
+            margin-bottom: 5px;
         }
         
-        .info strong {
+        .game-detail strong {
             color: #8B0000;
             width: 100px;
             display: inline-block;
         }
         
-        .buttons {
+        .button-group {
             display: flex;
             gap: 10px;
             margin-top: 15px;
@@ -137,6 +149,7 @@
             color: #8B0000;
             cursor: pointer;
             border-radius: 5px;
+            font-size: 1rem;
             flex: 1;
         }
         
@@ -150,7 +163,11 @@
             color: black;
         }
         
-        .logout {
+        .btn-test {
+            background: #333;
+        }
+        
+        .logout-btn {
             float: right;
             padding: 8px 20px;
             background: transparent;
@@ -160,30 +177,35 @@
             border-radius: 3px;
         }
         
-        /* Modal for testing */
-        .modal {
+        .logout-btn:hover {
+            background: #8B0000;
+            color: black;
+        }
+        
+        /* Game Test Modal */
+        .game-modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background-color: rgba(0, 0, 0, 0.95);
             z-index: 1000;
         }
         
-        .modal-content {
+        .game-modal-content {
             position: relative;
             width: 90%;
             height: 90%;
             margin: 2% auto;
-            background: black;
+            background-color: black;
             border: 2px solid #8B0000;
             border-radius: 10px;
             padding: 20px;
         }
         
-        .close {
+        .close-modal {
             position: absolute;
             top: 10px;
             right: 20px;
@@ -192,11 +214,15 @@
             cursor: pointer;
         }
         
-        iframe {
+        .close-modal:hover {
+            color: #ff0000;
+        }
+        
+        .game-frame {
             width: 100%;
             height: 100%;
             border: none;
-            background: white;
+            background-color: white;
         }
         
         .no-items {
@@ -205,23 +231,24 @@
             border: 2px dashed #8B0000;
             border-radius: 10px;
             color: #666;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <!-- Login -->
-    <div id="loginScreen" class="login-box">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
         <h2>🔐 ADMIN LOGIN</h2>
-        <input type="text" id="username" placeholder="Username" value="admin">
-        <input type="password" id="password" placeholder="Password" value="minibossx2026">
-        <button onclick="login()">LOGIN</button>
-        <div id="loginError" class="error">Invalid credentials</div>
+        <input type="text" id="username" class="login-input" placeholder="Username" value="admin">
+        <input type="password" id="password" class="login-input" placeholder="Password" value="minibossx2026">
+        <button class="login-btn" onclick="login()">LOGIN</button>
+        <div id="loginError" class="error-msg">Invalid username or password</div>
     </div>
 
     <!-- Admin Panel -->
     <div id="adminPanel" class="admin-panel">
         <div class="container">
-            <button class="logout" onclick="logout()">LOGOUT</button>
+            <button class="logout-btn" onclick="logout()">LOGOUT</button>
             <h1>⚡ ADMIN PANEL ⚡</h1>
             
             <div class="nav-bar">
@@ -238,25 +265,31 @@
         </div>
     </div>
 
-    <!-- Test Modal -->
-    <div id="gameModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeGame()">&times;</span>
-            <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+    <!-- Game Test Modal -->
+    <div id="gameModal" class="game-modal">
+        <div class="game-modal-content">
+            <span class="close-modal" onclick="closeGame()">&times;</span>
+            <iframe id="gameFrame" class="game-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
         </div>
     </div>
 
     <script>
-        // ==================== LOGIN ====================
+        // ==================== LOGIN SYSTEM ====================
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "minibossx2026";
+        
         function login() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
             
-            if (user === 'admin' && pass === 'minibossx2026') {
+            if (username === ADMIN_USER && password === ADMIN_PASS) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('loginError').style.display = 'none';
+                
                 loadGames();
-                sessionStorage.setItem('admin', 'loggedin');
+                
+                sessionStorage.setItem('adminLoggedIn', 'true');
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
@@ -265,12 +298,11 @@
         function logout() {
             document.getElementById('loginScreen').style.display = 'block';
             document.getElementById('adminPanel').style.display = 'none';
-            sessionStorage.removeItem('admin');
+            sessionStorage.removeItem('adminLoggedIn');
         }
         
-        // Check login status
         window.onload = function() {
-            if (sessionStorage.getItem('admin') === 'loggedin') {
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
             }
@@ -278,13 +310,15 @@
         };
         
         // ==================== GAME FUNCTIONS ====================
-        function testGame(html) {
-            if (!html) {
-                alert('No game content');
+        function testGame(htmlContent) {
+            if (!htmlContent) {
+                alert('No game content to test');
                 return;
             }
-            document.getElementById('gameFrame').srcdoc = html;
-            document.getElementById('gameModal').style.display = 'block';
+            const frame = document.getElementById('gameFrame');
+            const modal = document.getElementById('gameModal');
+            frame.srcdoc = htmlContent;
+            modal.style.display = 'block';
         }
         
         function closeGame() {
@@ -292,16 +326,23 @@
             document.getElementById('gameFrame').srcdoc = '';
         }
         
+        window.onclick = function(event) {
+            const modal = document.getElementById('gameModal');
+            if (event.target === modal) {
+                closeGame();
+            }
+        };
+        
         function approveGame(index) {
             const pending = JSON.parse(localStorage.getItem('pending_games')) || [];
             const game = pending[index];
             
             if (!game || !game.fileContent) {
-                alert('Error: No game file');
+                alert('Error: Game file content missing');
                 return;
             }
             
-            // Create approved game - ONLY store metadata, HTML is separate
+            // Create approved game
             const approvedGame = {
                 id: Date.now(),
                 name: game.gameName,
@@ -309,10 +350,11 @@
                 description: game.description,
                 category: game.category,
                 platform: game.platform,
-                html: game.fileContent  // HTML is in its own field
+                html: game.fileContent,
+                dateApproved: new Date().toLocaleString()
             };
             
-            // Save to approved
+            // Add to approved
             const approved = JSON.parse(localStorage.getItem('approved_games')) || [];
             approved.push(approvedGame);
             localStorage.setItem('approved_games', JSON.stringify(approved));
@@ -341,63 +383,76 @@
             loadGames();
         }
         
+        // Helper function to safely encode HTML content for onclick
+        function encodeForOnClick(html) {
+            if (!html) return '';
+            // Convert the HTML to a base64 string to avoid quote issues
+            return btoa(unescape(encodeURIComponent(html)));
+        }
+        
         function loadGames() {
-            // Load pending
+            // Load pending games
             const pending = JSON.parse(localStorage.getItem('pending_games')) || [];
-            const pendingDiv = document.getElementById('pendingList');
+            const pendingList = document.getElementById('pendingList');
             
             if (pending.length === 0) {
-                pendingDiv.innerHTML = '<div class="no-items">✨ No pending games</div>';
+                pendingList.innerHTML = '<div class="no-items">✨ No pending submissions</div>';
             } else {
                 let html = '';
-                pending.forEach((game, i) => {
+                pending.forEach((game, index) => {
+                    // Safely encode the HTML content
+                    const encodedContent = encodeForOnClick(game.fileContent || '');
+                    
                     html += `
                         <div class="game-card">
-                            <h3>${escapeHtml(game.gameName)}</h3>
-                            <div class="info"><strong>Developer:</strong> ${escapeHtml(game.developerName)}</div>
-                            <div class="info"><strong>Email:</strong> ${escapeHtml(game.email)}</div>
-                            <div class="info"><strong>Category:</strong> ${escapeHtml(game.category)}</div>
-                            <div class="info"><strong>Platform:</strong> ${escapeHtml(game.platform)}</div>
-                            <div class="info"><strong>Description:</strong> ${escapeHtml(game.description)}</div>
-                            <div class="buttons">
-                                <button class="btn" onclick='testGame(${JSON.stringify(game.fileContent)})'>TEST</button>
-                                <button class="btn btn-approve" onclick="approveGame(${i})">APPROVE</button>
-                                <button class="btn" onclick="rejectGame(${i})">REJECT</button>
+                            <h3>${escapeHtml(game.gameName || 'Untitled')}</h3>
+                            <div class="game-detail"><strong>Developer:</strong> ${escapeHtml(game.developerName || 'Unknown')}</div>
+                            <div class="game-detail"><strong>Email:</strong> ${escapeHtml(game.email || 'No email')}</div>
+                            <div class="game-detail"><strong>Category:</strong> ${escapeHtml(game.category || 'OTHER')}</div>
+                            <div class="game-detail"><strong>Platform:</strong> ${escapeHtml(game.platform || 'BOTH')}</div>
+                            <div class="game-detail"><strong>Description:</strong> ${escapeHtml(game.description || 'No description')}</div>
+                            <div class="button-group">
+                                <button class="btn btn-test" onclick="testGame(atob('${encodedContent}'))">TEST</button>
+                                <button class="btn btn-approve" onclick="approveGame(${index})">APPROVE</button>
+                                <button class="btn" onclick="rejectGame(${index})">REJECT</button>
                             </div>
                         </div>
                     `;
                 });
-                pendingDiv.innerHTML = html;
+                pendingList.innerHTML = html;
             }
             
-            // Load approved
+            // Load approved games
             const approved = JSON.parse(localStorage.getItem('approved_games')) || [];
-            const approvedDiv = document.getElementById('approvedList');
+            const approvedList = document.getElementById('approvedList');
             
             if (approved.length === 0) {
-                approvedDiv.innerHTML = '<div class="no-items">📭 No approved games</div>';
+                approvedList.innerHTML = '<div class="no-items">📭 No approved games</div>';
             } else {
                 let html = '';
-                approved.forEach((game, i) => {
+                approved.forEach((game, index) => {
+                    // Safely encode the HTML content
+                    const encodedContent = encodeForOnClick(game.html || '');
+                    
                     html += `
                         <div class="game-card">
-                            <h3>${escapeHtml(game.name)}</h3>
-                            <div class="info"><strong>Developer:</strong> ${escapeHtml(game.developer)}</div>
-                            <div class="info"><strong>Category:</strong> ${escapeHtml(game.category)}</div>
-                            <div class="info"><strong>Platform:</strong> ${escapeHtml(game.platform)}</div>
-                            <div class="info"><strong>Description:</strong> ${escapeHtml(game.description)}</div>
-                            <div class="buttons">
-                                <button class="btn" onclick='testGame(${JSON.stringify(game.html)})'>TEST</button>
-                                <button class="btn" onclick="removeGame(${i})">REMOVE</button>
+                            <h3>${escapeHtml(game.name || 'Untitled')}</h3>
+                            <div class="game-detail"><strong>Developer:</strong> ${escapeHtml(game.developer || 'Unknown')}</div>
+                            <div class="game-detail"><strong>Category:</strong> ${escapeHtml(game.category || 'OTHER')}</div>
+                            <div class="game-detail"><strong>Platform:</strong> ${escapeHtml(game.platform || 'BOTH')}</div>
+                            <div class="game-detail"><strong>Description:</strong> ${escapeHtml(game.description || 'No description')}</div>
+                            <div class="button-group">
+                                <button class="btn btn-test" onclick="testGame(atob('${encodedContent}'))">TEST</button>
+                                <button class="btn" onclick="removeGame(${index})">REMOVE</button>
                             </div>
                         </div>
                     `;
                 });
-                approvedDiv.innerHTML = html;
+                approvedList.innerHTML = html;
             }
         }
         
-        // Helper to prevent HTML injection
+        // Helper function to escape HTML special characters
         function escapeHtml(text) {
             if (!text) return '';
             return String(text)
