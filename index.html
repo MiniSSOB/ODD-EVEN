@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniBOSSX - Submit Game</title>
+    <title>MiniBOSSX - Game Portal</title>
     <style>
         * {
             margin: 0;
@@ -26,9 +26,7 @@
         }
         
         h1 {
-            color: #8B0000;
             font-size: 4rem;
-            letter-spacing: 2px;
             text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
         }
         
@@ -52,76 +50,84 @@
             color: black;
         }
         
-        .submit-container {
-            max-width: 700px;
+        .games-container {
+            flex: 1;
+            max-width: 1200px;
             margin: 0 auto;
             width: 90%;
-            padding: 30px;
-            border: 1px solid #8B0000;
-            border-radius: 15px;
-            background: rgba(139, 0, 0, 0.05);
-            margin-bottom: 40px;
+            padding: 20px;
         }
         
-        h2 {
+        .section-title {
             text-align: center;
             margin-bottom: 30px;
             font-size: 2rem;
-            color: #8B0000;
+            border-bottom: 1px solid #8B0000;
+            padding-bottom: 10px;
         }
         
-        .form-group {
-            margin-bottom: 20px;
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
         }
         
-        label {
-            display: block;
+        .game-card {
+            border: 1px solid #8B0000;
+            border-radius: 10px;
+            padding: 20px;
+            background: rgba(139, 0, 0, 0.05);
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(139, 0, 0, 0.3);
+        }
+        
+        .game-title {
+            font-size: 1.5rem;
             margin-bottom: 5px;
-            color: #8B0000;
+        }
+        
+        .developer {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        
+        .description {
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        
+        .tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .tag {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+        
+        .category {
+            background: #8B0000;
+            color: black;
             font-weight: bold;
         }
         
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            background: black;
+        .platform {
             border: 1px solid #8B0000;
             color: #8B0000;
-            border-radius: 5px;
         }
         
-        textarea {
-            height: 100px;
-            resize: vertical;
-        }
-        
-        .file-upload-area {
-            border: 2px dashed #8B0000;
-            padding: 30px;
-            text-align: center;
-            margin: 20px 0;
-            cursor: pointer;
-            border-radius: 10px;
-        }
-        
-        .file-upload-area:hover {
-            background: rgba(139, 0, 0, 0.1);
-        }
-        
-        .file-name {
-            margin-top: 10px;
-            color: #8B0000;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 30px;
-        }
-        
-        .btn {
-            flex: 1;
-            padding: 15px;
+        .play-btn {
+            width: 100%;
+            padding: 12px;
             background: transparent;
             border: 2px solid #8B0000;
             color: #8B0000;
@@ -130,27 +136,44 @@
             font-weight: bold;
         }
         
-        .btn:hover {
+        .play-btn:hover {
             background: #8B0000;
             color: black;
         }
         
-        .btn-primary {
-            background: #8B0000;
-            color: black;
-        }
-        
-        .success-message {
-            display: none;
+        .no-games {
             text-align: center;
-            padding: 40px;
-            border: 2px solid #8B0000;
-            border-radius: 15px;
-            margin-top: 20px;
+            padding: 80px 20px;
+            border: 2px dashed #8B0000;
+            border-radius: 10px;
+            grid-column: 1 / -1;
         }
         
-        .success-message.show {
-            display: block;
+        /* Counters */
+        .counter-section {
+            text-align: center;
+            padding: 15px 0;
+            border-top: 1px solid #333;
+        }
+        
+        .counters {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .counter {
+            background: rgba(139, 0, 0, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 1px solid #8B0000;
+        }
+        
+        .counter span {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-left: 5px;
         }
         
         .bottom {
@@ -159,8 +182,46 @@
         }
         
         .copyright {
-            color: #8B0000;
             opacity: 0.7;
+        }
+        
+        /* Game Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            margin: 2% auto;
+            background: black;
+            border: 2px solid #8B0000;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            color: #8B0000;
+            font-size: 30px;
+            cursor: pointer;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
         }
     </style>
 </head>
@@ -174,79 +235,16 @@
         <a href="submit.html">SUBMIT</a>
     </div>
     
-    <div class="submit-container">
-        <h2>🎮 SUBMIT YOUR GAME</h2>
-        
-        <div class="instructions" style="margin-bottom: 20px; padding: 15px; border: 1px solid #8B0000; border-radius: 10px;">
-            <h3>📋 How to Submit:</h3>
-            <ol style="color: #ccc; margin-left: 20px;">
-                <li>Create your game in a single HTML file</li>
-                <li>Fill out the form below</li>
-                <li>Upload your HTML file</li>
-                <li>We'll review and add it</li>
-            </ol>
-        </div>
-        
-        <form id="submissionForm">
-            <div class="form-group">
-                <label>Game Name *</label>
-                <input type="text" id="gameName" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Developer Name *</label>
-                <input type="text" id="developerName" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Email *</label>
-                <input type="email" id="developerEmail" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Description *</label>
-                <textarea id="gameDescription" required></textarea>
-            </div>
-            
-            <div class="form-group">
-                <label>Category *</label>
-                <select id="gameCategory" required>
-                    <option value="ACTION">Action</option>
-                    <option value="PUZZLE">Puzzle</option>
-                    <option value="ARCADE">Arcade</option>
-                    <option value="OTHER">Other</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Platform *</label>
-                <select id="gamePlatform" required>
-                    <option value="DESKTOP">Desktop</option>
-                    <option value="MOBILE">Mobile</option>
-                    <option value="BOTH">Both</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>Game File (HTML) *</label>
-                <div class="file-upload-area" onclick="document.getElementById('gameFile').click()">
-                    📂 Click to select HTML file
-                    <input type="file" id="gameFile" accept=".html,.htm" style="display: none;" onchange="handleFileSelect(this)">
-                </div>
-                <div id="fileName" class="file-name"></div>
-            </div>
-            
-            <div class="button-group">
-                <button type="button" class="btn btn-primary" onclick="handleSubmit()">SUBMIT</button>
-                <button type="reset" class="btn">CLEAR</button>
-            </div>
-        </form>
-        
-        <div id="successMessage" class="success-message">
-            <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
-            <h3>GAME SUBMITTED!</h3>
-            <p>We'll review your game and notify you via email.</p>
-            <button class="btn btn-primary" onclick="resetForm()">SUBMIT ANOTHER</button>
+    <div class="games-container">
+        <h2 class="section-title">🎮 GAMES</h2>
+        <div id="gamesGrid" class="games-grid"></div>
+    </div>
+    
+    <div class="counter-section">
+        <div class="counters">
+            <div class="counter">📊 Total: <span id="totalCount">0</span></div>
+            <div class="counter">👤 Unique: <span id="uniqueCount">0</span></div>
+            <div class="counter">⏳ 24h: <span id="last24hCount">0</span></div>
         </div>
     </div>
     
@@ -254,72 +252,115 @@
         <p class="copyright">MiniBOSSX © 2026</p>
     </div>
 
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGame()">&times;</span>
+            <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+        </div>
+    </div>
+
     <script>
-        let selectedFile = null;
-        
-        function handleFileSelect(input) {
-            selectedFile = input.files[0];
-            if (selectedFile) {
-                document.getElementById('fileName').textContent = `Selected: ${selectedFile.name}`;
-            }
-        }
-        
-        function handleSubmit() {
-            // Get values
-            const game = {
-                gameName: document.getElementById('gameName').value,
-                developerName: document.getElementById('developerName').value,
-                developerEmail: document.getElementById('developerEmail').value,
-                gameDescription: document.getElementById('gameDescription').value,
-                gameCategory: document.getElementById('gameCategory').value,
-                gamePlatform: document.getElementById('gamePlatform').value
-            };
+        // ==================== LOAD GAMES ====================
+        function loadGames() {
+            const games = JSON.parse(localStorage.getItem('approved_games')) || [];
+            const grid = document.getElementById('gamesGrid');
             
-            // Validate
-            for (let key in game) {
-                if (!game[key]) {
-                    alert('Please fill in all fields');
-                    return;
-                }
-            }
-            
-            if (!selectedFile) {
-                alert('Please select a file');
+            if (games.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-games">
+                        <p>🚀 NO GAMES YET</p>
+                        <div class="description">Be the first to submit your game</div>
+                        <a href="submit.html" style="display:inline-block; margin-top:20px; padding:12px 30px; background:#8B0000; color:black; text-decoration:none; border-radius:5px; font-weight:bold;">SUBMIT GAME</a>
+                    </div>
+                `;
                 return;
             }
             
-            // Read file
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Create submission
-                const submission = {
-                    id: Date.now(),
-                    ...game,
-                    fileContent: e.target.result,
-                    fileName: selectedFile.name,
-                    dateSubmitted: new Date().toISOString()
-                };
+            let html = '';
+            games.forEach(game => {
+                if (!game.html) return; // Skip if no game content
                 
-                // Save to pending
-                const pending = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
-                pending.push(submission);
-                localStorage.setItem('minibossx_pending', JSON.stringify(pending));
-                
-                // Show success
-                document.getElementById('submissionForm').style.display = 'none';
-                document.getElementById('successMessage').classList.add('show');
-            };
+                html += `
+                    <div class="game-card">
+                        <h3 class="game-title">${escapeHtml(game.name)}</h3>
+                        <div class="developer">by ${escapeHtml(game.developer)}</div>
+                        <div class="description">${escapeHtml(game.description)}</div>
+                        <div class="tags">
+                            <span class="tag category">${escapeHtml(game.category)}</span>
+                            <span class="tag platform">${escapeHtml(game.platform)}</span>
+                        </div>
+                        <button class="play-btn" onclick='playGame(${JSON.stringify(game.html)})'>▶ PLAY</button>
+                    </div>
+                `;
+            });
             
-            reader.readAsText(selectedFile);
+            grid.innerHTML = html;
         }
         
-        function resetForm() {
-            document.getElementById('submissionForm').reset();
-            document.getElementById('submissionForm').style.display = 'block';
-            document.getElementById('successMessage').classList.remove('show');
-            document.getElementById('fileName').textContent = '';
-            selectedFile = null;
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
         }
+        
+        function playGame(html) {
+            if (!html) {
+                alert('Game content not found');
+                return;
+            }
+            document.getElementById('gameFrame').srcdoc = html;
+            document.getElementById('gameModal').style.display = 'block';
+        }
+        
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+            document.getElementById('gameFrame').srcdoc = '';
+        }
+        
+        window.onclick = function(event) {
+            const modal = document.getElementById('gameModal');
+            if (event.target === modal) closeGame();
+        };
+        
+        // ==================== COUNTERS ====================
+        function updateCounters() {
+            const now = Date.now();
+            const day = 24 * 60 * 60 * 1000;
+            
+            // Total
+            let total = localStorage.getItem('total_visits') || '0';
+            total = parseInt(total) + 1;
+            localStorage.setItem('total_visits', total);
+            document.getElementById('totalCount').textContent = total;
+            
+            // Unique
+            let unique = localStorage.getItem('unique_visits') || '0';
+            if (!localStorage.getItem('visitor')) {
+                unique = parseInt(unique) + 1;
+                localStorage.setItem('unique_visits', unique);
+                localStorage.setItem('visitor', '1');
+            }
+            document.getElementById('uniqueCount').textContent = unique;
+            
+            // 24h
+            let times = localStorage.getItem('visits_24h');
+            times = times ? JSON.parse(times) : [];
+            times = times.filter(t => now - t < day);
+            times.push(now);
+            localStorage.setItem('visits_24h', JSON.stringify(times));
+            document.getElementById('last24hCount').textContent = times.length;
+        }
+        
+        // ==================== INIT ====================
+        window.onload = function() {
+            loadGames();
+            updateCounters();
+        };
     </script>
 </body>
 </html>
