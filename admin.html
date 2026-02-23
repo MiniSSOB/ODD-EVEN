@@ -5,250 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - MiniBOSSX</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: black; color: #8B0000; font-family: Arial; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 30px; }
+        .nav-bar { text-align: center; margin: 20px 0; }
+        .nav-bar a { color: #8B0000; text-decoration: none; margin: 0 10px; padding: 8px 25px; border: 2px solid #8B0000; border-radius: 5px; display: inline-block; }
+        .nav-bar a:hover { background: #8B0000; color: black; }
         
-        body {
-            background-color: black;
-            font-family: Arial, Helvetica, sans-serif;
-            color: #8B0000;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 3rem;
-            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-        }
-        
-        .nav-bar {
-            text-align: center;
-            margin: 20px 0 40px;
-        }
-        
-        .nav-bar a {
-            color: #8B0000;
-            text-decoration: none;
-            margin: 0 10px;
-            padding: 8px 25px;
-            border: 2px solid #8B0000;
-            border-radius: 5px;
-            display: inline-block;
-        }
-        
-        .nav-bar a:hover {
-            background: #8B0000;
-            color: black;
-        }
-        
-        /* Login Screen */
-        .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 40px;
-            border: 2px solid #8B0000;
-            border-radius: 15px;
-            background: rgba(139, 0, 0, 0.05);
-            text-align: center;
-        }
-        
-        .login-container h2 {
-            margin-bottom: 30px;
-            font-size: 2rem;
-        }
-        
-        .login-input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 20px;
-            background: black;
-            border: 1px solid #8B0000;
-            color: #8B0000;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        
-        .login-btn {
-            width: 100%;
-            padding: 12px;
-            background: transparent;
-            border: 2px solid #8B0000;
-            color: #8B0000;
-            font-size: 1.2rem;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        
-        .login-btn:hover {
-            background: #8B0000;
-            color: black;
-        }
-        
-        .error-msg {
-            color: #ff0000;
-            margin-top: 10px;
-            display: none;
-        }
+        /* Login */
+        .login-box { max-width: 400px; margin: 100px auto; padding: 40px; border: 2px solid #8B0000; border-radius: 15px; text-align: center; }
+        .login-box input { width: 100%; padding: 12px; margin: 10px 0; background: black; border: 1px solid #8B0000; color: #8B0000; border-radius: 5px; }
+        .login-box button { width: 100%; padding: 12px; background: transparent; border: 2px solid #8B0000; color: #8B0000; cursor: pointer; border-radius: 5px; }
+        .login-box button:hover { background: #8B0000; color: black; }
+        .error { color: red; display: none; }
         
         /* Admin Panel */
-        .admin-panel {
-            display: none;
-        }
+        .admin-panel { display: none; }
+        h2 { margin: 30px 0 20px; border-bottom: 1px solid #8B0000; padding-bottom: 10px; }
         
-        h2 {
-            margin: 30px 0 20px;
-            border-bottom: 1px solid #8B0000;
-            padding-bottom: 10px;
-        }
+        .game-item { border: 1px solid #8B0000; border-radius: 10px; padding: 15px; margin-bottom: 15px; background: rgba(139,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .game-info { flex: 1; }
+        .game-title { font-size: 1.2rem; font-weight: bold; }
+        .game-meta { color: #ccc; font-size: 0.9rem; }
+        .game-actions { display: flex; gap: 10px; }
+        .btn { padding: 8px 15px; border: 1px solid #8B0000; background: transparent; color: #8B0000; cursor: pointer; border-radius: 5px; }
+        .btn:hover { background: #8B0000; color: black; }
+        .btn-approve { background: #8B0000; color: black; }
+        .logout { float: right; padding: 8px 20px; background: transparent; border: 1px solid #8B0000; color: #8B0000; cursor: pointer; border-radius: 3px; }
         
-        .game-card {
-            border: 1px solid #8B0000;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background: rgba(139, 0, 0, 0.05);
-        }
+        /* Add Game Section */
+        .add-section { border: 1px solid #8B0000; border-radius: 10px; padding: 20px; margin-top: 30px; }
+        .add-section input, .add-section textarea, .add-section select { width: 100%; padding: 10px; margin-bottom: 10px; background: black; border: 1px solid #8B0000; color: #8B0000; border-radius: 5px; }
+        .add-section textarea { height: 150px; font-family: monospace; }
+        .file-area { border: 2px dashed #8B0000; padding: 20px; text-align: center; margin: 10px 0; cursor: pointer; border-radius: 5px; }
+        .file-area:hover { background: rgba(139,0,0,0.1); }
         
-        .game-card h3 {
-            color: #8B0000;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; }
+        .modal-content { position: relative; width: 90%; height: 90%; margin: 2% auto; background: black; border: 2px solid #8B0000; border-radius: 10px; padding: 20px; }
+        .close { position: absolute; top: 10px; right: 20px; color: #8B0000; font-size: 30px; cursor: pointer; }
+        iframe { width: 100%; height: 100%; border: none; background: white; }
         
-        .game-detail {
-            color: #ccc;
-            margin-bottom: 5px;
-        }
-        
-        .game-detail strong {
-            color: #8B0000;
-            width: 100px;
-            display: inline-block;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .btn {
-            padding: 10px 20px;
-            border: 2px solid #8B0000;
-            background: transparent;
-            color: #8B0000;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 1rem;
-            flex: 1;
-        }
-        
-        .btn:hover {
-            background: #8B0000;
-            color: black;
-        }
-        
-        .btn-approve {
-            background: #8B0000;
-            color: black;
-        }
-        
-        .btn-test {
-            background: #333;
-        }
-        
-        .logout-btn {
-            float: right;
-            padding: 8px 20px;
-            background: transparent;
-            border: 1px solid #8B0000;
-            color: #8B0000;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-        
-        .logout-btn:hover {
-            background: #8B0000;
-            color: black;
-        }
-        
-        /* Game Test Modal */
-        .game-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 1000;
-        }
-        
-        .game-modal-content {
-            position: relative;
-            width: 90%;
-            height: 90%;
-            margin: 2% auto;
-            background-color: black;
-            border: 2px solid #8B0000;
-            border-radius: 10px;
-            padding: 20px;
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            color: #8B0000;
-            font-size: 30px;
-            cursor: pointer;
-        }
-        
-        .close-modal:hover {
-            color: #ff0000;
-        }
-        
-        .game-frame {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background-color: white;
-        }
-        
-        .no-items {
-            text-align: center;
-            padding: 40px;
-            border: 2px dashed #8B0000;
-            border-radius: 10px;
-            color: #666;
-            margin: 20px 0;
-        }
+        .no-items { text-align: center; padding: 40px; border: 2px dashed #8B0000; border-radius: 10px; color: #666; }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="loginScreen" class="login-container">
+    <!-- Login -->
+    <div id="loginScreen" class="login-box">
         <h2>🔐 ADMIN LOGIN</h2>
-        <input type="text" id="username" class="login-input" placeholder="Username" value="admin">
-        <input type="password" id="password" class="login-input" placeholder="Password" value="minibossx2026">
-        <button class="login-btn" onclick="login()">LOGIN</button>
-        <div id="loginError" class="error-msg">Invalid username or password</div>
+        <input type="text" id="username" placeholder="Username" value="admin">
+        <input type="password" id="password" placeholder="Password" value="minibossx2026">
+        <button onclick="login()">LOGIN</button>
+        <div id="loginError" class="error">Invalid credentials</div>
     </div>
 
     <!-- Admin Panel -->
     <div id="adminPanel" class="admin-panel">
         <div class="container">
-            <button class="logout-btn" onclick="logout()">LOGOUT</button>
+            <button class="logout" onclick="logout()">LOGOUT</button>
             <h1>⚡ ADMIN PANEL ⚡</h1>
             
             <div class="nav-bar">
@@ -257,39 +72,59 @@
                 <a href="admin.html">ADMIN</a>
             </div>
             
-            <h2>📥 PENDING GAMES</h2>
+            <h2>📥 PENDING SUBMISSIONS</h2>
             <div id="pendingList"></div>
             
-            <h2>✅ APPROVED GAMES</h2>
-            <div id="approvedList"></div>
+            <h2>✅ LIVE GAMES</h2>
+            <div id="gamesList"></div>
+            
+            <h2>➕ ADD NEW GAME</h2>
+            <div class="add-section">
+                <input type="text" id="gameName" placeholder="Game Name">
+                <input type="text" id="gameDev" placeholder="Developer">
+                <textarea id="gameDesc" placeholder="Description"></textarea>
+                <select id="gameCat">
+                    <option value="ACTION">Action</option>
+                    <option value="PUZZLE">Puzzle</option>
+                    <option value="ARCADE">Arcade</option>
+                    <option value="OTHER">Other</option>
+                </select>
+                <select id="gamePlatform">
+                    <option value="DESKTOP">Desktop</option>
+                    <option value="MOBILE">Mobile</option>
+                    <option value="BOTH">Both</option>
+                </select>
+                
+                <div class="file-area" onclick="document.getElementById('gameFile').click()">
+                    📂 Click to select HTML file
+                    <input type="file" id="gameFile" accept=".html,.htm" style="display: none;" onchange="handleFileSelect(this)">
+                </div>
+                <div id="fileName" style="color: #ccc; margin-bottom: 10px;"></div>
+                
+                <textarea id="gameCode" placeholder="Or paste HTML code here..."></textarea>
+                
+                <button class="btn btn-approve" onclick="addGame()" style="width:100%; padding:15px;">ADD GAME TO SITE</button>
+            </div>
         </div>
     </div>
 
-    <!-- Game Test Modal -->
-    <div id="gameModal" class="game-modal">
-        <div class="game-modal-content">
-            <span class="close-modal" onclick="closeGame()">&times;</span>
-            <iframe id="gameFrame" class="game-frame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGame()">&times;</span>
+            <iframe id="gameFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"></iframe>
         </div>
     </div>
 
     <script>
-        // ==================== LOGIN SYSTEM ====================
-        const ADMIN_USER = "admin";
-        const ADMIN_PASS = "minibossx2026";
-        
+        // ==================== LOGIN ====================
         function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            
-            if (username === ADMIN_USER && password === ADMIN_PASS) {
+            if (document.getElementById('username').value === 'admin' && 
+                document.getElementById('password').value === 'minibossx2026') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
-                document.getElementById('loginError').style.display = 'none';
-                
-                loadGames();
-                
-                sessionStorage.setItem('adminLoggedIn', 'true');
+                loadAll();
+                sessionStorage.setItem('admin', 'yes');
             } else {
                 document.getElementById('loginError').style.display = 'block';
             }
@@ -298,27 +133,92 @@
         function logout() {
             document.getElementById('loginScreen').style.display = 'block';
             document.getElementById('adminPanel').style.display = 'none';
-            sessionStorage.removeItem('adminLoggedIn');
+            sessionStorage.removeItem('admin');
         }
         
         window.onload = function() {
-            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            if (sessionStorage.getItem('admin') === 'yes') {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
             }
-            loadGames();
+            loadAll();
         };
         
-        // ==================== GAME FUNCTIONS ====================
-        function testGame(htmlContent) {
-            if (!htmlContent) {
-                alert('No game content to test');
+        // ==================== FILE HANDLING ====================
+        let selectedFile = null;
+        
+        function handleFileSelect(input) {
+            selectedFile = input.files[0];
+            document.getElementById('fileName').textContent = selectedFile ? `Selected: ${selectedFile.name}` : '';
+        }
+        
+        function addGame() {
+            const name = document.getElementById('gameName').value;
+            const dev = document.getElementById('gameDev').value;
+            const desc = document.getElementById('gameDesc').value;
+            const cat = document.getElementById('gameCat').value;
+            const platform = document.getElementById('gamePlatform').value;
+            const pastedCode = document.getElementById('gameCode').value;
+            
+            if (!name || !dev || !desc) {
+                alert('Please fill in name, developer, and description');
                 return;
             }
-            const frame = document.getElementById('gameFrame');
-            const modal = document.getElementById('gameModal');
-            frame.srcdoc = htmlContent;
-            modal.style.display = 'block';
+            
+            // Function to actually save the game
+            function saveGameWithCode(code) {
+                if (!code) {
+                    alert('No game code provided');
+                    return;
+                }
+                
+                const games = JSON.parse(localStorage.getItem('site_games')) || [];
+                games.push({
+                    id: Date.now(),
+                    name: name,
+                    developer: dev,
+                    description: desc,
+                    category: cat,
+                    platform: platform,
+                    html: code,
+                    added: new Date().toLocaleString()
+                });
+                localStorage.setItem('site_games', JSON.stringify(games));
+                
+                // Clear form
+                document.getElementById('gameName').value = '';
+                document.getElementById('gameDev').value = '';
+                document.getElementById('gameDesc').value = '';
+                document.getElementById('gameCode').value = '';
+                document.getElementById('fileName').textContent = '';
+                selectedFile = null;
+                
+                loadAll();
+                alert('Game added to site!');
+            }
+            
+            // If file is selected, read it
+            if (selectedFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    saveGameWithCode(e.target.result);
+                };
+                reader.readAsText(selectedFile);
+            } 
+            // Otherwise use pasted code
+            else if (pastedCode) {
+                saveGameWithCode(pastedCode);
+            }
+            else {
+                alert('Please either select a file or paste HTML code');
+            }
+        }
+        
+        // ==================== GAME MANAGEMENT ====================
+        function testGame(html) {
+            if (!html) return;
+            document.getElementById('gameFrame').srcdoc = html;
+            document.getElementById('gameModal').style.display = 'block';
         }
         
         function closeGame() {
@@ -326,141 +226,109 @@
             document.getElementById('gameFrame').srcdoc = '';
         }
         
-        window.onclick = function(event) {
-            const modal = document.getElementById('gameModal');
-            if (event.target === modal) {
-                closeGame();
-            }
-        };
-        
-        function approveGame(index) {
+        function approveSubmission(index) {
             const pending = JSON.parse(localStorage.getItem('pending_games')) || [];
             const game = pending[index];
             
-            if (!game || !game.fileContent) {
-                alert('Error: Game file content missing');
-                return;
-            }
+            if (!game || !game.html) return;
             
-            // Create approved game
-            const approvedGame = {
+            const games = JSON.parse(localStorage.getItem('site_games')) || [];
+            games.push({
                 id: Date.now(),
-                name: game.gameName,
-                developer: game.developerName,
+                name: game.name,
+                developer: game.developer,
                 description: game.description,
                 category: game.category,
                 platform: game.platform,
-                html: game.fileContent,
-                dateApproved: new Date().toLocaleString()
-            };
+                html: game.html
+            });
+            localStorage.setItem('site_games', JSON.stringify(games));
             
-            // Add to approved
-            const approved = JSON.parse(localStorage.getItem('approved_games')) || [];
-            approved.push(approvedGame);
-            localStorage.setItem('approved_games', JSON.stringify(approved));
-            
-            // Remove from pending
             pending.splice(index, 1);
             localStorage.setItem('pending_games', JSON.stringify(pending));
             
-            loadGames();
-            alert('Game approved!');
+            loadAll();
         }
         
-        function rejectGame(index) {
-            if (!confirm('Reject this game?')) return;
+        function rejectSubmission(index) {
+            if (!confirm('Reject this submission?')) return;
             const pending = JSON.parse(localStorage.getItem('pending_games')) || [];
             pending.splice(index, 1);
             localStorage.setItem('pending_games', JSON.stringify(pending));
-            loadGames();
+            loadAll();
         }
         
         function removeGame(index) {
             if (!confirm('Remove this game?')) return;
-            const approved = JSON.parse(localStorage.getItem('approved_games')) || [];
-            approved.splice(index, 1);
-            localStorage.setItem('approved_games', JSON.stringify(approved));
-            loadGames();
+            const games = JSON.parse(localStorage.getItem('site_games')) || [];
+            games.splice(index, 1);
+            localStorage.setItem('site_games', JSON.stringify(games));
+            loadAll();
         }
         
-        // Helper function to safely encode HTML content for onclick
-        function encodeForOnClick(html) {
-            if (!html) return '';
-            // Convert the HTML to a base64 string to avoid quote issues
-            return btoa(unescape(encodeURIComponent(html)));
-        }
-        
-        function loadGames() {
-            // Load pending games
+        function loadAll() {
+            // Load pending
             const pending = JSON.parse(localStorage.getItem('pending_games')) || [];
-            const pendingList = document.getElementById('pendingList');
+            const pendingDiv = document.getElementById('pendingList');
             
             if (pending.length === 0) {
-                pendingList.innerHTML = '<div class="no-items">✨ No pending submissions</div>';
+                pendingDiv.innerHTML = '<div class="no-items">✨ No pending submissions</div>';
             } else {
                 let html = '';
-                pending.forEach((game, index) => {
-                    // Safely encode the HTML content
-                    const encodedContent = encodeForOnClick(game.fileContent || '');
-                    
+                pending.forEach((game, i) => {
                     html += `
-                        <div class="game-card">
-                            <h3>${escapeHtml(game.gameName || 'Untitled')}</h3>
-                            <div class="game-detail"><strong>Developer:</strong> ${escapeHtml(game.developerName || 'Unknown')}</div>
-                            <div class="game-detail"><strong>Email:</strong> ${escapeHtml(game.email || 'No email')}</div>
-                            <div class="game-detail"><strong>Category:</strong> ${escapeHtml(game.category || 'OTHER')}</div>
-                            <div class="game-detail"><strong>Platform:</strong> ${escapeHtml(game.platform || 'BOTH')}</div>
-                            <div class="game-detail"><strong>Description:</strong> ${escapeHtml(game.description || 'No description')}</div>
-                            <div class="button-group">
-                                <button class="btn btn-test" onclick="testGame(atob('${encodedContent}'))">TEST</button>
-                                <button class="btn btn-approve" onclick="approveGame(${index})">APPROVE</button>
-                                <button class="btn" onclick="rejectGame(${index})">REJECT</button>
+                        <div class="game-item">
+                            <div class="game-info">
+                                <div class="game-title">${escapeText(game.name)}</div>
+                                <div class="game-meta">by ${escapeText(game.developer)} • ${escapeText(game.category)} • ${escapeText(game.platform)}</div>
+                                <div class="game-meta">${escapeText(game.description)}</div>
+                            </div>
+                            <div class="game-actions">
+                                <button class="btn" onclick='testGame(${JSON.stringify(game.html).replace(/'/g, "\\'")})'>TEST</button>
+                                <button class="btn btn-approve" onclick="approveSubmission(${i})">APPROVE</button>
+                                <button class="btn" onclick="rejectSubmission(${i})">REJECT</button>
                             </div>
                         </div>
                     `;
                 });
-                pendingList.innerHTML = html;
+                pendingDiv.innerHTML = html;
             }
             
-            // Load approved games
-            const approved = JSON.parse(localStorage.getItem('approved_games')) || [];
-            const approvedList = document.getElementById('approvedList');
+            // Load live games
+            const games = JSON.parse(localStorage.getItem('site_games')) || [];
+            const gamesDiv = document.getElementById('gamesList');
             
-            if (approved.length === 0) {
-                approvedList.innerHTML = '<div class="no-items">📭 No approved games</div>';
+            if (games.length === 0) {
+                gamesDiv.innerHTML = '<div class="no-items">📭 No games yet</div>';
             } else {
                 let html = '';
-                approved.forEach((game, index) => {
-                    // Safely encode the HTML content
-                    const encodedContent = encodeForOnClick(game.html || '');
-                    
+                games.forEach((game, i) => {
                     html += `
-                        <div class="game-card">
-                            <h3>${escapeHtml(game.name || 'Untitled')}</h3>
-                            <div class="game-detail"><strong>Developer:</strong> ${escapeHtml(game.developer || 'Unknown')}</div>
-                            <div class="game-detail"><strong>Category:</strong> ${escapeHtml(game.category || 'OTHER')}</div>
-                            <div class="game-detail"><strong>Platform:</strong> ${escapeHtml(game.platform || 'BOTH')}</div>
-                            <div class="game-detail"><strong>Description:</strong> ${escapeHtml(game.description || 'No description')}</div>
-                            <div class="button-group">
-                                <button class="btn btn-test" onclick="testGame(atob('${encodedContent}'))">TEST</button>
-                                <button class="btn" onclick="removeGame(${index})">REMOVE</button>
+                        <div class="game-item">
+                            <div class="game-info">
+                                <div class="game-title">${escapeText(game.name)}</div>
+                                <div class="game-meta">by ${escapeText(game.developer)} • ${escapeText(game.category)} • ${escapeText(game.platform)}</div>
+                                <div class="game-meta">${escapeText(game.description)}</div>
+                            </div>
+                            <div class="game-actions">
+                                <button class="btn" onclick='testGame(${JSON.stringify(game.html).replace(/'/g, "\\'")})'>TEST</button>
+                                <button class="btn" onclick="removeGame(${i})">REMOVE</button>
                             </div>
                         </div>
                     `;
                 });
-                approvedList.innerHTML = html;
+                gamesDiv.innerHTML = html;
             }
         }
         
-        // Helper function to escape HTML special characters
-        function escapeHtml(text) {
+        function escapeText(text) {
             if (!text) return '';
-            return String(text)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
+            return String(text).replace(/[&<>]/g, function(c) {
+                if (c === '&') return '&amp;';
+                if (c === '<') return '&lt;';
+                if (c === '>') return '&gt;';
+                return c;
+            });
         }
     </script>
 </body>
