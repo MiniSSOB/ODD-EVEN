@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniBOSSX - Submit Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #8B0000;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-center {
+            text-align: center;
+            padding-top: 30px;
+        }
+        
+        h1 {
+            color: #8B0000;
+            font-size: 4rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            display: inline-block;
+        }
+        
+        .nav-bar {
+            text-align: center;
+            margin: 20px 0 30px 0;
+        }
+        
+        .nav-bar a {
+            color: #8B0000;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 1.2rem;
+            padding: 8px 25px;
+            border: 2px solid #8B0000;
+            border-radius: 5px;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+        
+        .nav-bar a:hover {
+            background-color: #8B0000;
+            color: black;
+        }
+        
+        .submit-container {
+            flex: 1;
+            max-width: 700px;
+            margin: 0 auto;
+            width: 90%;
+            padding: 30px;
+            border: 1px solid #8B0000;
+            border-radius: 15px;
+            background-color: rgba(139, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: #8B0000;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1rem;
+            color: #8B0000;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: black;
+            border: 1px solid #8B0000;
+            color: #8B0000;
+            font-size: 1rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
+            border-color: #8B0000;
+        }
+        
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        select {
+            cursor: pointer;
+        }
+        
+        option {
+            background-color: black;
+            color: #8B0000;
+        }
+        
+        .instructions {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #8B0000;
+            border-radius: 10px;
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+        
+        .instructions h3 {
+            margin-bottom: 15px;
+            color: #8B0000;
+            font-size: 1.2rem;
+        }
+        
+        .instructions ol {
+            padding-left: 25px;
+            color: #ccc;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .note-box {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: rgba(139, 0, 0, 0.2);
+            border-left: 4px solid #8B0000;
+            color: #8B0000;
+            font-size: 0.9rem;
+        }
+        
+        .note-box code {
+            background-color: black;
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #8B0000;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed #8B0000;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 10px;
+            background-color: rgba(139, 0, 0, 0.05);
+        }
+        
+        .file-upload-area:hover {
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+        
+        .file-upload-area.dragover {
+            background-color: rgba(139, 0, 0, 0.2);
+            border-color: #ff0000;
+        }
+        
+        .file-name {
+            margin-top: 10px;
+            color: #8B0000;
+            font-size: 0.9rem;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 30px;
+            background-color: transparent;
+            color: #8B0000;
+            border: 2px solid #8B0000;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            flex: 1;
+            font-weight: bold;
+        }
+        
+        .btn:hover {
+            background-color: #8B0000;
+            color: black;
+        }
+        
+        .btn-primary {
+            background-color: #8B0000;
+            color: black;
+        }
+        
+        .btn-primary:hover {
+            background-color: transparent;
+            color: #8B0000;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+            border: 2px solid #8B0000;
+            border-radius: 15px;
+            margin-top: 20px;
+            background-color: rgba(139, 0, 0, 0.1);
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .success-message h3 {
+            color: #8B0000;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .success-message p {
+            color: #ccc;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #8B0000;
+        }
+        
+        .bottom {
+            text-align: center;
+            padding: 20px 0 30px 0;
+        }
+        
+        .copyright {
+            color: #8B0000;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-center">
+        <h1>MiniBOSSX</h1>
+    </div>
+    
+    <div class="nav-bar">
+        <a href="index.html">HOME</a>
+        <a href="submit.html">SUBMIT GAME</a>
+    </div>
+    
+    <div class="submit-container">
+        <h2>🎮 SUBMIT YOUR GAME</h2>
+        
+        <div class="instructions">
+            <h3>📋 How to Submit:</h3>
+            <ol>
+                <li>Create your game in a single <strong>index.html</strong> file</li>
+                <li>Test it locally by opening it in your browser</li>
+                <li>Fill out the form below with your game details</li>
+                <li>Upload your <strong>index.html</strong> file directly</li>
+                <li>We'll review and add it to the site within 24-48 hours</li>
+            </ol>
+            <div class="note-box">
+                ⚠️ <strong>Important:</strong> Your game must be a single HTML file named <code>index.html</code><br>
+                📁 Maximum file size: 5MB
+            </div>
+        </div>
+        
+        <form id="submissionForm">
+            <div class="form-group">
+                <label for="gameName">🎲 Game Name *</label>
+                <input type="text" id="gameName" required placeholder="e.g., Super Platformer">
+            </div>
+            
+            <div class="form-group">
+                <label for="developerName">👤 Developer Name *</label>
+                <input type="text" id="developerName" required placeholder="Your name or studio">
+            </div>
+            
+            <div class="form-group">
+                <label for="developerEmail">📧 Email Address *</label>
+                <input type="email" id="developerEmail" required placeholder="We'll notify you when approved">
+            </div>
+            
+            <div class="form-group">
+                <label for="gameDescription">📝 Game Description *</label>
+                <textarea id="gameDescription" required placeholder="Tell us about your game..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="gameCategory">🏷️ Category *</label>
+                <select id="gameCategory" required>
+                    <option value="">Select a category</option>
+                    <option value="ACTION">Action</option>
+                    <option value="ARCADE">Arcade</option>
+                    <option value="PUZZLE">Puzzle</option>
+                    <option value="PLATFORMER">Platformer</option>
+                    <option value="SHOOTER">Shooter</option>
+                    <option value="SPORTS">Sports</option>
+                    <option value="STRATEGY">Strategy</option>
+                    <option value="OTHER">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="gamePlatform">📱 Platform *</label>
+                <select id="gamePlatform" required>
+                    <option value="">Select platform</option>
+                    <option value="DESKTOP">Desktop Only</option>
+                    <option value="MOBILE">Mobile Only</option>
+                    <option value="BOTH">Works on Both</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>📄 Game File (index.html) *</label>
+                <div class="file-upload-area" id="fileUploadArea" onclick="document.getElementById('gameFile').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+                    📂 Click to select your index.html file<br>
+                    or drag and drop here
+                    <input type="file" id="gameFile" accept=".html,.htm" style="display: none;" onchange="handleFileSelect(this)">
+                </div>
+                <div id="fileName" class="file-name"></div>
+            </div>
+            
+            <div class="button-group">
+                <button type="button" class="btn btn-primary" onclick="handleSubmit()" id="submitBtn">SUBMIT GAME</button>
+                <button type="reset" class="btn" onclick="resetFileInput()">CLEAR</button>
+            </div>
+        </form>
+        
+        <div id="successMessage" class="success-message">
+            <div class="success-icon">✅</div>
+            <h3>GAME SUBMITTED!</h3>
+            <p>Thank you for submitting to MiniBOSSX!<br>We'll review your game and notify you via email when it's live.</p>
+            <button class="btn btn-primary" onclick="resetForm()">SUBMIT ANOTHER</button>
+        </div>
+    </div>
+    
+    <div class="bottom">
+        <p class="copyright">MiniBOSSX © 2026</p>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        
+        function handleFileSelect(input) {
+            selectedFile = input.files[0];
+            validateAndShowFile();
+        }
+        
+        function handleDragOver(event) {
+            event.preventDefault();
+            document.getElementById('fileUploadArea').classList.add('dragover');
+        }
+        
+        function handleDragLeave(event) {
+            event.preventDefault();
+            document.getElementById('fileUploadArea').classList.remove('dragover');
+        }
+        
+        function handleDrop(event) {
+            event.preventDefault();
+            document.getElementById('fileUploadArea').classList.remove('dragover');
+            
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                selectedFile = files[0];
+                validateAndShowFile();
+            }
+        }
+        
+        function validateAndShowFile() {
+            if (!selectedFile) return;
+            
+            // Check if it's an HTML file
+            if (!selectedFile.name.toLowerCase().endsWith('.html') && !selectedFile.name.toLowerCase().endsWith('.htm')) {
+                alert('Please select an HTML file (.html or .htm)');
+                selectedFile = null;
+                document.getElementById('fileName').textContent = '';
+                return;
+            }
+            
+            // Check file size (5MB limit)
+            if (selectedFile.size > 5 * 1024 * 1024) {
+                alert('File is too large. Maximum size is 5MB');
+                selectedFile = null;
+                document.getElementById('fileName').textContent = '';
+                return;
+            }
+            
+            document.getElementById('fileName').textContent = `Selected: ${selectedFile.name} (${(selectedFile.size / 1024).toFixed(2)} KB)`;
+        }
+        
+        function resetFileInput() {
+            selectedFile = null;
+            document.getElementById('gameFile').value = '';
+            document.getElementById('fileName').textContent = '';
+        }
+        
+        function handleSubmit() {
+            // Get form values
+            const gameName = document.getElementById('gameName').value;
+            const developerName = document.getElementById('developerName').value;
+            const developerEmail = document.getElementById('developerEmail').value;
+            const gameDescription = document.getElementById('gameDescription').value;
+            const gameCategory = document.getElementById('gameCategory').value;
+            const gamePlatform = document.getElementById('gamePlatform').value;
+            
+            // Validate
+            if (!gameName || !developerName || !developerEmail || !gameDescription || !gameCategory || !gamePlatform) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(developerEmail)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            // Validate file
+            if (!selectedFile) {
+                alert('Please select your game file (index.html)');
+                return;
+            }
+            
+            // Disable submit button to prevent double submission
+            document.getElementById('submitBtn').disabled = true;
+            
+            // Read the file
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileContent = e.target.result;
+                
+                // Create submission with file content
+                const submission = {
+                    id: Date.now(),
+                    gameName,
+                    developerName,
+                    developerEmail,
+                    gameDescription,
+                    gameCategory,
+                    gamePlatform,
+                    fileContent: fileContent, // Store the actual HTML content
+                    fileName: selectedFile.name,
+                    dateSubmitted: new Date().toLocaleString(),
+                    status: 'pending'
+                };
+                
+                // Save to localStorage
+                let submissions = JSON.parse(localStorage.getItem('minibossx_pending')) || [];
+                submissions.push(submission);
+                localStorage.setItem('minibossx_pending', JSON.stringify(submissions));
+                
+                // Show success
+                document.getElementById('submissionForm').style.display = 'none';
+                document.getElementById('successMessage').classList.add('show');
+                
+                console.log('Submission saved with file!');
+            };
+            
+            reader.onerror = function() {
+                alert('Error reading file. Please try again.');
+                document.getElementById('submitBtn').disabled = false;
+            };
+            
+            reader.readAsText(selectedFile);
+        }
+        
+        function resetForm() {
+            // Reset form
+            document.getElementById('submissionForm').reset();
+            document.getElementById('submissionForm').style.display = 'block';
+            document.getElementById('successMessage').classList.remove('show');
+            
+            // Reset file input
+            resetFileInput();
+            
+            // Re-enable submit button
+            document.getElementById('submitBtn').disabled = false;
+        }
+    </script>
+</body>
