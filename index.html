@@ -1,40 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>sleak · noise suggestion square</title>
-  <style>
-    /* -- RESET & BASE -- */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>slick dice · 60s cooldown</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      background: #0c0c0c;
-      /* chaotic noise: diagonal stripes + scan grain */
-      background-image: 
-        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 2px, transparent 2px, transparent 6px),
-        repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.03) 0px, rgba(0, 0, 0, 0.5) 1px, transparent 1px, transparent 4px);
-      color: #cfcfcf;
-      font-family: 'Courier New', Courier, monospace;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      margin: 0;
-    }
+        body {
+            background: #0b0d10;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            margin: 0;
+            color: #eef2f5;
+            background-image: radial-gradient(circle at 25% 0%, #1f2329 0%, transparent 40%),
+                              radial-gradient(circle at 75% 100%, #1f2a30 0%, transparent 40%);
+        }
 
-    /* main vault — everything square, no curves */
-    .container {
-      max-width: 960px;
-      width: 100%;
-      border: 4px solid #2a2a2a;
-      background: #121212;
-      padding: 30px;
+        /* main slick card – square, no rounding, but refined */
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(18, 22, 28, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid #3e4a5a;
+            padding: 2rem 2rem 2rem 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 0 1px #2e3a44 inset;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* dice vessel – absolute center */
+        .dice-wrapper {
+            margin: 2rem 0 2.5rem 0;
+            perspective: 800px;
+        }
+
+        .dice {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(145deg, #242c34, #151e26);
+            border: 3px solid #4e6279;
+            box-shadow: 10px 10px 0 #0a0e12, 0 0 20px #2f4b70;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s cubic-bezier(0.2, 1.6, 0.5, 1);
+            cursor: pointer;
+            user-select: none;
+            color: #d0e4ff;
+            font-size: 7rem;
+            font-weight: 700;
+            text-shadow: 4px 4px 0 #0f1a24;
+            /* square face, no rounding */
+        }
+
+        .dice:hover:not(.disabled) {
+            transform: translate(-3px, -3px);
+            box-shadow: 16px 16px 0 #0a0e12, 0 0 30px #3b6a9e;
+            border-color: #7a95b5;
+        }
+
+        .dice:active:not(.disabled) {
+            transform: translate(4px, 4px);
+            box-shadow: 6px 6px 0 #0a0e12;
+        }
+
+        .dice.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(60%);
+            box-shadow: 4px 4px 0 #0a0e12;
+            border-color: #3c4450;
+        }
+
+        /* cooldown indicator – clean & minimal */
+        .cooldown-timer {
+            font-size: 1.3rem;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+            height: 2.5rem;
+            color: #9ab8d9;
+            font-weight: 400;
+            text-transform: uppercase;
+            border-bottom: 1px solid #2b3a48;
+            padding: 0 1rem 0.5rem 1rem;
+        }
+
+        .cooldown-timer span {
+            font-weight: 600;
+            color: #f2c94c;
+            background: #1e2936;
+            padding: 0.2rem 1rem;
+            border: 1px solid #4d6880;
+            margin-left: 0.5rem;
+        }
+
+        /* footer counters – sharp & techy */
+        .footer {
+            margin-top: 2.5rem;
+            width: 100%;
+            border-top: 2px solid #2e3e4e;
+            padding-top: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2.5rem;
+            font-size: 1.3rem;
+            font-weight: 300;
+            color: #b3c7de;
+        }
+
+        .counter-item {
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+            background: #131b24;
+            padding: 0.5rem 1.5rem;
+            border: 1px solid #3f5368;
+            box-shadow: inset 0 0 0 1px #1f2b35;
+        }
+
+        .counter-item .label {
+            font-weight: 300;
+            text-transform: uppercase;
+            font-size: 1rem;
+            letter-spacing: 1.5px;
+            color: #7f99b6;
+        }
+
+        .counter-item .value {
+            font-weight: 600;
+            font-size: 2rem;
+            color: #e2ecff;
+            text-shadow: 0 0 8px #3670b3;
+        }
+
+        /* small description */
+        .info-note {
+            font-size: 0.9rem;
+            color: #617e9c;
+            margin-bottom: 0.5rem;
+        }
+
+        /* everything square, but slick */
+        button, .dice, .counter-item, .container {
+            border-radius: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- main dice block -->
+        <div class="dice-wrapper">
+            <div class="dice" id="dice" role="button" tabindex="0" aria-label="roll dice, once per minute">?</div>
+        </div>
+
+        <!-- cooldown status -->
+        <div class="cooldown-timer" id="cooldownDisplay">
+            ⏳ ready to roll <span id="timerText">⚡</span>
+        </div>
+
+        <!-- visit counters (bottom) -->
+        <div class="footer">
+            <div class="counter-item">
+                <span class="label">visits (total)</span>
+                <span class="value" id="totalVisits">0</span>
+            </div>
+            <div class="counter-item">
+                <span class="label">unique (browser)</span>
+                <span class="value" id="uniqueVisits">0</span>
+            </div>
+        </div>
+        <div class="info-note">⏱️ roll once per 60s · counters persist locally</div>
+    </div>
+
+    <script>
+        (function() {
+            // ==================== COUNTERS (total & unique) ====================
+            const TOTAL_KEY = 'total_visits_dice';
+            const UNIQUE_KEY = 'unique_visitor_dice';
+            const UNIQUE_FLAG = 'unique_visited_flag_dice';
+
+            // total visits: increment on every page load
+            let total = localStorage.getItem(TOTAL_KEY);
+            total = total ? Number(total) + 1 : 1;
+            localStorage.setItem(TOTAL_KEY, total);
+
+            // unique visits: only increment if first time (per browser)
+            let unique = localStorage.getItem(UNIQUE_KEY);
+            unique = unique ? Number(unique) : 0;
+            const hasVisitedBefore = localStorage.getItem(UNIQUE_FLAG);
+
+            if (!hasVisitedBefore) {
+                // new unique visitor
+                unique += 1;
+                localStorage.setItem(UNIQUE_KEY, unique);
+                localStorage.setItem(UNIQUE_FLAG, 'true');
+            }
+
+            // update DOM counters
+            document.getElementById('totalVisits').textContent = total;
+            document.getElementById('uniqueVisits').textContent = unique;
+
+            // ==================== DICE & 60s COOLDOWN ====================
+            const diceEl = document.getElementById('dice');
+            const timerText = document.getElementById('timerText');
+
+            const LAST_ROLL_KEY = 'last_roll_timestamp_dice';
+            const COOLDOWN_SEC = 60; // 60 seconds
+
+            // helper to get remaining cooldown (seconds)
+            function getRemainingCooldown() {
+                const last = localStorage.getItem(LAST_ROLL_KEY);
+                if (!last) return 0; // never rolled
+                const elapsed = (Date.now() - Number(last)) / 1000;
+                const remaining = COOLDOWN_SEC - elapsed;
+                return remaining > 0 ? Math.ceil(remaining) : 0;
+            }
+
+            // update dice appearance and timer based on cooldown
+            function updateCooldownUI() {
+                const remaining = getRemainingCooldown();
+                if (remaining > 0) {
+                    diceEl.classList.add('disabled');
+                    timerText.innerText = `⧗ ${remaining}s`;
+                } else {
+                    diceEl.classList.remove('disabled');
+                    timerText.innerText = '🎲 roll';
+                }
+            }
+
+            // perform the roll (generate 1-100, update dice face)
+            function rollDice() {
+                const randomNum = Math.floor(Math.random() * 100) + 1; // 1-100
+                diceEl.textContent = randomNum;
+                // store timestamp
+                localStorage.setItem(LAST_ROLL_KEY, Date.now().toString());
+                // update ui immediately
+                updateCooldownUI();
+
+                // start local countdown timer (repeats every second until cooldown ends)
+                if (window.cooldownInterval) clearInterval(window.cooldownInterval);
+                window.cooldownInterval = setInterval(() => {
+                    const remaining = getRemainingCooldown();
+                    if (remaining <= 0) {
+                        // cooldown finished: reset dice face to "?" and enable
+                        diceEl.textContent = '?';
+                        diceEl.classList.remove('disabled');
+                        timerText.innerText = '🎲 roll';
+                        clearInterval(window.cooldownInterval);
+                        window.cooldownInterval = null;
+                    } else {
+                        timerText.innerText = `⧗ ${remaining}s`;
+                    }
+                }, 200); // smooth update
+            }
+
+            // handle click on dice
+            diceEl.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (diceEl.classList.contains('disabled')) {
+                    // maybe flash or just ignore
+                    return;
+                }
+                // perform roll
+                rollDice();
+            });
+
+            // also allow keyboard "enter" or "space" (accessibility)
+            diceEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (!diceEl.classList.contains('disabled')) {
+                        rollDice();
+                    }
+                }
+            });
+
+            // initial UI based on any previous roll
+            (function initDice() {
+                const remaining = getRemainingCooldown();
+                if (remaining > 0) {
+                    diceEl.classList.add('disabled');
+                    diceEl.textContent = '?';     // still show ? but disabled
+                    timerText.innerText = `⧗ ${remaining}s`;
+
+                    // start countdown interval
+                    if (window.cooldownInterval) clearInterval(window.cooldownInterval);
+                    window.cooldownInterval = setInterval(() => {
+                        const r = getRemainingCooldown();
+                        if (r <= 0) {
+                            diceEl.textContent = '?';
+                            diceEl.classList.remove('disabled');
+                            timerText.innerText = '🎲 roll';
+                            clearInterval(window.cooldownInterval);
+                            window.cooldownInterval = null;
+                        } else {
+                            timerText.innerText = `⧗ ${r}s`;
+                        }
+                    }, 200);
+                } else {
+                    diceEl.textContent = '?';
+                    diceEl.classList.remove('disabled');
+                    timerText.innerText = '🎲 roll';
+                }
+            })();
+
+            // optional: clean interval on page unload
+            window.addEventListener('beforeunload', function() {
+                if (window.cooldownInterval) clearInterval(window.cooldownInterval);
+            });
+
+        })();
+    </script>
+</body>
+</html>      padding: 30px;
       box-shadow: 14px 14px 0 #000000;
       position: relative;
       z-index: 2;
