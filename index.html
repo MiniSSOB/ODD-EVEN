@@ -1,40 +1,449 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>9 BOX · ask in secret</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #03050a;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            color: #eef3fc;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sleak · noise suggestion square</title>
+  <style>
+    /* -- RESET & BASE -- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0c0c0c;
+      /* chaotic noise: diagonal stripes + scan grain */
+      background-image: 
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 2px, transparent 2px, transparent 6px),
+        repeating-linear-gradient(0deg, rgba(0, 255, 0, 0.03) 0px, rgba(0, 0, 0, 0.5) 1px, transparent 1px, transparent 4px);
+      color: #cfcfcf;
+      font-family: 'Courier New', Courier, monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      margin: 0;
+    }
+
+    /* main vault — everything square, no curves */
+    .container {
+      max-width: 960px;
+      width: 100%;
+      border: 4px solid #2a2a2a;
+      background: #121212;
+      padding: 30px;
+      box-shadow: 14px 14px 0 #000000;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* big bold headline — like a bootlegger marquee */
+    h1 {
+      font-size: 5rem;
+      font-weight: 800;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: #e0e0e0;
+      text-align: center;
+      border: 4px solid #3a3a3a;
+      padding: 25px 15px;
+      margin-bottom: 35px;
+      background: #1d1d1d;
+      box-shadow: 10px 10px 0 #000;
+      word-break: break-word;
+      font-family: 'Impact', 'Arial Black', 'Courier New', sans-serif;
+      text-shadow: 3px 3px 0 #2a2a2a;
+    }
+
+    /* input area — raw square */
+    .input-area {
+      border: 4px solid #333;
+      padding: 25px;
+      margin-bottom: 35px;
+      background: #1a1a1a;
+      box-shadow: 10px 10px 0 #000;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .input-area input[type="text"] {
+      flex: 3 1 250px;
+      background: #0a0a0a;
+      border: 3px solid #3a3a3a;
+      padding: 18px 20px;
+      font-size: 1.5rem;
+      color: #b5ffb5;     /* faint terminal green */
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: bold;
+      outline: none;
+      box-shadow: inset 4px 4px 0 #000;
+    }
+
+    .input-area input[type="text"]::placeholder {
+      color: #4a4a4a;
+      font-style: italic;
+      letter-spacing: 1px;
+    }
+
+    .input-area button {
+      flex: 1 1 auto;
+      background: #222;
+      border: 3px solid #3a3a3a;
+      padding: 18px 30px;
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #f0f0f0;
+      cursor: pointer;
+      font-family: 'Courier New', Courier, monospace;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 6px 6px 0 #000;
+      transition: 0.05s linear;
+    }
+
+    .input-area button:hover {
+      background: #2e2e2e;
+      border-color: #5a5a5a;
+      box-shadow: 2px 2px 0 #000;
+      transform: translate(4px, 4px);
+    }
+
+    /* suggestion board — second tab look (square & raw) */
+    .suggestions-list {
+      border: 4px solid #333;
+      padding: 10px 20px 20px 20px;
+      background: #151515;
+      box-shadow: 10px 10px 0 #000;
+      margin-bottom: 35px;
+    }
+
+    /* like a little tab header inside the board */
+    .suggestions-list::before {
+      content: "⚡ SUGGESTION FORUM ⚡";
+      display: block;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      padding: 20px 0 15px 0;
+      border-bottom: 4px solid #3a3a3a;
+      margin-bottom: 15px;
+      color: #b0ffb0;
+      text-shadow: 2px 2px 0 #1f1f1f;
+      font-family: 'Impact', 'Arial Black', sans-serif;
+    }
+
+    /* individual suggestion cards — square, heavy */
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 3px solid #2a2a2a;
+      background: #1e1e1e;
+      padding: 18px 20px;
+      margin: 15px 0;
+      box-shadow: 6px 6px 0 #000;
+      transition: 0.05s linear;
+    }
+
+    .suggestion-item:hover {
+      border-color: #4f4f4f;
+      box-shadow: 2px 2px 0 #000;
+      transform: translate(2px, 2px);
+    }
+
+    .suggestion-text {
+      flex: 1;
+      font-size: 1.6rem;
+      font-weight: 500;
+      color: #dbdbdb;
+      word-break: break-word;
+      padding-right: 20px;
+      font-family: 'Courier New', Courier, monospace;
+      text-transform: none;
+      letter-spacing: 0.5px;
+    }
+
+    .vote-area {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+
+    .vote-btn {
+      width: 55px;
+      height: 55px;
+      background: #252525;
+      border: 3px solid #3c3c3c;
+      font-size: 2.8rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: white;
+      box-shadow: 5px 5px 0 #000;
+      transition: 0.02s linear;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .vote-btn:hover {
+      background: #3a3a3a;
+      border-color: #6a6a6a;
+      box-shadow: 2px 2px 0 #000;
+      transform: translate(3px, 3px);
+    }
+
+    .vote-count {
+      font-size: 2.4rem;
+      font-weight: 800;
+      min-width: 55px;
+      text-align: center;
+      color: #b3ffb3;   /* dirty green for bootleg vibe */
+      text-shadow: 2px 2px 0 #121212;
+      background: #0f0f0f;
+      padding: 5px 0;
+      border: 2px solid #3f3f3f;
+      box-shadow: inset 2px 2px 0 #000;
+    }
+
+    /* view counter footer — raw, square, no roundness */
+    .footer {
+      border: 4px solid #333;
+      padding: 20px;
+      background: #1a1a1a;
+      text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      box-shadow: 10px 10px 0 #000;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #bcbcbc;
+    }
+
+    #viewCounter {
+      color: #93f093;
+      background: #0a0a0a;
+      padding: 5px 20px;
+      border: 3px solid #3c3c3c;
+      margin-left: 15px;
+      font-size: 2.2rem;
+      box-shadow: inset 3px 3px 0 #000;
+    }
+
+    /* keep everything sharp & square */
+    button, input, div, h1, .vote-btn, .suggestion-item {
+      border-radius: 0 !important;
+    }
+
+    /* extra glitch / bootlegger noise (overlay) */
+    .container::after {
+      content: "";
+      position: absolute;
+      top: 10px; left: 10px; right: -10px; bottom: -10px;
+      background: repeating-linear-gradient(45deg, rgba(255, 200, 0, 0.02) 0px, rgba(255, 0, 0, 0.01) 4px, transparent 8px);
+      pointer-events: none;
+      z-index: -1;
+      border: 2px solid #2b2b2b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- BIG SUGGESTION HEADER -->
+    <h1>SUGGESTION</h1>
+
+    <!-- INPUT AREA (square, rough) -->
+    <div class="input-area">
+      <input type="text" id="suggestionInput" placeholder=" type your crooked idea...">
+      <button id="submitSuggestion">SUBMIT</button>
+    </div>
+
+    <!-- SECOND TAB / FORUM (suggestions live here) -->
+    <div class="suggestions-list" id="suggestionsList">
+      <!-- injected via JS -->
+    </div>
+
+    <!-- VIEW COUNTER BOTTOM (bootlegger views) -->
+    <div class="footer">
+      <span>🚬 VISITORS COUNTED <span id="viewCounter">0</span></span>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      // ========== VIEW COUNTER (grimy persistent counter) ==========
+      let viewCount = localStorage.getItem('viewCount');
+      if (viewCount === null) {
+        viewCount = 0;
+      } else {
+        viewCount = Number(viewCount);
+      }
+      viewCount += 1;                     // one more degenerate visitor
+      localStorage.setItem('viewCount', viewCount);
+      document.getElementById('viewCounter').textContent = viewCount;
+
+      // ========== SUGGESTIONS DATA (with bootleg default noise) ==========
+      const STORAGE_KEY = 'bootleg_suggestions';
+
+      // default dirty suggestions (chaos / bootlegger flavor)
+      const defaultSuggestions = [
+        { id: 1, text: "more static in the background", votes: 9 },
+        { id: 2, text: "replace all curves with squares", votes: 16 },
+        { id: 3, text: "add a jar of moonshine icon", votes: 4 },
+        { id: 4, text: "every font must be bold and jagged", votes: 12 }
+      ];
+
+      // load from localStorage or use defaults
+      function loadSuggestions() {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (stored) {
+          try {
+            return JSON.parse(stored);
+          } catch (e) {
+            return defaultSuggestions;
+          }
+        } else {
+          return defaultSuggestions;
         }
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(2, 5, 10, 0.98);
-            backdrop-filter: blur(6px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .modal-box {
-            background: #0e121c;
-            border: 1px solid #2c354f;
-            width: 90%;
-            max-width: 360px;
-            padding: 2rem 1.8rem;
-        }
-        .modal-box h2 {
-            font-weight: 400;
+      }
+
+      let suggestions = loadSuggestions();
+
+      function saveSuggestions() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(suggestions));
+      }
+
+      // ========== RENDER (with vote sorting, heavy squares) ==========
+      function escapeHtml(unsafe) {
+        return unsafe.replace(/[&<>"]/g, function(m) {
+          if (m === '&') return '&amp;';
+          if (m === '<') return '&lt;';
+          if (m === '>') return '&gt;';
+          if (m === '"') return '&quot;';
+          return m;
+        });
+      }
+
+      function renderSuggestions() {
+        const container = document.getElementById('suggestionsList');
+        if (!container) return;
+
+        // sort by votes descending (crude but fair)
+        const sorted = [...suggestions].sort((a, b) => b.votes - a.votes);
+
+        let htmlString = '';  // we will build then set, but need event listeners → better to create elements
+        // using manual DOM to keep listeners easy
+        container.innerHTML = ''; // clear
+
+        sorted.forEach(s => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'suggestion-item';
+
+          const textDiv = document.createElement('div');
+          textDiv.className = 'suggestion-text';
+          textDiv.textContent = s.text;   // safe, no injection
+
+          const voteArea = document.createElement('div');
+          voteArea.className = 'vote-area';
+
+          // upvote button
+          const upBtn = document.createElement('div');
+          upBtn.className = 'vote-btn upvote';
+          upBtn.setAttribute('data-id', s.id);
+          upBtn.textContent = '+';
+
+          // vote count display
+          const countSpan = document.createElement('div');
+          countSpan.className = 'vote-count';
+          countSpan.textContent = s.votes;
+
+          // downvote button
+          const downBtn = document.createElement('div');
+          downBtn.className = 'vote-btn downvote';
+          downBtn.setAttribute('data-id', s.id);
+          downBtn.textContent = '−';  // minus sign, looks sharp
+
+          voteArea.appendChild(upBtn);
+          voteArea.appendChild(countSpan);
+          voteArea.appendChild(downBtn);
+
+          itemDiv.appendChild(textDiv);
+          itemDiv.appendChild(voteArea);
+
+          container.appendChild(itemDiv);
+        });
+
+        // Attach voting listeners (up/down)
+        document.querySelectorAll('.upvote').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = Number(btn.dataset.id);
+            const suggestion = suggestions.find(s => s.id === id);
+            if (suggestion) {
+              suggestion.votes += 1;
+              saveSuggestions();
+              renderSuggestions();  // re-render to reflect sorted order
+            }
+          });
+        });
+
+        document.querySelectorAll('.downvote').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = Number(btn.dataset.id);
+            const suggestion = suggestions.find(s => s.id === id);
+            if (suggestion) {
+              suggestion.votes -= 1;
+              saveSuggestions();
+              renderSuggestions();
+            }
+          });
+        });
+      }
+
+      // ========== ADD NEW SUGGESTION ==========
+      function addSuggestionFromInput() {
+        const inputField = document.getElementById('suggestionInput');
+        const text = inputField.value.trim();
+        if (text === '') return;
+
+        const newId = suggestions.length > 0 ? Math.max(...suggestions.map(s => s.id)) + 1 : 1;
+        suggestions.push({
+          id: newId,
+          text: text,
+          votes: 0
+        });
+        saveSuggestions();
+        renderSuggestions();
+        inputField.value = '';   // clear field
+      }
+
+      // ========== INIT & EVENT BINDINGS ==========
+      window.addEventListener('DOMContentLoaded', () => {
+        renderSuggestions();
+
+        const submitBtn = document.getElementById('submitSuggestion');
+        const inputField = document.getElementById('suggestionInput');
+
+        submitBtn.addEventListener('click', addSuggestionFromInput);
+
+        inputField.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            addSuggestionFromInput();
+          }
+        });
+      });
+
+    })();
+  </script>
+</body>
+</html>            font-weight: 400;
             text-transform: uppercase;
             letter-spacing: 3px;
             font-size: 1.2rem;
