@@ -1,40 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniBOSSX - Game Portal</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background-color: black;
-            font-family: Arial, Helvetica, sans-serif;
-            color: #8B0000;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .top-center {
-            text-align: center;
-            padding-top: 30px;
-        }
-        
-        h1 {
-            color: #8B0000;
-            font-size: 4rem;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px rgba(139, 0, 0, 0.5);
-        }
-        
-        .nav-bar {
-            text-align: center;
-            margin: 20px 0 30px 0;
+<button onclick="newJoke()">Tell me a joke</button>
+<p id="joke"></p>
+<script>
+  const jokes = [
+    "Why do programmers prefer dark mode? Because light attracts bugs.",
+    "What do you call a fake noodle? An impasta.",
+    // add 2-3 more
+  ];
+  function newJoke() {
+    document.getElementById('joke').innerText = jokes[Math.floor(Math.random() * jokes.length)];
+  }
+</script>            margin: 20px 0 30px 0;
         }
         
         .nav-bar a {
