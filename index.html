@@ -1,12 +1,11 @@
-<button onclick="newJoke()">Tell me a joke</button>
-<p id="joke"></p>
+<button onclick="changeColor()">Change Color</button>
 <script>
-  const jokes = [
-    "Why do programmers prefer dark mode? Because light attracts bugs.",
-    "What do you call a fake noodle? An impasta.",
-    // add 2-3 more
-  ];
-  function newJoke() {
-    document.getElementById('joke').innerText = jokes[Math.floor(Math.random() * jokes.length)];
+  function changeColor() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    document.body.style.backgroundColor = color;
   }
 </script>
