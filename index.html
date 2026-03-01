@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Magic 9 Box · Ask once a day</title>
+    <title>9 Box · Community Feed</title>
     <style>
         * {
             margin: 0;
@@ -12,29 +12,726 @@
         }
 
         body {
-            background: linear-gradient(145deg, #1a1e2c 0%, #2d3349 100%);
+            background: #0b0d15;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            padding: 1.5rem;
-            margin: 0;
+            padding: 1rem;
+            color: #eef2fb;
         }
 
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 3rem;
-            padding: 2.5rem 2rem;
-            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            max-width: 650px;
+        .app {
             width: 100%;
-            transition: all 0.2s ease;
+            max-width: 700px;
+            background: #141720;
+            border-radius: 2rem;
+            padding: 1.5rem 1.2rem;
+            box-shadow: 0 30px 50px -20px black, inset 0 1px 1px rgba(255,255,255,0.05);
+            border: 1px solid #2a2f42;
         }
 
+        /* tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.8rem;
+            border-bottom: 1px solid #2b3045;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #7e89b0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 0.4rem 1.2rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: #2d344a;
+            color: white;
+        }
+
+        /* name section */
+        .name-section {
+            background: #1c212f;
+            border-radius: 3rem;
+            padding: 0.7rem 1.2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            border: 1px solid #353e58;
+        }
+
+        .name-display {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .change-name {
+            background: #2f3a5a;
+            border: none;
+            color: #b3c2ff;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .name-input {
+            background: #0f121b;
+            border: 1px solid #3d4765;
+            border-radius: 3rem;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.9rem;
+            width: 180px;
+        }
+
+        .save-name {
+            background: #4b5c9e;
+            border: none;
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 3rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        /* question area */
+        .question-area {
+            margin: 1.5rem 0 1rem;
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .question-input {
+            flex: 1;
+            background: #1a1f30;
+            border: 1px solid #38405f;
+            border-radius: 3rem;
+            padding: 0.9rem 1.5rem;
+            font-size: 1rem;
+            color: white;
+            outline: none;
+        }
+
+        .question-input:focus {
+            border-color: #7e8bb4;
+        }
+
+        /* black 9 box */
+        .black-box {
+            width: 80px;
+            height: 80px;
+            background: #0a0c14;
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px -5px black, inset 0 -3px 0 #2f354a;
+            border: 1px solid #4b547a;
+            cursor: pointer;
+            transition: 0.1s ease;
+            flex-shrink: 0;
+        }
+
+        .black-box:hover {
+            background: #121624;
+            border-color: #8f9ed4;
+            transform: scale(1.02);
+        }
+
+        .black-box:active {
+            transform: scale(0.97);
+        }
+
+        .black-box .nine {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #e0e5ff;
+            text-shadow: 0 2px 5px #30386b;
+            font-family: 'Times New Roman', serif;
+            line-height: 1;
+        }
+
+        /* answer display */
+        .answer-display {
+            background: #1a1f2d;
+            border-radius: 2rem;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0 2rem;
+            border-left: 4px solid #7d8ed1;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            color: #e5eafe;
+            min-height: 5rem;
+            word-break: break-word;
+        }
+
+        /* feed tab */
+        .feed-list {
+            max-height: 380px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+            margin-top: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .feed-item {
+            background: #1e2436;
+            border-radius: 1.5rem;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid #303a57;
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+            color: #a6b4dc;
+        }
+
+        .feed-name {
+            font-weight: 600;
+            color: #ccd9ff;
+        }
+
+        .feed-time {
+            font-family: monospace;
+        }
+
+        .feed-question {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            color: white;
+        }
+
+        .feed-answer {
+            color: #b1c6ff;
+            font-style: italic;
+            border-left: 2px solid #4d5f9e;
+            padding-left: 0.7rem;
+        }
+
+        /* counter and footer */
+        .site-counter {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #5f6b99;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px dashed #2d334f;
+            padding-top: 1.2rem;
+        }
+
+        .counter-number {
+            background: #232a41;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+            color: #cbd5ff;
+            font-weight: 600;
+        }
+
+        .btn-reset {
+            background: none;
+            border: none;
+            color: #5f6fa3;
+            text-decoration: underline dotted;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .small-note {
+            color: #3f4870;
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 0.5rem;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app">
+    <!-- Tabs -->
+    <div class="tabs">
+        <button id="tabAsk" class="tab-btn active">🎲 Ask</button>
+        <button id="tabFeed" class="tab-btn">📃 Live Feed</button>
+    </div>
+
+    <!-- Name section (always visible) -->
+    <div id="nameSection" class="name-section"></div>
+
+    <!-- Ask tab content -->
+    <div id="askContent">
+        <div class="question-area">
+            <input type="text" id="questionInput" class="question-input" placeholder="Type your question...">
+            <div id="nineBox" class="black-box">
+                <span class="nine">9</span>
+            </div>
+        </div>
+        <div id="answerDisplay" class="answer-display">
+            🤐 Ask the 9 box anything
+        </div>
+    </div>
+
+    <!-- Feed tab content (hidden by default) -->
+    <div id="feedContent" style="display: none;">
+        <div class="feed-list" id="feedList"></div>
+        <div class="small-note">⏳ last 50 questions from the community</div>
+    </div>
+
+    <!-- Visitor counter -->
+    <div class="site-counter">
+        <span>👥 visitors</span>
+        <span id="counterDisplay" class="counter-number">0</span>
+        <button id="resetCounter" class="btn-reset">reset</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ---------- 200+ savage answers (same as before) ----------
+        const answers = [
+            "Without a doubt – but you'll regret it.",
+            "Ask again when you're less desperate.",
+            "My sources say no, and they're never wrong.",
+            "Outlook not so good – have you tried crying?",
+            "Very doubtful, but nice try.",
+            "100% yes, and I'm judging you.",
+            "Don't count on it. Actually, don't count at all.",
+            "Signs point to... oh look, a distraction!",
+            "Better not tell you now – you'd scream.",
+            "Cannot predict now, I'm hungover.",
+            "Concentrate and ask again (and maybe shower).",
+            "Yes, but your crush still won't notice you.",
+            "No, and the universe giggled.",
+            "It is certain... that you need therapy.",
+            "You may rely on it – said no one ever.",
+            "As I see it, yes... wait, no, I lied.",
+            "Reply hazy, try again after coffee.",
+            "My reply is no, but thanks for playing.",
+            "Yes, definitely... to fail.",
+            "Most likely you'll regret asking.",
+            "No – and the 9 box is never wrong.",
+            "Yes, if you sacrifice a sock.",
+            "Ask again tomorrow (I'm bored of you).",
+            "The spirits say 'LOL no'.",
+            "Absolutely. In your dreams.",
+            "I see greatness... for your cat.",
+            "Don't bet on it, unless you like losing.",
+            "It's 50/50 – like your IQ.",
+            "Signs point to disappointment.",
+            "Outlook good... for disaster.",
+            "You'll die in 7 seconds. (just kidding... or not?)",
+            "Your secret crush thinks you're weird.",
+            "That job? You're already rejected.",
+            "Someone is talking behind your back right now.",
+            "You have 1 unread message from your ex. Don't check.",
+            "Your browser history will be leaked tomorrow.",
+            "The 9 predicts you'll step on Lego tonight.",
+            "You're not the father. (plot twist)",
+            "Your wifi will die during the final boss.",
+            "A spider is watching you.",
+            "That itch? It's not a mosquito.",
+            "Your phone battery will die at 3%.",
+            "Your 'good luck' charm is cursed.",
+            "You forgot something important. Very important.",
+            "The person you're thinking of is thinking of someone else.",
+            "Your fly is undone (metaphorically).",
+            "You have 24 hours to live... just kidding, or am I?",
+            "That sound you heard? Nothing good.",
+            "Your future spouse is currently dating someone else.",
+            "You will sneeze at the worst moment.",
+            "The next click will cost you $9.99.",
+            "You're being followed... by a duck.",
+            "Your bank account is sad.",
+            "The 9 says: go to bed. Now.",
+            "You're not as funny as you think.",
+            "That 'good idea' is actually terrible.",
+            "Your pet is plotting against you.",
+            "You'll die at 92... bored.",
+            "You have been visited by the number 9. That's it.",
+            "Tomorrow you'll find a penny. Then lose it.",
+            "The answer is purple. Always purple.",
+            "9 out of 10 voices in my head agree.",
+            "Try turning your life off and on again.",
+            "You're the reason they put instructions on shampoo.",
+            "Ask a random squirrel instead.",
+            "The 9 has spoken: 'meh'.",
+            "Error 404: answer not found.",
+            "Your vibe attracts a tribe... of idiots.",
+            "You owe me $3.50.",
+            "I'd give you an answer, but I'm shy.",
+            "The 9 is currently out of office.",
+            "Ask me tomorrow – I'll give the same answer.",
+            "You are now breathing manually.",
+            "Your left foot feels lighter.",
+            "The answer is under your bed.",
+            "Banana. Just banana.",
+            "The secret password is 'fluffernutter'.",
+            "You have a nice smile. Too bad.",
+            "42. No, wait, 24.",
+            "You will find what you're looking for in the last place you look.",
+            "The 9 box is now self-aware. Run.",
+            "I'm not saying it was aliens... but it was aliens.",
+            "You're the chosen one. (to take out the trash)",
+            "The answer is 'your shoelace is untied'.",
+            "Shhh, I'm listening to the void.",
+            "Your future is bright... like a potato.",
+            "9 is just 8 scared of 7.",
+            "You're the 9th person to ask that today.",
+            "The council of nines says maybe.",
+            "I'd tell you, but then I'd have to kill you.",
+            "You'll get a notification in 3...2...1...",
+            "Slay, queen. (or king, or enby)",
+            "That's a red flag, honestly.",
+            "Touch grass and ask again.",
+            "The vibe is off. Very off.",
+            "Based on your browsing history... no.",
+            "You're valid. But this answer isn't.",
+            "I oop –",
+            "Send this to 10 friends for good luck. (just kidding)",
+            "You just lost The Game.",
+            "Your screen time is 6h higher than yesterday.",
+            "That's cringe, bro.",
+            "Yikes.",
+            "The 9 says: touch some grass.",
+            "You're main character energy, but in a bad way.",
+            "No cap, you're sus.",
+            "This answer is sponsored by Raid: Shadow Legends.",
+            "Your future is giving 2014 Tumblr.",
+            "Big oof.",
+            "It's giving 'no'.",
+            "You're valid, but your question isn't.",
+            "Sheesh, ask something harder.",
+            "You're on thin ice, my dude.",
+            "The 9 is tired of your questions.",
+            "Answer: ghosted.",
+            "You've been ratio'd by the universe.",
+            "This isn't a drill, it's a 9.",
+            "Plot twist: you're the villain.",
+            "I'm not rude, you're just sensitive.",
+            "The 9 is sleeping. Zzz.",
+            "You will stub your toe today.",
+            "Your hair looks weird today.",
+            "You have something in your teeth. (still there)",
+            "You forgot to zip up.",
+            "Your socks don't match.",
+            "Your breath smells like that thing you ate.",
+            "You'll yawn in 5 seconds.",
+            "You just blinked.",
+            "Your nose itches. (scratch it)",
+            "You can't swallow twice without thinking.",
+            "You're now aware of your tongue.",
+            "Your posture is terrible.",
+            "You're holding your phone too close.",
+            "Your screen brightness is too high.",
+            "You haven't blinked in a while. Do it.",
+            "You're hungry. Deny it.",
+            "You're thirsty. Drink water.",
+            "You need to pee. Maybe.",
+            "Your leg fell asleep. Shake it.",
+            "You're breathing manually again.",
+            "Your back hurts. Admit it.",
+            "You're squinting.",
+            "Your lips are dry.",
+            "You just made a random face.",
+            "You're itching somewhere.",
+            "Your foot fell asleep.",
+            "You're scrolling too fast.",
+            "You just sniffed.",
+            "You're holding your breath.",
+            "You're now thinking about your breathing.",
+            "This is the way... to disappointment.",
+            "One does not simply ask the 9 box.",
+            "You shall not pass! (the vibe check)",
+            "To infinity... and beyond your budget.",
+            "I'll be back. (with a bad answer)",
+            "You can't handle the truth!",
+            "Why so serious?",
+            "May the 9 be with you.",
+            "There's no place like home... delete history.",
+            "You're a wizard, Harry. (a weird one)",
+            "I see dead people... and they're laughing.",
+            "You're gonna need a bigger boat.",
+            "Carpe diem. (seize the wrong answer)",
+            "You had me at 'hello world'.",
+            "Keep your friends close, and your 9 box closer.",
+            "With great power comes no responsibility.",
+            "You're the chosen one. (to click again)",
+            "I'm something of a scientist myself.",
+            "That's what she said. (probably)",
+            "The 9 giveth, and the 9 taketh away.",
+            "You've been visited by the number 9. Upvote for good luck.",
+            "Sike! That's the wrong number.",
+            "The 9 is sus.",
+            "Among us, the answer is imposter.",
+            "Yeet.",
+            "Bet.",
+            "No cap, you're asking too much.",
+            "The 9 is giving main character vibes.",
+            "This ain't it, chief.",
+            "It's giving 'L + ratio'.",
+            "42 (but you knew that).",
+            "The cake is a lie. So is this answer.",
+            "You have been bitten by a radioactive 9.",
+            "The answer is in another castle.",
+            "Press F to pay respects.",
+            "Your save file is corrupted.",
+            "You've unlocked the 'disappointment' achievement.",
+            "Game over. Insert coin.",
+            "You're out of lives. (just kidding)",
+            "The 9 box suggests you touch grass.",
+            "Error: reality not found.",
+            "The simulation is glitching.",
+            "You're not the main character.",
+            "This is a test of the emergency broadcast system.",
+            "The voices say yes.",
+            "The 9 is now a 6. (upside down)",
+            "You're being watched by a cat.",
+            "Your tax return will be audited. (maybe)",
+            "The answer is a secret.",
+            "Shh, the 9 is napping.",
+            "You will forget this answer immediately.",
+            "The 9 has no opinion. (rare)",
+            "You're asking a box. A box.",
+            "I'm a box, not a miracle worker.",
+            "Your future is like a pizza: sometimes burnt.",
+            "The 9 says: treat yourself. (to disappointment)",
+            "You've got mail. (it's spam)",
+            "You have 999+ notifications. All spam.",
+            "This answer was written by AI. (just kidding)",
+            "The 9 is having an existential crisis."
+        ];
+
+        // ---------- DOM elements ----------
+        const tabAsk = document.getElementById('tabAsk');
+        const tabFeed = document.getElementById('tabFeed');
+        const askContent = document.getElementById('askContent');
+        const feedContent = document.getElementById('feedContent');
+        const nameSection = document.getElementById('nameSection');
+        const questionInput = document.getElementById('questionInput');
+        const nineBox = document.getElementById('nineBox');
+        const answerDisplay = document.getElementById('answerDisplay');
+        const feedList = document.getElementById('feedList');
+        const counterSpan = document.getElementById('counterDisplay');
+        const resetBtn = document.getElementById('resetCounter');
+
+        // ---------- Name logic (localStorage) ----------
+        const NAME_KEY = 'magic9_username';
+        let currentName = localStorage.getItem(NAME_KEY) || '';
+
+        function renderNameSection() {
+            if (currentName) {
+                nameSection.innerHTML = `
+                    <div class="name-display">
+                        <span>🧑 ${currentName}</span>
+                        <button class="change-name" id="changeNameBtn">change</button>
+                    </div>
+                `;
+                document.getElementById('changeNameBtn').addEventListener('click', () => {
+                    currentName = '';
+                    localStorage.removeItem(NAME_KEY);
+                    renderNameSection();
+                });
+            } else {
+                nameSection.innerHTML = `
+                    <div style="display: flex; gap: 0.5rem; width: 100%;">
+                        <input type="text" id="nameInput" class="name-input" placeholder="Enter your name" maxlength="30">
+                        <button id="saveNameBtn" class="save-name">Save</button>
+                    </div>
+                `;
+                document.getElementById('saveNameBtn').addEventListener('click', () => {
+                    const newName = document.getElementById('nameInput').value.trim();
+                    if (newName) {
+                        currentName = newName;
+                        localStorage.setItem(NAME_KEY, currentName);
+                        renderNameSection();
+                    }
+                });
+            }
+        }
+        renderNameSection();
+
+        // ---------- Feed storage (localStorage + dummy data) ----------
+        const FEED_KEY = 'magic9_feed';
+        const MAX_FEED_ITEMS = 50;
+
+        // Load feed or initialize with 10 dummy entries
+        let feed = JSON.parse(localStorage.getItem(FEED_KEY)) || [];
+        if (feed.length === 0) {
+            // Create some fake users to simulate community
+            const dummyNames = ['Alex', 'Jordan', 'Taylor', 'Casey', 'Riley', 'Morgan', 'Quinn', 'Avery', 'Skyler', 'Peyton'];
+            const dummyQuestions = [
+                'Will I win the lottery?',
+                'Does my crush like me?',
+                'Should I quit my job?',
+                'Is pineapple on pizza okay?',
+                'Will it rain tomorrow?',
+                'Am I adopted?',
+                'Is there life on Mars?',
+                'Will I pass my exam?',
+                'Should I text my ex?',
+                'Is this a dream?'
+            ];
+            for (let i = 0; i < 12; i++) {
+                const randomName = dummyNames[Math.floor(Math.random() * dummyNames.length)];
+                const randomQ = dummyQuestions[Math.floor(Math.random() * dummyQuestions.length)];
+                const randomAns = answers[Math.floor(Math.random() * answers.length)];
+                const timestamp = Date.now() - Math.floor(Math.random() * 7*24*60*60*1000); // within last week
+                feed.push({
+                    name: randomName,
+                    question: randomQ,
+                    answer: randomAns,
+                    time: timestamp
+                });
+            }
+            // sort newest first
+            feed.sort((a,b) => b.time - a.time);
+            localStorage.setItem(FEED_KEY, JSON.stringify(feed));
+        }
+
+        // Helper to format timestamp
+        function formatTime(ts) {
+            const diff = Date.now() - ts;
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return 'just now';
+            if (mins < 60) return `${mins}m ago`;
+            const hours = Math.floor(mins / 60);
+            if (hours < 24) return `${hours}h ago`;
+            const days = Math.floor(hours / 24);
+            return `${days}d ago`;
+        }
+
+        // Render feed
+        function renderFeed() {
+            if (!feedList) return;
+            feedList.innerHTML = '';
+            const sorted = [...feed].sort((a,b) => b.time - a.time).slice(0, MAX_FEED_ITEMS);
+            sorted.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'feed-item';
+                div.innerHTML = `
+                    <div class="feed-header">
+                        <span class="feed-name">${escapeHTML(item.name)}</span>
+                        <span class="feed-time">${formatTime(item.time)}</span>
+                    </div>
+                    <div class="feed-question">❓ ${escapeHTML(item.question)}</div>
+                    <div class="feed-answer">💬 ${escapeHTML(item.answer)}</div>
+                `;
+                feedList.appendChild(div);
+            });
+        }
+
+        // Simple escape for innerHTML safety
+        function escapeHTML(str) {
+            return String(str).replace(/[&<>"]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                if (m === '"') return '&quot;';
+                return m;
+            });
+        }
+
+        // Add new question to feed
+        function addToFeed(question, answer) {
+            if (!currentName) {
+                alert('Please set your name first.');
+                return false;
+            }
+            if (!question.trim()) {
+                alert('Ask a question first.');
+                return false;
+            }
+            const newEntry = {
+                name: currentName,
+                question: question.trim(),
+                answer: answer,
+                time: Date.now()
+            };
+            feed.push(newEntry);
+            // keep only last 50
+            feed.sort((a,b) => b.time - a.time);
+            if (feed.length > MAX_FEED_ITEMS) {
+                feed = feed.slice(0, MAX_FEED_ITEMS);
+            }
+            localStorage.setItem(FEED_KEY, JSON.stringify(feed));
+            renderFeed();
+            return true;
+        }
+
+        // ---------- Ask logic ----------
+        nineBox.addEventListener('click', () => {
+            if (!currentName) {
+                alert('Please set your name first.');
+                return;
+            }
+            const question = questionInput.value.trim();
+            if (!question) {
+                alert('Type your question.');
+                return;
+            }
+            const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+            answerDisplay.innerText = `🔮 ${randomAnswer}`;
+            addToFeed(question, randomAnswer);
+            questionInput.value = ''; // optional clear
+        });
+
+        // ---------- Tab switching ----------
+        tabAsk.addEventListener('click', () => {
+            tabAsk.classList.add('active');
+            tabFeed.classList.remove('active');
+            askContent.style.display = 'block';
+            feedContent.style.display = 'none';
+        });
+
+        tabFeed.addEventListener('click', () => {
+            tabFeed.classList.add('active');
+            tabAsk.classList.remove('active');
+            askContent.style.display = 'none';
+            feedContent.style.display = 'block';
+            renderFeed(); // refresh when switching
+        });
+
+        // ---------- Visitor counter ----------
+        function updateCounter() {
+            let count = localStorage.getItem('magic9_visitCount');
+            count = count ? parseInt(count,10)+1 : 1;
+            localStorage.setItem('magic9_visitCount', count.toString());
+            counterSpan.innerText = count;
+        }
+        updateCounter();
+
+        resetBtn.addEventListener('click', () => {
+            localStorage.setItem('magic9_visitCount', '0');
+            counterSpan.innerText = '0';
+        });
+
+        // Initial render
+        renderFeed();
+    })();
+</script>
+</body>
+</html>
         h1 {
             font-size: 2.2rem;
             font-weight: 500;
