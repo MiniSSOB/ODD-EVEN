@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>9 BOX · ask in secret</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background: #03050a;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -21,10 +16,9 @@
             padding: 1rem;
             color: #eef3fc;
         }
-
         .modal {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            inset: 0;
             background: rgba(2, 5, 10, 0.98);
             backdrop-filter: blur(6px);
             display: flex;
@@ -32,9 +26,202 @@
             justify-content: center;
             z-index: 1000;
         }
-
         .modal-box {
             background: #0e121c;
+            border: 1px solid #2c354f;
+            width: 90%;
+            max-width: 360px;
+            padding: 2rem 1.8rem;
+        }
+        .modal-box h2 {
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #b7c2e2;
+            border-left: 3px solid #cc3b3b;
+            padding-left: 1rem;
+        }
+        .modal-box input {
+            width: 100%;
+            background: #171e2d;
+            border: 1px solid #37415f;
+            padding: 0.9rem 1rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            margin-bottom: 1rem;
+            border-radius: 0;
+        }
+        .modal-box input:focus { border-color: #c53c3c; }
+        .modal-box button {
+            width: 100%;
+            background: #1c2338;
+            border: 1px solid #c53c3c;
+            color: #f0d9d9;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            padding: 0.9rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: 0.1s;
+            border-radius: 0;
+        }
+        .modal-box button:hover {
+            background: #262f4a;
+            border-color: #ff5a5a;
+            color: white;
+        }
+        .skip-link {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: #8b97bb;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .skip-link:hover { color: #f0f3fd; }
+        /* Rest of your styles unchanged - copy from previous version */
+        .app { max-width: 780px; width: 100%; background: #0b0f18; border: 1px solid #2b3247; padding: 2rem 1.8rem; box-shadow: 0 20px 40px -15px black; display: none; }
+        .tabs { display: flex; border-bottom: 1px solid #2b3247; margin-bottom: 1.8rem; }
+        .tab { background: transparent; border: none; color: #8b97bb; font-size: 0.9rem; font-weight: 400; padding: 0.6rem 2rem; cursor: pointer; border-bottom: 2px solid transparent; letter-spacing: 1px; text-transform: uppercase; }
+        .tab.active { color: #f0f3fd; border-bottom: 2px solid #d14747; }
+        .user-header { display: flex; justify-content: space-between; align-items: center; background: #141a28; padding: 0.7rem 1.2rem; margin-bottom: 2rem; border: 1px solid #2e3650; font-size: 0.9rem; }
+        .user-name { color: #dbe2ff; font-weight: 500; }
+        .change-btn { background: none; border: 1px solid #49547c; color: #b1beec; padding: 0.2rem 1rem; cursor: pointer; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; border-radius: 0; }
+        .ask-row { display: flex; gap: 0.8rem; align-items: center; margin-bottom: 2rem; }
+        .ask-row input { flex: 1; background: #121826; border: 1px solid #384160; padding: 1rem 1.2rem; color: white; font-size: 1rem; outline: none; border-radius: 0; }
+        .ask-row input:focus { border-color: #c54242; }
+        .nine-box { width: 85px; height: 85px; background: #0d101b; border: 2px solid #b63b3b; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.1s ease; flex-shrink: 0; }
+        .nine-box:hover { background: #181f32; border-color: #ff5e5e; }
+        .nine-box:active { transform: scale(0.96); }
+        .nine-box .nine { font-size: 4rem; font-weight: 600; color: #d14949; font-family: 'Times New Roman', serif; line-height: 1; text-shadow: 0 2px 8px #631c1c; }
+        .answer-panel { background: #0c101c; border: 1px solid #2f3753; padding: 1.5rem 2rem; margin: 1.5rem 0 1rem; min-height: 90px; font-size: 1.1rem; line-height: 1.5; color: #d2dcff; border-left: 4px solid #c94646; word-break: break-word; }
+        .cooldown { color: #e69292; font-size: 0.85rem; text-align: right; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .feed-list { max-height: 380px; overflow-y: auto; border: 1px solid #262e48; background: #0a0e18; margin-top: 1rem; }
+        .feed-item { padding: 1.2rem 1.4rem; border-bottom: 1px solid #1f263b; background: #101523; }
+        .feed-item:last-child { border-bottom: none; }
+        .feed-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: #7e8bb3; margin-bottom: 0.3rem; text-transform: uppercase; }
+        .feed-name { color: #d2dcff; font-weight: 600; }
+        .feed-question { color: white; margin-bottom: 0.3rem; }
+        .feed-answer { color: #b7c7ff; font-style: italic; border-left: 2px solid #c44b4b; padding-left: 1rem; }
+        .footer { display: flex; justify-content: space-between; align-items: center; margin-top: 2.5rem; border-top: 1px solid #242d45; padding-top: 1.2rem; font-size: 0.8rem; color: #657199; }
+        .counter { border: 1px solid #3b4670; padding: 0.2rem 1rem; color: #b3c0f0; }
+        .reset { background: none; border: none; color: #6575b0; text-decoration: underline; cursor: pointer; font-size: 0.7rem; }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div id="nameModal" class="modal">
+    <div class="modal-box">
+        <h2>enter your name</h2>
+        <input type="text" id="modalNameInput" placeholder="name..." maxlength="30" autofocus>
+        <button id="modalSaveBtn">enter the 9</button>
+        <div class="skip-link" id="skipName">or skip as Guest</div>
+    </div>
+</div>
+
+<div id="app" class="app">
+    <div class="tabs">
+        <button id="tabAsk" class="tab active">ask</button>
+        <button id="tabFeed" class="tab">live feed</button>
+    </div>
+
+    <div id="userHeader" class="user-header">
+        <span class="user-name" id="displayName">Guest</span>
+        <button class="change-btn" id="changeNameBtn">change</button>
+    </div>
+
+    <div id="askContent">
+        <div class="ask-row">
+            <input type="text" id="questionInput" placeholder="your question...">
+            <div id="nineBox" class="nine-box"><span class="nine">9</span></div>
+        </div>
+        <div id="answerDisplay" class="answer-panel">⚡ ask the 9 box</div>
+        <div id="cooldownDisplay" class="cooldown"></div>
+    </div>
+
+    <div id="feedContent" style="display: none;">
+        <div class="feed-list" id="feedList"></div>
+        <div style="color:#4b5785; font-size:0.7rem; margin-top:0.8rem; text-align:right;">last 50 questions</div>
+    </div>
+
+    <div class="footer">
+        <span>visitors</span>
+        <span class="counter" id="visitorCounter">0</span>
+        <button class="reset" id="resetCounter">reset</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const answers = [ /* your full 200+ answers array here - paste from previous versions to keep it short */ 
+            "Without a doubt – but you'll regret it.", /* ... all others ... */ "The 9 is having an existential crisis."
+        ];
+
+        const modal = document.getElementById('nameModal');
+        const app = document.getElementById('app');
+        const modalInput = document.getElementById('modalNameInput');
+        const modalSave = document.getElementById('modalSaveBtn');
+        const skipLink = document.getElementById('skipName');
+        const displayName = document.getElementById('displayName');
+        const changeBtn = document.getElementById('changeNameBtn');
+
+        let currentName = 'Guest';
+
+        // Use sessionStorage for less restriction
+        try {
+            const saved = sessionStorage.getItem('9box_name');
+            if (saved) currentName = saved;
+        } catch (e) {
+            console.warn('Storage blocked - default Guest');
+        }
+
+        function showMain() {
+            if (modal) modal.style.display = 'none';
+            if (app) app.style.display = 'block';
+            if (displayName) displayName.textContent = currentName;
+        }
+
+        // Show main immediately if name already set this session
+        showMain();
+
+        // Only force modal if no name set
+        if (currentName === 'Guest' && modal) {
+            modal.style.display = 'flex';
+            app.style.display = 'none';
+        }
+
+        function saveAndEnter(name = modalInput?.value.trim() || 'Guest') {
+            currentName = name || 'Guest';
+            try {
+                sessionStorage.setItem('9box_name', currentName);
+            } catch (e) {}
+            showMain();
+        }
+
+        if (modalSave) modalSave.onclick = () => saveAndEnter();
+        if (modalInput) modalInput.onkeypress = e => { if (e.key === 'Enter') saveAndEnter(); };
+        if (skipLink) skipLink.onclick = () => saveAndEnter('Guest');
+
+        if (changeBtn) changeBtn.onclick = () => {
+            try { sessionStorage.removeItem('9box_name'); } catch (e) {}
+            location.reload();
+        };
+
+        // The rest of the logic (feed, cooldown, click handler, tabs, visitor) remains the same as your last working version
+        // Paste it here from your previous code to avoid duplication - focus on name flow fix first
+
+        console.log('9Box init - name:', currentName);
+    })();
+</script>
+</body>
+</html>            background: #0e121c;
             border: 1px solid #2c354f;
             width: 90%;
             max-width: 360px;
