@@ -1,11 +1,561 @@
-<button onclick="changeColor()">Change Color</button>
-<script>
-  function changeColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    document.body.style.backgroundColor = color;
-  }
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic 9 Box · Ask once a day</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #1a1e2c 0%, #2d3349 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 1.5rem;
+            margin: 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 3rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 30px 50px -20px rgba(0, 0, 0, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            max-width: 650px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.25rem;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .sub {
+            text-align: center;
+            color: #a9b4d4;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            font-weight: 400;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.15);
+            padding-bottom: 1rem;
+        }
+
+        /* the 9 box */
+        .nine-box {
+            width: 220px;
+            height: 220px;
+            background: #121520;
+            border-radius: 3.5rem;
+            margin: 1.5rem auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 20px 35px -8px black,
+                inset 0 -5px 10px rgba(0,0,0,0.6),
+                inset 0 5px 15px rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 215, 100, 0.3);
+            transition: transform 0.2s cubic-bezier(0.2, 0.9, 0.4, 1), box-shadow 0.2s, background 0.2s;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .nine-box:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 45px -8px #000, 0 0 0 2px rgba(255, 215, 100, 0.4);
+            background: #1b1f30;
+        }
+
+        .nine-box:active {
+            transform: scale(0.98);
+        }
+
+        .nine-box.disabled {
+            opacity: 0.45;
+            filter: grayscale(0.6);
+            pointer-events: none;
+            box-shadow: 0 10px 20px -5px black;
+        }
+
+        .nine-box .nine {
+            font-size: 8rem;
+            font-weight: 700;
+            color: #ffd964;
+            text-shadow: 0 5px 15px #b27700, 0 -2px 5px #fff6d0;
+            transform: rotate(-2deg);
+            font-family: 'Times New Roman', serif;
+        }
+
+        .answer-area {
+            background: rgba(10, 12, 22, 0.7);
+            border-radius: 3rem;
+            padding: 1.5rem 2rem;
+            margin: 2rem 0 1.5rem;
+            border-left: 4px solid #ffd964;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            line-height: 1.6;
+            color: #f0eef7;
+            text-align: center;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+            word-break: break-word;
+        }
+
+        .status-message {
+            color: #b1c2e0;
+            font-size: 1rem;
+            margin: 1rem 0 0;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 3rem;
+            text-align: center;
+            font-weight: 400;
+            border: 1px solid rgba(255,255,240,0.05);
+        }
+
+        .site-counter {
+            margin-top: 2.5rem;
+            font-size: 0.9rem;
+            color: #7b89b3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+            padding-top: 1.5rem;
+        }
+
+        .counter-number {
+            background: #1e2338;
+            padding: 0.25rem 0.9rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #ffd964;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 215, 100, 0.3);
+        }
+
+        .btn-reset {
+            background: none;
+            border: none;
+            color: #4b5a87;
+            font-size: 0.8rem;
+            text-decoration: underline dotted;
+            cursor: pointer;
+            margin-left: 0.75rem;
+            transition: color 0.2s;
+        }
+
+        .btn-reset:hover {
+            color: #a9b4d4;
+        }
+
+        footer {
+            font-size: 0.8rem;
+            text-align: center;
+            color: #49557e;
+            margin-top: 1rem;
+        }
+    </style>
+    <!-- Google Font Inter (optional) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="card">
+        <h1>⚡ 9 BOX ⚡</h1>
+        <div class="sub">click the 9 · one wish per day</div>
+
+        <!-- clickable 9 box -->
+        <div id="nineBox" class="nine-box">
+            <div class="nine">9</div>
+        </div>
+
+        <!-- answer shows up here -->
+        <div id="answerDisplay" class="answer-area">
+            🤐 ask me anything
+        </div>
+
+        <!-- status: time left or messages -->
+        <div id="statusMessage" class="status-message">
+            ✨ click the 9 and get a fortune
+        </div>
+
+        <!-- site visitor counter -->
+        <div class="site-counter">
+            <span>👁️ visitors</span>
+            <span id="counterDisplay" class="counter-number">0</span>
+            <button id="resetCounter" class="btn-reset" title="reset counter (just for fun)">↻</button>
+        </div>
+        <footer>⚡ one click per day · 200+ savage answers</footer>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 200+ FUNNY / SHOCKING ANSWERS ----------
+            const answers = [
+                // 1-30: classic 8-ball remix (dark/funny)
+                "Without a doubt – but you'll regret it.",
+                "Ask again when you're less desperate.",
+                "My sources say no, and they're never wrong.",
+                "Outlook not so good – have you tried crying?",
+                "Very doubtful, but nice try.",
+                "100% yes, and I'm judging you.",
+                "Don't count on it. Actually, don't count at all.",
+                "Signs point to... oh look, a distraction!",
+                "Better not tell you now – you'd scream.",
+                "Cannot predict now, I'm hungover.",
+                "Concentrate and ask again (and maybe shower).",
+                "Yes, but your crush still won't notice you.",
+                "No, and the universe giggled.",
+                "It is certain... that you need therapy.",
+                "You may rely on it – said no one ever.",
+                "As I see it, yes... wait, no, I lied.",
+                "Reply hazy, try again after coffee.",
+                "My reply is no, but thanks for playing.",
+                "Yes, definitely... to fail.",
+                "Most likely you'll regret asking.",
+                "No – and the 9 box is never wrong.",
+                "Yes, if you sacrifice a sock.",
+                "Ask again tomorrow (I'm bored of you).",
+                "The spirits say 'LOL no'.",
+                "Absolutely. In your dreams.",
+                "I see greatness... for your cat.",
+                "Don't bet on it, unless you like losing.",
+                "It's 50/50 – like your IQ.",
+                "Signs point to disappointment.",
+                "Outlook good... for disaster.",
+
+                // 31-60: shocking / offensive (but funny)
+                "You'll die in 7 seconds. (just kidding... or not?)",
+                "Your secret crush thinks you're weird.",
+                "That job? You're already rejected.",
+                "Someone is talking behind your back right now.",
+                "You have 1 unread message from your ex. Don't check.",
+                "Your browser history will be leaked tomorrow.",
+                "The 9 predicts you'll step on Lego tonight.",
+                "You're not the father. (plot twist)",
+                "Your wifi will die during the final boss.",
+                "A spider is watching you.",
+                "That itch? It's not a mosquito.",
+                "Your phone battery will die at 3%.",
+                "Your 'good luck' charm is cursed.",
+                "You forgot something important. Very important.",
+                "The person you're thinking of is thinking of someone else.",
+                "Your fly is undone (metaphorically).",
+                "You have 24 hours to live... just kidding, or am I?",
+                "That sound you heard? Nothing good.",
+                "Your future spouse is currently dating someone else.",
+                "You will sneeze at the worst moment.",
+                "The next click will cost you $9.99.",
+                "You're being followed... by a duck.",
+                "Your bank account is sad.",
+                "The 9 says: go to bed. Now.",
+                "You're not as funny as you think.",
+                "That 'good idea' is actually terrible.",
+                "Your pet is plotting against you.",
+                "You'll die at 92... bored.",
+                "You have been visited by the number 9. That's it.",
+                "Tomorrow you'll find a penny. Then lose it.",
+
+                // 61-90: absurd / weird
+                "The answer is purple. Always purple.",
+                "9 out of 10 voices in my head agree.",
+                "Try turning your life off and on again.",
+                "You're the reason they put instructions on shampoo.",
+                "Ask a random squirrel instead.",
+                "The 9 has spoken: 'meh'.",
+                "Error 404: answer not found.",
+                "Your vibe attracts a tribe... of idiots.",
+                "You owe me $3.50.",
+                "I'd give you an answer, but I'm shy.",
+                "The 9 is currently out of office.",
+                "Ask me tomorrow – I'll give the same answer.",
+                "You are now breathing manually.",
+                "Your left foot feels lighter.",
+                "The answer is under your bed.",
+                "Banana. Just banana.",
+                "The secret password is 'fluffernutter'.",
+                "You have a nice smile. Too bad.",
+                "42. No, wait, 24.",
+                "You will find what you're looking for in the last place you look.",
+                "The 9 box is now self-aware. Run.",
+                "I'm not saying it was aliens... but it was aliens.",
+                "You're the chosen one. (to take out the trash)",
+                "The answer is 'your shoelace is untied'.",
+                "Shhh, I'm listening to the void.",
+                "Your future is bright... like a potato.",
+                "9 is just 8 scared of 7.",
+                "You're the 9th person to ask that today.",
+                "The council of nines says maybe.",
+                "I'd tell you, but then I'd have to kill you.",
+
+                // 91-120: more modern / cynical
+                "You'll get a notification in 3...2...1...",
+                "Slay, queen. (or king, or enby)",
+                "That's a red flag, honestly.",
+                "Touch grass and ask again.",
+                "The vibe is off. Very off.",
+                "Based on your browsing history... no.",
+                "You're valid. But this answer isn't.",
+                "I oop –",
+                "Send this to 10 friends for good luck. (just kidding)",
+                "You just lost The Game.",
+                "Your screen time is 6h higher than yesterday.",
+                "That's cringe, bro.",
+                "Yikes.",
+                "The 9 says: touch some grass.",
+                "You're main character energy, but in a bad way.",
+                "No cap, you're sus.",
+                "This answer is sponsored by Raid: Shadow Legends.",
+                "Your future is giving 2014 Tumblr.",
+                "Big oof.",
+                "It's giving 'no'.",
+                "You're valid, but your question isn't.",
+                "Sheesh, ask something harder.",
+                "You're on thin ice, my dude.",
+                "The 9 is tired of your questions.",
+                "Answer: ghosted.",
+                "You've been ratio'd by the universe.",
+                "This isn't a drill, it's a 9.",
+                "Plot twist: you're the villain.",
+                "I'm not rude, you're just sensitive.",
+                "The 9 is sleeping. Zzz.",
+
+                // 121-150: physical / embarrassing
+                "You will stub your toe today.",
+                "Your hair looks weird today.",
+                "You have something in your teeth. (still there)",
+                "You forgot to zip up.",
+                "Your socks don't match.",
+                "Your breath smells like that thing you ate.",
+                "You'll yawn in 5 seconds.",
+                "You just blinked.",
+                "Your nose itches. (scratch it)",
+                "You can't swallow twice without thinking.",
+                "You're now aware of your tongue.",
+                "Your posture is terrible.",
+                "You're holding your phone too close.",
+                "Your screen brightness is too high.",
+                "You haven't blinked in a while. Do it.",
+                "You're hungry. Deny it.",
+                "You're thirsty. Drink water.",
+                "You need to pee. Maybe.",
+                "Your leg fell asleep. Shake it.",
+                "You're breathing manually again.",
+                "Your back hurts. Admit it.",
+                "You're squinting.",
+                "Your lips are dry.",
+                "You just made a random face.",
+                "You're itching somewhere.",
+                "Your foot fell asleep.",
+                "You're scrolling too fast.",
+                "You just sniffed.",
+                "You're holding your breath.",
+                "You're now thinking about your breathing.",
+
+                // 151-180: pop culture / memes
+                "This is the way... to disappointment.",
+                "One does not simply ask the 9 box.",
+                "You shall not pass! (the vibe check)",
+                "To infinity... and beyond your budget.",
+                "I'll be back. (with a bad answer)",
+                "You can't handle the truth!",
+                "Why so serious?",
+                "May the 9 be with you.",
+                "There's no place like home... delete history.",
+                "You're a wizard, Harry. (a weird one)",
+                "I see dead people... and they're laughing.",
+                "You're gonna need a bigger boat.",
+                "Carpe diem. (seize the wrong answer)",
+                "You had me at 'hello world'.",
+                "Keep your friends close, and your 9 box closer.",
+                "With great power comes no responsibility.",
+                "You're the chosen one. (to click again)",
+                "I'm something of a scientist myself.",
+                "That's what she said. (probably)",
+                "The 9 giveth, and the 9 taketh away.",
+                "You've been visited by the number 9. Upvote for good luck.",
+                "Sike! That's the wrong number.",
+                "The 9 is sus.",
+                "Among us, the answer is imposter.",
+                "Yeet.",
+                "Bet.",
+                "No cap, you're asking too much.",
+                "The 9 is giving main character vibes.",
+                "This ain't it, chief.",
+                "It's giving 'L + ratio'.",
+
+                // 181-210: completely random
+                "42 (but you knew that).",
+                "The cake is a lie. So is this answer.",
+                "You have been bitten by a radioactive 9.",
+                "The answer is in another castle.",
+                "Press F to pay respects.",
+                "Your save file is corrupted.",
+                "You've unlocked the 'disappointment' achievement.",
+                "Game over. Insert coin.",
+                "You're out of lives. (just kidding)",
+                "The 9 box suggests you touch grass.",
+                "Error: reality not found.",
+                "The simulation is glitching.",
+                "You're not the main character.",
+                "This is a test of the emergency broadcast system.",
+                "The voices say yes.",
+                "The 9 is now a 6. (upside down)",
+                "You're being watched by a cat.",
+                "Your tax return will be audited. (maybe)",
+                "The answer is a secret.",
+                "Shh, the 9 is napping.",
+                "You will forget this answer immediately.",
+                "The 9 has no opinion. (rare)",
+                "You're asking a box. A box.",
+                "I'm a box, not a miracle worker.",
+                "Your future is like a pizza: sometimes burnt.",
+                "The 9 says: treat yourself. (to disappointment)",
+                "You've got mail. (it's spam)",
+                "You have 999+ notifications. All spam.",
+                "This answer was written by AI. (just kidding)",
+                "The 9 is having an existential crisis."
+            ];
+
+            // ensure we have at least 200 (we have 210)
+            console.log('Answers loaded:', answers.length);
+
+            // ----- DOM elements -----
+            const nineBox = document.getElementById('nineBox');
+            const answerDisplay = document.getElementById('answerDisplay');
+            const statusDisplay = document.getElementById('statusMessage');
+            const counterSpan = document.getElementById('counterDisplay');
+            const resetBtn = document.getElementById('resetCounter');
+
+            // ----- localStorage keys -----
+            const LAST_CLICK_KEY = 'magic9_lastClick';
+            const VISIT_COUNT_KEY = 'magic9_visitCount';
+
+            // ----- once‑per‑day logic -----
+            const ONE_DAY_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+            function getLastClickTime() {
+                const stored = localStorage.getItem(LAST_CLICK_KEY);
+                return stored ? parseInt(stored, 10) : 0;
+            }
+
+            function setLastClickTime(now = Date.now()) {
+                localStorage.setItem(LAST_CLICK_KEY, now.toString());
+            }
+
+            function canClickToday() {
+                const last = getLastClickTime();
+                if (last === 0) return true; // never clicked
+                return (Date.now() - last) >= ONE_DAY_MS;
+            }
+
+            function getTimeUntilNext() {
+                const last = getLastClickTime();
+                if (last === 0) return 0;
+                const diff = ONE_DAY_MS - (Date.now() - last);
+                return diff > 0 ? diff : 0;
+            }
+
+            function formatTimeRemaining(ms) {
+                if (ms <= 0) return null;
+                const hours = Math.floor(ms / (60 * 60 * 1000));
+                const minutes = Math.floor((ms % (60 * 60 * 1000)) / (60 * 1000));
+                const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+                return `${hours}h ${minutes}m ${seconds}s`;
+            }
+
+            // update UI based on daily limit
+            function refreshDailyState() {
+                if (canClickToday()) {
+                    nineBox.classList.remove('disabled');
+                    statusDisplay.innerText = '✨ click the 9 and receive a fortune';
+                } else {
+                    nineBox.classList.add('disabled');
+                    const remaining = getTimeUntilNext();
+                    if (remaining > 0) {
+                        statusDisplay.innerText = `⏳ come back in ${formatTimeRemaining(remaining)}`;
+                    } else {
+                        statusDisplay.innerText = '🎉 you can click again! (refresh maybe)';
+                        // edge case: force recheck after timeout?
+                        nineBox.classList.remove('disabled');
+                    }
+                }
+            }
+
+            // ----- click handler -----
+            function handleNineClick() {
+                if (!canClickToday()) {
+                    const remaining = getTimeUntilNext();
+                    answerDisplay.innerText = '⏳ already asked today. wait for the 9 to recharge.';
+                    statusDisplay.innerText = `next click in ${formatTimeRemaining(remaining)}`;
+                    return;
+                }
+
+                // pick random answer
+                const randomIndex = Math.floor(Math.random() * answers.length);
+                const chosen = answers[randomIndex];
+                answerDisplay.innerText = `🔮 ${chosen}`;
+                statusDisplay.innerText = '✅ answer delivered. come back tomorrow!';
+
+                // record the click
+                setLastClickTime();
+                // disable box visually
+                nineBox.classList.add('disabled');
+            }
+
+            nineBox.addEventListener('click', handleNineClick);
+
+            // ----- visitor counter (increments each page load) -----
+            function updateCounter() {
+                let count = localStorage.getItem(VISIT_COUNT_KEY);
+                if (count === null) {
+                    count = 1;
+                } else {
+                    count = parseInt(count, 10) + 1;
+                }
+                localStorage.setItem(VISIT_COUNT_KEY, count.toString());
+                counterSpan.innerText = count;
+            }
+
+            // reset counter (fun feature)
+            resetBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                localStorage.setItem(VISIT_COUNT_KEY, '0');
+                counterSpan.innerText = '0';
+                statusDisplay.innerText = 'counter reset 👻';
+            });
+
+            // ----- initialise -----
+            updateCounter();
+            refreshDailyState();
+
+            // optionally recheck daily state every second (to update countdown)
+            // but we can just keep static, or update occasionally
+            setInterval(() => {
+                refreshDailyState();
+            }, 1000);
+        })();
+    </script>
+</body>
+</html>
