@@ -16,11 +16,15 @@
       font-family: 'Inter', system-ui, 'Segoe UI', 'Roboto', monospace;
       padding: 2rem 1.2rem;
       color: #ede9cf;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     .container {
       max-width: 1200px;
       margin: 0 auto;
+      flex: 1;
     }
 
     .header {
@@ -85,11 +89,64 @@
       color: #8b8a5a;
     }
 
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.7rem;
+    /* FOOTER STYLES */
+    .site-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid #2a2c1f;
       text-align: center;
+    }
+
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .copyright {
+      font-size: 0.7rem;
       color: #6e6a4a;
+      letter-spacing: 0.5px;
+    }
+
+    .copyright a {
+      color: #8b8a5a;
+      text-decoration: none;
+    }
+
+    .copyright a:hover {
+      color: #d4af37;
+    }
+
+    /* Counter styling */
+    .counter-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      background: #1a1d14;
+      padding: 6px 16px;
+      border-radius: 40px;
+      border: 1px solid #3a3c2a;
+      margin-bottom: 0.5rem;
+    }
+
+    .counter-label {
+      font-size: 0.65rem;
+      color: #b9ae7a;
+      letter-spacing: 1px;
+    }
+
+    /* Hide Statcounter default styling and reposition */
+    .statcounter {
+      display: inline-block !important;
+    }
+    
+    /* Make the statcounter image fit nicely */
+    .statcounter img {
+      margin: 0 !important;
+      vertical-align: middle !important;
     }
   </style>
 </head>
@@ -112,28 +169,34 @@
       <div class="tool-desc">Track buys/sells • Average cost • Sell orders</div>
     </a>
   </div>
+</div>
 
-  <div class="footer">
-    Click any tool above • Your data saves locally in YOUR browser
+<footer class="site-footer">
+  <div class="footer-content">
+    <div class="counter-wrapper">
+      <span class="counter-label">👁️ VISITORS</span>
+      <!-- Statcounter code -->
+      <script type="text/javascript">
+        var sc_project=13224045;
+        var sc_invisible=0;
+        var sc_security="d02faac4";
+        var scJsHost = "https://";
+        document.write("<sc" + "ript type='text/javascript' src='" + scJsHost + "statcounter.com/counter/counter.js'></" + "script>");
+      </script>
+      <noscript>
+        <div class="statcounter">
+          <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
+            <img class="statcounter" src="https://c.statcounter.com/13224045/0/d02faac4/0/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade">
+          </a>
+        </div>
+      </noscript>
+      <!-- End Statcounter code -->
+    </div>
+    <div class="copyright">
+      © 2026 MiniSSOB Games • Your data saves locally in YOUR browser
+    </div>
   </div>
-</div>
-
-<!-- Statcounter code - WORKING VERSION -->
-<script type="text/javascript">
-var sc_project=13224045;
-var sc_invisible=0;
-var sc_security="d02faac4";
-var scJsHost = "https://";
-document.write("<sc" + "ript type='text/javascript' src='" + scJsHost + "statcounter.com/counter/counter.js'></" + "script>");
-</script>
-<noscript>
-<div class="statcounter">
-  <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
-    <img class="statcounter" src="https://c.statcounter.com/13224045/0/d02faac4/0/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade">
-  </a>
-</div>
-</noscript>
-<!-- End Statcounter code -->
+</footer>
 
 </body>
 </html>
