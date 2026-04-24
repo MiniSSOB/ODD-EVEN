@@ -10,7 +10,7 @@
     .container { max-width: 1400px; margin: 0 auto; }
     .back-link { display: inline-block; margin-bottom: 1rem; color: #d4af37; text-decoration: none; font-size: 0.8rem; }
     .back-link:hover { text-decoration: underline; }
-    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; background: linear-gradient(135deg, #f3e0a4, #d6af40); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    h1 { font-size: 1.5rem; margin-bottom: 0.25rem; color: #f3e0a4; }
     .sub { color: #b9ae7a; font-size: 0.8rem; margin-bottom: 1.5rem; }
     .two-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
     @media (max-width: 900px) { .two-columns { grid-template-columns: 1fr; } }
@@ -44,10 +44,9 @@
 <div class="container">
   <a href="index.html" class="back-link">← Back to Hub</a>
   <h1>💰 Gold Portfolio & Trader</h1>
-  <div class="sub">Track your buys/sells • Real profit/loss • Anonymous stats</div>
+  <div class="sub">Track your buys/sells • Real profit/loss</div>
 
   <div class="two-columns">
-    <!-- LEFT: PORTFOLIO -->
     <div class="panel">
       <div class="panel-header">📊 MY GOLD PORTFOLIO</div>
       <div class="panel-content">
@@ -55,11 +54,11 @@
           <div class="stat-card"><div class="stat-label">💰 GOLD ON HAND</div><div class="stat-value" id="totalGold">0</div></div>
           <div class="stat-card"><div class="stat-label">💵 TOTAL INVESTED</div><div class="stat-value" id="totalInvested">$0</div></div>
           <div class="stat-card"><div class="stat-label">📈 AVG COST / GOLD</div><div class="stat-value" id="avgCost">$0</div></div>
-          <div class="stat-card"><div class="stat-label">💰 TOTAL RECEIVED (SALES)</div><div class="stat-value" id="totalReceived">$0</div></div>
-          <div class="stat-card"><div class="stat-label">💎 REALIZED PROFIT/LOSS</div><div class="stat-value" id="realizedProfit">$0</div></div>
+          <div class="stat-card"><div class="stat-label">💰 TOTAL RECEIVED</div><div class="stat-value" id="totalReceived">$0</div></div>
+          <div class="stat-card"><div class="stat-label">💎 REALIZED PROFIT</div><div class="stat-value" id="realizedProfit">$0</div></div>
           <div class="stat-card"><div class="stat-label">📊 PORTFOLIO VALUE</div><div class="stat-value" id="portfolioValue">$0</div></div>
           <div class="stat-card"><div class="stat-label">💎 UNREALIZED P/L</div><div class="stat-value" id="unrealizedPL">$0</div></div>
-          <div class="stat-card"><div class="stat-label">🎯 BREAK EVEN (sell)</div><div class="stat-value" id="breakEven">$0</div></div>
+          <div class="stat-card"><div class="stat-label">🎯 BREAK EVEN</div><div class="stat-value" id="breakEven">$0</div></div>
         </div>
 
         <div class="form-row">
@@ -78,7 +77,7 @@
           <div class="stats-grid" style="margin-top: 0.5rem;">
             <div class="stat-card"><div class="stat-label">SELL PRICE NEEDED</div><div class="stat-value" id="sellPriceNeeded">$0</div></div>
             <div class="stat-card"><div class="stat-label">PROFIT PER GOLD</div><div class="stat-value" id="profitAfterFee">$0</div></div>
-            <div class="stat-card"><div class="stat-label">TOTAL PROFIT IF SOLD ALL</div><div class="stat-value" id="totalProfitIfSold">$0</div></div>
+            <div class="stat-card"><div class="stat-label">TOTAL PROFIT IF SOLD</div><div class="stat-value" id="totalProfitIfSold">$0</div></div>
           </div>
           <div style="font-size:0.6rem; color:#8b8a5a;">⚠️ Auction house takes 10% fee when you sell</div>
         </div>
@@ -91,7 +90,6 @@
       </div>
     </div>
 
-    <!-- RIGHT: SELL ORDERS -->
     <div class="panel">
       <div class="panel-header">📋 ACTIVE SELL ORDERS</div>
       <div class="panel-content">
@@ -111,15 +109,7 @@
 </div>
 
 <script>
-  // Anonymous player ID (for stats - optional)
-  let playerId = localStorage.getItem('minissob_player_id');
-  if(!playerId) {
-    playerId = `Player_${Math.floor(Math.random() * 10000)}`;
-    localStorage.setItem('minissob_player_id', playerId);
-  }
-  
-  // Data structures
-  let buys = []; // Track each buy for FIFO calculation
+  let buys = [];
   let totalInvested = 0;
   let totalGold = 0;
   let totalReceived = 0;
@@ -167,7 +157,6 @@
     if(isNaN(n)) return "$0"; 
     if(n >= 1e9) return "$" + (n/1e9).toFixed(2) + "B"; 
     if(n >= 1e6) return "$" + (n/1e6).toFixed(2) + "M"; 
-    if(n >= 1e3) return "$" + (n/1e3).toFixed(2) + "K"; 
     return "$" + n.toFixed(0); 
   }
   
@@ -177,17 +166,7 @@
     return totalGold > 0 ? totalInvested / totalGold : 0;
   }
   
-  function getRealizedProfit() {
-    return totalReceived - totalInvested;
-  }
-  
-  function getUnrealizedPL(currentMarketPrice) {
-    if(totalGold === 0) return 0;
-    let currentValue = totalGold * (currentMarketPrice || getAvgCost());
-    return currentValue - totalInvested;
-  }
-  
-  async function addTransaction() {
+  function addTransaction() {
     let amount = parseFloat(document.getElementById('txnAmount').value);
     let priceRaw = document.getElementById('txnPrice').value;
     let price = parsePrice(priceRaw);
@@ -215,12 +194,11 @@
     document.getElementById('txnPrice').value = '';
   }
   
-  async function executeSell(amount, sellPrice) {
+  function executeSell(amount, sellPrice) {
     let remainingToSell = amount;
     let totalCostBasis = 0;
     let newBuys = [];
     
-    // FIFO: sell oldest buys first
     for(let buy of buys) {
       if(remainingToSell <= 0) {
         newBuys.push(buy);
@@ -253,10 +231,6 @@
       type: 'SELL', 
       amount: amount, 
       price: sellPrice, 
-      costBasis: totalCostBasis,
-      proceeds: saleProceeds,
-      fee: fee,
-      netReceived: netReceived,
       profit: profit,
       date: Date.now() 
     });
@@ -282,11 +256,11 @@
     document.getElementById('sellPrice').value = '';
   }
   
-  async function completeSellOrder(orderId) {
+  function completeSellOrder(orderId) {
     let order = sellOrders.find(o => o.id === orderId);
     if(!order) return;
     
-    await executeSell(order.amount, order.price);
+    executeSell(order.amount, order.price);
     sellOrders = sellOrders.filter(o => o.id !== orderId);
     saveAll();
     renderAll();
@@ -296,10 +270,6 @@
     sellOrders = sellOrders.filter(o => o.id !== orderId);
     saveAll();
     renderAll();
-  }
-  
-  function deleteTransaction(index) {
-    alert("Cannot delete individual transactions. Use RESET ALL DATA to start over.");
   }
   
   function resetPortfolio() {
@@ -319,12 +289,11 @@
   function getProfitTarget() { return parseFloat(document.getElementById('profitSlider').value) || 0; }
   
   function renderAll() {
-    // Stats
     let avgCost = getAvgCost();
-    let realizedProfit = getRealizedProfit();
-    let currentMarketPrice = avgCost;
-    let unrealizedPL = getUnrealizedPL(currentMarketPrice);
+    let realizedProfit = totalReceived - totalInvested;
     let portfolioValue = totalGold * avgCost;
+    let unrealizedPL = portfolioValue - totalInvested;
+    let breakEven = avgCost / 0.9;
     
     document.getElementById('totalGold').innerText = totalGold.toFixed(2);
     document.getElementById('totalInvested').innerHTML = formatMoney(totalInvested);
@@ -341,7 +310,6 @@
     unrealizedElem.innerHTML = formatMoney(unrealizedPL);
     unrealizedElem.className = unrealizedPL >= 0 ? 'stat-value stat-value-profit' : 'stat-value stat-value-loss';
     
-    let breakEven = avgCost / 0.9;
     document.getElementById('breakEven').innerHTML = formatMoney(breakEven);
     
     let profitTarget = getProfitTarget();
@@ -354,21 +322,16 @@
     document.getElementById('totalProfitIfSold').innerHTML = formatMoney(totalProfitIfSold);
     document.getElementById('profitTargetDisplay').innerHTML = formatMoney(profitTarget);
     
-    // History
     let historyHtml = '';
     for(let i = transactions.length-1; i >= 0; i--) {
       let t = transactions[i];
       let typeColor = t.type === 'BUY' ? '#aaffaa' : (t.type === 'SELL' ? '#ffaaaa' : '#aaaaff');
       let priceDisplay = t.type === 'BUY' ? formatMoney(t.price) : (t.type === 'SELL' ? `${formatMoney(t.price)} (profit: ${formatMoney(t.profit)})` : 'FREE');
-      historyHtml += `<div class="history-row"><span style="color:${typeColor}">${t.type}</span><span>${t.amount.toFixed(2)}</span><span>${priceDisplay}</span><span><button class="delete-btn" data-idx="${i}" style="background:none; border:none; color:#ff8888; cursor:pointer;">✕</button></span></div>`;
+      historyHtml += `<div class="history-row"><span style="color:${typeColor}">${t.type}</span><span>${t.amount.toFixed(2)}</span><span>${priceDisplay}</span><span></span></div>`;
     }
     if(historyHtml === '') historyHtml = '<div class="history-row"><span colspan="4" style="color:#6e6a4a;">No transactions yet</span></div>';
     document.getElementById('historyList').innerHTML = historyHtml;
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => { deleteTransaction(parseInt(btn.getAttribute('data-idx'))); });
-    });
     
-    // Sell Orders
     let ordersHtml = '';
     for(let o of sellOrders) {
       let profitIfSold = (o.price * 0.9) - avgCost;
@@ -376,6 +339,7 @@
     }
     if(ordersHtml === '') ordersHtml = '<div class="orders-row"><span colspan="4" style="color:#6e6a4a;">No active sell orders</span></div>';
     document.getElementById('ordersList').innerHTML = ordersHtml;
+    
     document.querySelectorAll('.success-btn').forEach(btn => {
       btn.addEventListener('click', (e) => { completeSellOrder(parseInt(btn.getAttribute('data-order'))); });
     });
