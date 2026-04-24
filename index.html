@@ -10,7 +10,13 @@
     .container { max-width: 1200px; margin: 0 auto; flex: 1; }
     .header { text-align: center; margin-bottom: 2rem; }
     h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #f3e0a4, #d6af40); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 0.5rem; }
-    .sub { color: #b9ae7a; font-size: 0.85rem; }
+    .sub { color: #b9ae7a; font-size: 0.85rem; margin-bottom: 1.5rem; }
+    
+    /* Navbar Styles */
+    .nav-bar { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+    .nav-link { background: #1e2118; padding: 0.5rem 1.2rem; border-radius: 2rem; text-decoration: none; color: #b9ae7a; font-size: 0.85rem; transition: all 0.2s; border: 1px solid #3a3c2a; }
+    .nav-link:hover { background: #d4af37; color: #0a0c07; border-color: #d4af37; }
+    
     .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .tool-card { background: #14170f; border: 1px solid #3a3c2a; border-radius: 1.5rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s ease; text-align: center; text-decoration: none; display: block; }
     .tool-card:hover { border-color: #d4af37; transform: translateY(-4px); background: #1a1d14; }
@@ -32,6 +38,11 @@
     <h1>💰 MINISSOB GAMES</h1>
     <div class="sub">Select a tool below</div>
   </div>
+  
+  <div class="nav-bar">
+    <a href="stats.html" class="nav-link">📊 GLOBAL STATS</a>
+  </div>
+  
   <div class="tools-grid">
     <a href="bullet.html" class="tool-card">
       <div class="tool-icon">⚔️</div>
