@@ -43,8 +43,8 @@
 <body>
 <div class="container">
   <a href="index.html" class="back-link">← Back to Hub</a>
-  <h1>🪙 Gold Portfolio & Trader</h1>
-  <div class="sub">Track your gold • Real profit/loss • Anonymous global stats</div>
+  <h1>💰 Gold Portfolio & Trader</h1>
+  <div class="sub">Track your buys/sells • Real profit/loss • Anonymous stats</div>
 
   <div class="two-columns">
     <!-- LEFT: PORTFOLIO -->
@@ -56,7 +56,7 @@
           <div class="stat-card"><div class="stat-label">💵 TOTAL INVESTED</div><div class="stat-value" id="totalInvested">$0</div></div>
           <div class="stat-card"><div class="stat-label">📈 AVG COST / GOLD</div><div class="stat-value" id="avgCost">$0</div></div>
           <div class="stat-card"><div class="stat-label">💰 TOTAL RECEIVED (SALES)</div><div class="stat-value" id="totalReceived">$0</div></div>
-          <div class="stat-card"><div class="stat-label">💎 REALIZED PROFIT/LOSS</div><div class="stat-value" id="realizedProfit" class="stat-value-profit">$0</div></div>
+          <div class="stat-card"><div class="stat-label">💎 REALIZED PROFIT/LOSS</div><div class="stat-value" id="realizedProfit">$0</div></div>
           <div class="stat-card"><div class="stat-label">📊 PORTFOLIO VALUE</div><div class="stat-value" id="portfolioValue">$0</div></div>
           <div class="stat-card"><div class="stat-label">💎 UNREALIZED P/L</div><div class="stat-value" id="unrealizedPL">$0</div></div>
           <div class="stat-card"><div class="stat-label">🎯 BREAK EVEN (sell)</div><div class="stat-value" id="breakEven">$0</div></div>
@@ -111,17 +111,11 @@
 </div>
 
 <script>
-  // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT URL
-  const GOOGLE_SHEET_API = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-  
-  // Anonymous player ID
+  // Anonymous player ID (for stats - optional)
   let playerId = localStorage.getItem('minissob_player_id');
   if(!playerId) {
-    const existingIds = JSON.parse(localStorage.getItem('minissob_all_ids') || '[]');
-    playerId = `Player ${existingIds.length + 1}`;
+    playerId = `Player_${Math.floor(Math.random() * 10000)}`;
     localStorage.setItem('minissob_player_id', playerId);
-    existingIds.push(playerId);
-    localStorage.setItem('minissob_all_ids', JSON.stringify(existingIds));
   }
   
   // Data structures
@@ -171,9 +165,10 @@
   function formatMoney(v) { 
     let n = typeof v === 'number' ? v : parseFloat(v); 
     if(isNaN(n)) return "$0"; 
-    if(n>=1e9) return "$"+(n/1e9).toFixed(2)+"B"; 
-    if(n>=1e6) return "$"+(n/1e6).toFixed(2)+"M"; 
-    return "$"+n.toFixed(0); 
+    if(n >= 1e9) return "$" + (n/1e9).toFixed(2) + "B"; 
+    if(n >= 1e6) return "$" + (n/1e6).toFixed(2) + "M"; 
+    if(n >= 1e3) return "$" + (n/1e3).toFixed(2) + "K"; 
+    return "$" + n.toFixed(0); 
   }
   
   function parsePrice(v) { return parseFloat(String(v).replace(/,/g,'')) || 0; }
@@ -192,22 +187,6 @@
     return currentValue - totalInvested;
   }
   
-  async function sendToSheet(amount, price, type) {
-    try {
-      await fetch(GOOGLE_SHEET_API, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          playerId: playerId,
-          amount: amount,
-          price: price,
-          type: type
-        })
-      });
-    } catch(e) { console.log("Stats save failed:", e); }
-  }
-  
   async function addTransaction() {
     let amount = parseFloat(document.getElementById('txnAmount').value);
     let priceRaw = document.getElementById('txnPrice').value;
@@ -223,12 +202,10 @@
       totalInvested += amount * price;
       totalGold += amount;
       transactions.push({ type: 'BUY', amount: amount, price: price, date: Date.now() });
-      await sendToSheet(amount, price, 'buy');
     } else if(type === 'loot') {
       buys.push({ amount: amount, price: 0 });
       totalGold += amount;
       transactions.push({ type: 'LOOT', amount: amount, price: 0, date: Date.now() });
-      await sendToSheet(amount, 0, 'loot');
     }
     
     saveAll();
@@ -284,8 +261,8 @@
       date: Date.now() 
     });
     
-    await sendToSheet(amount, sellPrice, 'sell');
     saveAll();
+    renderAll();
   }
   
   function addSellOrder() {
@@ -345,7 +322,7 @@
     // Stats
     let avgCost = getAvgCost();
     let realizedProfit = getRealizedProfit();
-    let currentMarketPrice = avgCost; // For unrealized, use avg cost as placeholder
+    let currentMarketPrice = avgCost;
     let unrealizedPL = getUnrealizedPL(currentMarketPrice);
     let portfolioValue = totalGold * avgCost;
     
