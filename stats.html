@@ -16,93 +16,43 @@
     .stat-card { background: #1e2118; border-radius: 1rem; padding: 1rem; text-align: center; border: 1px solid #3a3c2a; }
     .stat-label { font-size: 0.7rem; color: #b9ae7a; letter-spacing: 1px; }
     .stat-value { font-size: 1.5rem; font-weight: 800; color: #d4af37; font-family: monospace; }
-    .players-table { background: #12140e; border-radius: 1rem; overflow: hidden; border: 1px solid #3a3c2a; }
-    .table-header { display: grid; grid-template-columns: 80px 1fr 1fr 1fr; background: #202217; padding: 0.8rem 1rem; font-weight: 700; font-size: 0.7rem; color: #e9d58b; }
-    .player-row { display: grid; grid-template-columns: 80px 1fr 1fr 1fr; padding: 0.6rem 1rem; border-bottom: 1px solid #26291c; font-size: 0.8rem; }
-    .player-row:hover { background: #1c1f16; }
-    .loading { text-align: center; padding: 2rem; color: #8b8a5a; }
-    .refresh-btn { background: #d4af37; border: none; padding: 6px 16px; border-radius: 2rem; font-weight: 700; cursor: pointer; color: #0a0c07; margin-top: 1rem; }
+    .info-box { background: #1a1d14; border-radius: 1rem; padding: 1.5rem; text-align: center; border: 1px solid #3a3c2a; margin-top: 1rem; }
+    .info-box h3 { color: #d4af37; margin-bottom: 0.5rem; }
+    .info-box p { color: #8b8a5a; font-size: 0.8rem; margin-bottom: 1rem; }
+    .setup-steps { text-align: left; background: #0e0f0b; border-radius: 0.8rem; padding: 1rem; margin-top: 1rem; }
+    .setup-steps li { margin-left: 1.5rem; margin-bottom: 0.5rem; color: #b9ae7a; font-size: 0.75rem; }
     .footer { margin-top: 2rem; font-size: 0.7rem; text-align: center; color: #6e6a4a; }
-    .positive { color: #aaffaa; }
-    .negative { color: #ffaaaa; }
   </style>
 </head>
 <body>
 <div class="container">
   <a href="index.html" class="back-link">← Back to Hub</a>
   <h1>📊 GLOBAL GOLD STATISTICS</h1>
-  <div class="sub">Anonymous player data • All transactions tracked</div>
+  <div class="sub">Anonymous player data • Coming soon</div>
 
-  <div class="stats-grid" id="statsGrid">
-    <div class="stat-card"><div class="stat-label">TOTAL GOLD BOUGHT</div><div class="stat-value" id="totalBought">-</div></div>
-    <div class="stat-card"><div class="stat-label">TOTAL GOLD SOLD</div><div class="stat-value" id="totalSold">-</div></div>
-    <div class="stat-card"><div class="stat-label">TOTAL GOLD MOVED</div><div class="stat-value" id="totalMoved">-</div></div>
-    <div class="stat-card"><div class="stat-label">ACTIVE PLAYERS</div><div class="stat-value" id="activePlayers">-</div></div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-label">TOTAL GOLD BOUGHT</div><div class="stat-value">0</div></div>
+    <div class="stat-card"><div class="stat-label">TOTAL GOLD SOLD</div><div class="stat-value">0</div></div>
+    <div class="stat-card"><div class="stat-label">TOTAL GOLD MOVED</div><div class="stat-value">0</div></div>
+    <div class="stat-card"><div class="stat-label">ACTIVE PLAYERS</div><div class="stat-value">0</div></div>
   </div>
 
-  <div class="players-table">
-    <div class="table-header">
-      <span>RANK</span>
-      <span>PLAYER</span>
-      <span>🟢 BOUGHT</span>
-      <span>🔴 SOLD</span>
+  <div class="info-box">
+    <h3>🔧 Stats Coming Soon</h3>
+    <p>Global stats require a Google Sheets connection. Your personal gold tracker still works 100% locally!</p>
+    <div class="setup-steps">
+      <strong>To enable global stats:</strong>
+      <ul style="margin-top: 8px;">
+        <li>1. Create a Google Sheet</li>
+        <li>2. Deploy an Apps Script Web App</li>
+        <li>3. Copy the URL into gold.html and stats.html</li>
+      </ul>
     </div>
-    <div id="playersList" class="loading">Loading anonymous player data...</div>
   </div>
 
-  <div style="text-align: center; margin-top: 1rem;">
-    <button class="refresh-btn" onclick="loadStats()">⟳ REFRESH DATA</button>
+  <div class="footer">
+    Your personal gold data stays on YOUR device • Global stats will show anonymous totals once connected
   </div>
-  <div class="footer">All players are anonymous • Data updates when players use the Gold Trader</div>
 </div>
-
-<script>
-  // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT URL
-  const API_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-  
-  function formatNumber(num) {
-    if(num >= 1000000) return (num/1000000).toFixed(2) + "M";
-    if(num >= 1000) return (num/1000).toFixed(2) + "K";
-    return num.toString();
-  }
-  
-  async function loadStats() {
-    document.getElementById('playersList').innerHTML = '<div class="loading">Loading anonymous player data...</div>';
-    
-    try {
-      const response = await fetch(API_URL);
-      const data = await response.json();
-      
-      document.getElementById('totalBought').innerHTML = formatNumber(data.totalBought);
-      document.getElementById('totalSold').innerHTML = formatNumber(data.totalSold);
-      document.getElementById('totalMoved').innerHTML = formatNumber(data.totalGoldMoved);
-      document.getElementById('activePlayers').innerHTML = data.activePlayers;
-      
-      let playersHtml = '';
-      for(let i = 0; i < data.players.length; i++) {
-        const p = data.players[i];
-        playersHtml += `
-          <div class="player-row">
-            <span>#${i+1}</span>
-            <span>🕵️ ${p.id}</span>
-            <span class="positive">${formatNumber(p.bought)}</span>
-            <span class="negative">${formatNumber(p.sold)}</span>
-          </div>
-        `;
-      }
-      
-      if(data.players.length === 0) {
-        playersHtml = '<div class="loading">No player data yet. Be the first to use the Gold Trader!</div>';
-      }
-      
-      document.getElementById('playersList').innerHTML = playersHtml;
-    } catch(e) {
-      document.getElementById('playersList').innerHTML = '<div class="loading">Error loading stats. Make sure the API URL is correct.</div>';
-      console.error(e);
-    }
-  }
-  
-  loadStats();
-</script>
 </body>
 </html>
