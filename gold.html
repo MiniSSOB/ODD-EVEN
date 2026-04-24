@@ -249,4 +249,40 @@
     let historyHtml = '';
     for(let i = transactions.length-1; i >= 0; i--) {
       let t = transactions[i];
-      let typeLabel = t.type === 'buy' ? '💰 BUY' : (t
+      let typeLabel = t.type === 'buy' ? '💰 BUY' : (t.type === 'sell' ? '💸 SELL' : '🎁 LOOT');
+      let typeColor = t.type === 'buy' ? '#aaffaa' : (t.type === 'sell' ? '#ffaaaa' : '#aaaaff');
+      historyHtml += `<div class="history-row"><span style="color:${typeColor}">${typeLabel}</span><span>${t.amount.toFixed(2)}</span><span>${formatMoney(t.price)}</span><span><button class="delete-btn" data-idx="${i}" style="background:none; border:none; color:#ff8888; cursor:pointer;">✕</button></span></div>`;
+    }
+    if(historyHtml === '') historyHtml = '<div class="history-row"><span colspan="4" style="color:#6e6a4a;">No transactions yet</span></div>';
+    document.getElementById('historyList').innerHTML = historyHtml;
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => { deleteTransaction(parseInt(btn.getAttribute('data-idx'))); });
+    });
+    
+    // Sell Orders
+    let ordersHtml = '';
+    for(let o of sellOrders) {
+      let profitIfSold = (o.price * 0.9) - avgCost;
+      ordersHtml += `<div class="orders-row"><span>${o.amount}</span><span>${formatMoney(o.price)}</span><span>${formatMoney(profitIfSold)}</span><span><button class="success-btn" data-order="${o.id}">✓</button><button class="cancel-btn" data-order="${o.id}">✕</button></span></div>`;
+    }
+    if(ordersHtml === '') ordersHtml = '<div class="orders-row"><span colspan="4" style="color:#6e6a4a;">No active sell orders</span></div>';
+    document.getElementById('ordersList').innerHTML = ordersHtml;
+    document.querySelectorAll('.success-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => { completeSellOrder(parseInt(btn.getAttribute('data-order'))); });
+    });
+    document.querySelectorAll('.cancel-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => { cancelSellOrder(parseInt(btn.getAttribute('data-order'))); });
+    });
+  }
+  
+  document.getElementById('addTransactionBtn').addEventListener('click', addTransaction);
+  document.getElementById('addSellOrderBtn').addEventListener('click', addSellOrder);
+  document.getElementById('resetPortfolioBtn').addEventListener('click', resetPortfolio);
+  document.getElementById('profitSlider').addEventListener('input', () => renderAll());
+  document.getElementById('txnPrice').addEventListener('input', function(e) { let val = parsePrice(e.target.value); if(!isNaN(val)) e.target.value = val.toLocaleString(); });
+  document.getElementById('sellPrice').addEventListener('input', function(e) { let val = parsePrice(e.target.value); if(!isNaN(val)) e.target.value = val.toLocaleString(); });
+  
+  loadAll();
+</script>
+</body>
+</html>
