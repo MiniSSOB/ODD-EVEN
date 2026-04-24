@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Bootlegger Tools • Calculator Hub</title>
+  <title>MiniSSOB Games • Bullet Calculator</title>
   <style>
     * {
       margin: 0;
@@ -19,7 +19,7 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 1000px;
       margin: 0 auto;
     }
 
@@ -171,25 +171,15 @@
 <body>
 <div class="container">
   <div class="header">
-    <h1>🔫 BOOTLEGGER TOOLS</h1>
-    <div class="sub">Select a tool below • All calculators in one place</div>
+    <h1>🎮 MINISSOB GAMES</h1>
+    <div class="sub">Select a tool below</div>
   </div>
 
   <div class="tools-grid">
     <div class="tool-card" data-tool="bulletCalc">
       <div class="tool-icon">⚔️</div>
       <div class="tool-title">Bullet Price Calculator</div>
-      <div class="tool-desc">Set gold/car price • Bulk order • Tiered discounts</div>
-    </div>
-    <div class="tool-card" data-tool="comingSoon1">
-      <div class="tool-icon">📦</div>
-      <div class="tool-title">Cargo Value Tool</div>
-      <div class="tool-desc">Coming soon • Calculate crate values</div>
-    </div>
-    <div class="tool-card" data-tool="comingSoon2">
-      <div class="tool-icon">💎</div>
-      <div class="tool-title">Gold Exchange</div>
-      <div class="tool-desc">Coming soon • Real-time gold rates</div>
+      <div class="tool-desc">Set car price • Bulk order • Tiered discounts</div>
     </div>
   </div>
 
@@ -201,20 +191,6 @@
     <div id="bulletCalcContent" class="tool-content">
       <div style="text-align: center; padding: 2rem;">Loading...</div>
     </div>
-    <div id="comingSoon1Content" class="tool-content">
-      <div style="text-align: center; padding: 2rem;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
-        <h3>Cargo Value Calculator</h3>
-        <p style="color: #8b8a5a; margin-top: 0.5rem;">Coming soon! Check back later.</p>
-      </div>
-    </div>
-    <div id="comingSoon2Content" class="tool-content">
-      <div style="text-align: center; padding: 2rem;">
-        <div style="font-size: 3rem; margin-bottom: 1rem;">💎</div>
-        <h3>Gold Exchange Tracker</h3>
-        <p style="color: #8b8a5a; margin-top: 0.5rem;">Coming soon! Check back later.</p>
-      </div>
-    </div>
   </div>
 
   <div class="counter-bar">
@@ -222,7 +198,7 @@
     <span class="counter-number" id="visitorCount">0</span>
   </div>
   <div class="footer">
-    Select a tool above • Each tool is self-contained • Counter counts every page load
+    Click the calculator above • Each line in bulk order = one car • Duplicates count separately
   </div>
 </div>
 
@@ -239,9 +215,7 @@
     document.getElementById('visitorCount').innerText = count.toLocaleString();
   }
 
-  // ============================================================
-  // BULLET CALCULATOR - FIXED VERSION
-  // ============================================================
+  // BULLET CALCULATOR
   function loadBulletCalculator() {
     const container = document.getElementById('bulletCalcContent');
     
@@ -256,30 +230,6 @@
           background: #12140e;
           padding: 0;
           color: #ede9cf;
-        }
-        .mode-toggle {
-          display: flex;
-          gap: 1rem;
-          margin-bottom: 1.5rem;
-          background: #0e0f0b;
-          padding: 0.5rem;
-          border-radius: 3rem;
-          width: fit-content;
-        }
-        .mode-btn {
-          background: transparent;
-          border: none;
-          padding: 0.6rem 1.5rem;
-          border-radius: 2rem;
-          font-weight: 600;
-          font-size: 0.85rem;
-          cursor: pointer;
-          color: #b9ae7a;
-          transition: all 0.2s;
-        }
-        .mode-btn.active {
-          background: #d4af37;
-          color: #0a0c07;
         }
         .input-panel {
           background: #1e2118;
@@ -341,6 +291,12 @@
           display: flex;
           align-items: center;
           gap: 12px;
+        }
+        .tier-toggle label {
+          font-weight: 600;
+          font-size: 0.85rem;
+          color: #e0ca7c;
+          cursor: pointer;
         }
         .tier-checkbox {
           width: 44px;
@@ -463,12 +419,7 @@
         }
       </style>
       <div class="bullet-calc-container">
-        <div class="mode-toggle">
-          <button class="mode-btn mode-car-btn active">💰 SET CAR PRICE</button>
-          <button class="mode-btn mode-gold-btn">💎 SET GOLD PRICE</button>
-        </div>
-
-        <div class="input-panel car-price-panel">
+        <div class="input-panel">
           <span class="cost-bullet-badge">🏎️ CASTILLON V16 (675 bullets)</span>
           <div class="input-group">
             <label>💰 WHAT YOU PAY ($)</label>
@@ -477,24 +428,15 @@
           <div class="cost-bullet-badge car-per-bullet">💵 PER BULLET: $444,444</div>
         </div>
 
-        <div class="input-panel gold-price-panel" style="display: none;">
-          <span class="cost-bullet-badge">💎 1 GOLD = 50 BULLETS</span>
-          <div class="input-group">
-            <label>💎 1 GOLD PRICE ($)</label>
-            <input type="text" class="price-input gold-price-input" value="20,000,000">
-          </div>
-          <div class="cost-bullet-badge gold-per-bullet">🔫 PER BULLET: $400,000</div>
-        </div>
-
         <div class="tier-controls">
           <div class="tier-toggle">
             <label>🔪 ENABLE TIERED PRICING</label>
             <input type="checkbox" class="tier-checkbox" checked>
           </div>
           <div class="tier-values">
-            <div class="tier-value-group"><span>🔴 440+:</span><input type="number" class="tier-input tier1-input" value="100" step="5">%</div>
-            <div class="tier-value-group"><span>🟡 100-339:</span><input type="number" class="tier-input tier2-input" value="50" step="5">%</div>
-            <div class="tier-value-group"><span>🟢 &lt;100:</span><input type="number" class="tier-input tier3-input" value="30" step="5">%</div>
+            <div class="tier-value-group"><span>🔴 440+ BULLETS:</span><input type="number" class="tier-input tier1-input" value="100" step="5">%</div>
+            <div class="tier-value-group"><span>🟡 100-339 BULLETS:</span><input type="number" class="tier-input tier2-input" value="50" step="5">%</div>
+            <div class="tier-value-group"><span>🟢 UNDER 100 BULLETS:</span><input type="number" class="tier-input tier3-input" value="30" step="5">%</div>
           </div>
         </div>
 
@@ -531,7 +473,6 @@ Hudson V12 Limousine"></textarea>
   }
 
   function initBulletCalculator() {
-    // CAR LIST - ORDERED BY NAME LENGTH (LONGEST FIRST) FOR PROPER MATCHING
     const carsRaw = [
       { name: "Sweet Sixteen V16 Roadster", bullets: 550 },
       { name: "Castillon V16 Roadster", bullets: 550 },
@@ -567,7 +508,6 @@ Hudson V12 Limousine"></textarea>
     ];
     
     const sortedCars = [...carsRaw].sort((a, b) => b.bullets - a.bullets);
-    let currentMode = 'car';
     
     function formatMillions(value) {
       if (!value && value !== 0) return "0";
@@ -587,15 +527,9 @@ Hudson V12 Limousine"></textarea>
     }
     
     function getBasePerBullet() {
-      if (currentMode === 'car') {
-        let price = parseCommaNumber(document.querySelector('.car-price-input').value);
-        if (isNaN(price) || price <= 0) price = 300000000;
-        return price / 675;
-      } else {
-        let price = parseCommaNumber(document.querySelector('.gold-price-input').value);
-        if (isNaN(price) || price <= 0) price = 20000000;
-        return price / 50;
-      }
+      let price = parseCommaNumber(document.querySelector('.car-price-input').value);
+      if (isNaN(price) || price <= 0) price = 300000000;
+      return price / 675;
     }
     
     function getMultiplier(bullets) {
@@ -624,11 +558,7 @@ Hudson V12 Limousine"></textarea>
     
     function updateDisplay() {
       const perBullet = getBasePerBullet();
-      if (currentMode === 'car') {
-        document.querySelector('.car-per-bullet').innerHTML = `💵 PER BULLET: $${formatMillions(perBullet)}`;
-      } else {
-        document.querySelector('.gold-per-bullet').innerHTML = `🔫 PER BULLET: $${formatMillions(perBullet)}`;
-      }
+      document.querySelector('.car-per-bullet').innerHTML = `💵 PER BULLET: $${formatMillions(perBullet)}`;
       renderCars();
     }
     
@@ -641,7 +571,6 @@ Hudson V12 Limousine"></textarea>
         let trimmedLine = line.trim();
         if (trimmedLine === "") continue;
         
-        // Try to match with longest names first (carsRaw already ordered by name length roughly)
         let matched = false;
         for (let car of carsRaw) {
           if (trimmedLine.toLowerCase() === car.name.toLowerCase()) {
@@ -650,7 +579,6 @@ Hudson V12 Limousine"></textarea>
             break;
           }
         }
-        // If no exact match, try contains (but longest first prevents overlap)
         if (!matched) {
           for (let car of carsRaw) {
             if (trimmedLine.toLowerCase().includes(car.name.toLowerCase())) {
@@ -683,24 +611,7 @@ Hudson V12 Limousine"></textarea>
       document.querySelector('.bulk-result').style.display = 'block';
     }
     
-    document.querySelector('.mode-car-btn').addEventListener('click', () => {
-      currentMode = 'car';
-      document.querySelector('.car-price-panel').style.display = 'flex';
-      document.querySelector('.gold-price-panel').style.display = 'none';
-      document.querySelector('.mode-car-btn').classList.add('active');
-      document.querySelector('.mode-gold-btn').classList.remove('active');
-      updateDisplay();
-    });
-    document.querySelector('.mode-gold-btn').addEventListener('click', () => {
-      currentMode = 'gold';
-      document.querySelector('.car-price-panel').style.display = 'none';
-      document.querySelector('.gold-price-panel').style.display = 'flex';
-      document.querySelector('.mode-gold-btn').classList.add('active');
-      document.querySelector('.mode-car-btn').classList.remove('active');
-      updateDisplay();
-    });
     document.querySelector('.car-price-input').addEventListener('input', updateDisplay);
-    document.querySelector('.gold-price-input').addEventListener('input', updateDisplay);
     document.querySelector('.tier-checkbox').addEventListener('change', updateDisplay);
     document.querySelector('.tier1-input').addEventListener('input', updateDisplay);
     document.querySelector('.tier2-input').addEventListener('input', updateDisplay);
@@ -709,10 +620,9 @@ Hudson V12 Limousine"></textarea>
     updateDisplay();
   }
 
-  // TOOL SELECTION LOGIC
+  // TOOL SELECTION
   const panel = document.getElementById('activeToolPanel');
   const panelTitle = document.getElementById('panelTitle');
-  let currentTool = null;
 
   function openTool(toolId) {
     document.querySelectorAll('.tool-content').forEach(content => {
@@ -724,29 +634,22 @@ Hudson V12 Limousine"></textarea>
       selectedContent.classList.add('active');
     }
     
-    if (toolId === 'bulletCalc') panelTitle.innerText = '⚔️ Bullet Price Calculator';
-    else if (toolId === 'comingSoon1') panelTitle.innerText = '📦 Cargo Value Tool';
-    else if (toolId === 'comingSoon2') panelTitle.innerText = '💎 Gold Exchange';
-    else panelTitle.innerText = 'Tool';
-    
+    panelTitle.innerText = '⚔️ Bullet Price Calculator';
     panel.style.display = 'block';
-    currentTool = toolId;
     
-    if (toolId === 'bulletCalc' && document.getElementById('bulletCalcContent').innerHTML.includes('Loading...')) {
+    if (document.getElementById('bulletCalcContent').innerHTML.includes('Loading...')) {
       loadBulletCalculator();
     }
   }
 
   document.querySelectorAll('.tool-card').forEach(card => {
     card.addEventListener('click', () => {
-      const tool = card.getAttribute('data-tool');
-      openTool(tool);
+      openTool('bulletCalc');
     });
   });
 
   document.getElementById('closePanelBtn').addEventListener('click', () => {
     panel.style.display = 'none';
-    currentTool = null;
   });
 
   updateVisitorCounter();
