@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>MiniSSOB Games • Bullet Calculator</title>
+  <title>MiniSSOB Games • Gold Portfolio Tracker</title>
   <style>
     * {
       margin: 0;
@@ -19,7 +19,7 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
@@ -181,6 +181,11 @@
       <div class="tool-title">Bullet Price Calculator</div>
       <div class="tool-desc">Set car price • Bulk order • Tiered discounts</div>
     </div>
+    <div class="tool-card" data-tool="goldTracker">
+      <div class="tool-icon">💎</div>
+      <div class="tool-title">Gold Portfolio Tracker</div>
+      <div class="tool-desc">Track buys, sells, loot • Average cost • Profit targets</div>
+    </div>
   </div>
 
   <div id="activeToolPanel" class="active-tool-panel" style="display: none;">
@@ -191,6 +196,9 @@
     <div id="bulletCalcContent" class="tool-content">
       <div style="text-align: center; padding: 2rem;">Loading...</div>
     </div>
+    <div id="goldTrackerContent" class="tool-content">
+      <div style="text-align: center; padding: 2rem;">Loading...</div>
+    </div>
   </div>
 
   <div class="counter-bar">
@@ -198,225 +206,56 @@
     <span class="counter-number" id="visitorCount">0</span>
   </div>
   <div class="footer">
-    Click the calculator above • Each line in bulk order = one car • Duplicates count separately
+    Your data saves locally in YOUR browser • Nobody else sees your gold portfolio
   </div>
 </div>
 
 <script>
   // VISITOR COUNTER
   function updateVisitorCounter() {
-    let count = localStorage.getItem('bootlegger_site_visits');
+    let count = localStorage.getItem('minissob_site_visits');
     if (count === null) {
       count = 1;
     } else {
       count = parseInt(count) + 1;
     }
-    localStorage.setItem('bootlegger_site_visits', count);
+    localStorage.setItem('minissob_site_visits', count);
     document.getElementById('visitorCount').innerText = count.toLocaleString();
   }
 
+  // ============================================================
   // BULLET CALCULATOR
+  // ============================================================
   function loadBulletCalculator() {
     const container = document.getElementById('bulletCalcContent');
     
     const bulletCalcHTML = `
       <style>
-        .bullet-calc-container * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-        .bullet-calc-container {
-          background: #12140e;
-          padding: 0;
-          color: #ede9cf;
-        }
-        .input-panel {
-          background: #1e2118;
-          border-radius: 1.5rem;
-          padding: 1rem 1.2rem;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1rem;
-          margin-bottom: 0.8rem;
-        }
-        .input-group {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: baseline;
-          gap: 0.8rem;
-          background: #0e0f0b;
-          padding: 0.8rem 1.2rem;
-          border-radius: 1.5rem;
-        }
-        .input-group label {
-          font-weight: 600;
-          font-size: 0.8rem;
-          color: #e0ca7c;
-        }
-        .price-input {
-          background: #050504;
-          border: 1px solid #5e5536;
-          padding: 8px 14px;
-          border-radius: 3rem;
-          font-size: 1rem;
-          font-weight: 700;
-          font-family: monospace;
-          color: #ffecb3;
-          width: 220px;
-          text-align: center;
-        }
-        .cost-bullet-badge {
-          background: #2a2c1c;
-          padding: 6px 16px;
-          border-radius: 40px;
-          font-family: monospace;
-          font-weight: 800;
-          font-size: 0.8rem;
-        }
-        .tier-controls {
-          background: #1a1d14;
-          border-radius: 1.5rem;
-          padding: 1rem 1.2rem;
-          margin-top: 1rem;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1rem;
-        }
-        .tier-toggle {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-        .tier-toggle label {
-          font-weight: 600;
-          font-size: 0.85rem;
-          color: #e0ca7c;
-          cursor: pointer;
-        }
-        .tier-checkbox {
-          width: 44px;
-          height: 24px;
-          appearance: none;
-          background: #2a2c1f;
-          border-radius: 30px;
-          position: relative;
-          cursor: pointer;
-        }
-        .tier-checkbox:checked {
-          background: #d4af37;
-        }
-        .tier-checkbox::before {
-          content: '';
-          width: 20px;
-          height: 20px;
-          background: #fff;
-          border-radius: 50%;
-          position: absolute;
-          top: 2px;
-          left: 3px;
-          transition: 0.2s;
-        }
-        .tier-checkbox:checked::before {
-          left: 21px;
-        }
-        .tier-values {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-          align-items: center;
-        }
-        .tier-value-group {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          background: #0e0f0b;
-          padding: 5px 12px;
-          border-radius: 2rem;
-        }
-        .tier-value-group span {
-          font-size: 0.7rem;
-          color: #b9ae7a;
-        }
-        .tier-input {
-          background: #050504;
-          border: 1px solid #5e5536;
-          padding: 4px 8px;
-          border-radius: 1.5rem;
-          font-size: 0.8rem;
-          font-weight: 600;
-          font-family: monospace;
-          color: #ffecb3;
-          width: 60px;
-          text-align: center;
-        }
-        .cars-table {
-          background: #0e0f0b;
-          border-radius: 1rem;
-          overflow: hidden;
-          margin-top: 1rem;
-          max-height: 300px;
-          overflow-y: auto;
-        }
-        .table-header {
-          display: grid;
-          grid-template-columns: 2fr 0.8fr 1.2fr;
-          background: #202217;
-          padding: 0.5rem 1rem;
-          font-weight: 700;
-          font-size: 0.65rem;
-          color: #e9d58b;
-        }
-        .car-row {
-          display: grid;
-          grid-template-columns: 2fr 0.8fr 1.2fr;
-          padding: 0.4rem 1rem;
-          border-bottom: 1px solid #26291c;
-          font-size: 0.75rem;
-        }
-        .bulk-panel {
-          background: #1a1d14;
-          border-radius: 1rem;
-          padding: 1rem;
-          margin-top: 1rem;
-        }
-        .bulk-textarea {
-          width: 100%;
-          background: #0e0f0b;
-          border: 1px solid #5e5536;
-          border-radius: 1rem;
-          padding: 10px;
-          font-family: monospace;
-          font-size: 0.75rem;
-          color: #ffecb3;
-          resize: vertical;
-          margin-bottom: 0.8rem;
-        }
-        .calc-btn {
-          background: #d4af37;
-          border: none;
-          padding: 8px 20px;
-          border-radius: 2rem;
-          font-weight: 700;
-          cursor: pointer;
-          color: #0a0c07;
-        }
-        .stats-note {
-          font-size: 0.65rem;
-          margin-top: 8px;
-          text-align: right;
-          color: #a6a073;
-        }
-        .bulk-result {
-          margin-top: 12px;
-          background: #0e0f0b;
-          padding: 10px;
-          border-radius: 1rem;
-        }
+        .bullet-calc-container * { margin: 0; padding: 0; box-sizing: border-box; }
+        .bullet-calc-container { background: #12140e; padding: 0; color: #ede9cf; }
+        .input-panel { background: #1e2118; border-radius: 1.5rem; padding: 1rem 1.2rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.8rem; }
+        .input-group { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.8rem; background: #0e0f0b; padding: 0.8rem 1.2rem; border-radius: 1.5rem; }
+        .input-group label { font-weight: 600; font-size: 0.8rem; color: #e0ca7c; }
+        .price-input { background: #050504; border: 1px solid #5e5536; padding: 8px 14px; border-radius: 3rem; font-size: 1rem; font-weight: 700; font-family: monospace; color: #ffecb3; width: 220px; text-align: center; }
+        .cost-bullet-badge { background: #2a2c1c; padding: 6px 16px; border-radius: 40px; font-family: monospace; font-weight: 800; font-size: 0.8rem; }
+        .tier-controls { background: #1a1d14; border-radius: 1.5rem; padding: 1rem 1.2rem; margin-top: 1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+        .tier-toggle { display: flex; align-items: center; gap: 12px; }
+        .tier-checkbox { width: 44px; height: 24px; appearance: none; background: #2a2c1f; border-radius: 30px; position: relative; cursor: pointer; }
+        .tier-checkbox:checked { background: #d4af37; }
+        .tier-checkbox::before { content: ''; width: 20px; height: 20px; background: #fff; border-radius: 50%; position: absolute; top: 2px; left: 3px; transition: 0.2s; }
+        .tier-checkbox:checked::before { left: 21px; }
+        .tier-values { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+        .tier-value-group { display: flex; align-items: center; gap: 8px; background: #0e0f0b; padding: 5px 12px; border-radius: 2rem; }
+        .tier-value-group span { font-size: 0.7rem; color: #b9ae7a; }
+        .tier-input { background: #050504; border: 1px solid #5e5536; padding: 4px 8px; border-radius: 1.5rem; font-size: 0.8rem; font-weight: 600; font-family: monospace; color: #ffecb3; width: 60px; text-align: center; }
+        .cars-table { background: #0e0f0b; border-radius: 1rem; overflow: hidden; margin-top: 1rem; max-height: 300px; overflow-y: auto; }
+        .table-header { display: grid; grid-template-columns: 2fr 0.8fr 1.2fr; background: #202217; padding: 0.5rem 1rem; font-weight: 700; font-size: 0.65rem; color: #e9d58b; }
+        .car-row { display: grid; grid-template-columns: 2fr 0.8fr 1.2fr; padding: 0.4rem 1rem; border-bottom: 1px solid #26291c; font-size: 0.75rem; }
+        .bulk-panel { background: #1a1d14; border-radius: 1rem; padding: 1rem; margin-top: 1rem; }
+        .bulk-textarea { width: 100%; background: #0e0f0b; border: 1px solid #5e5536; border-radius: 1rem; padding: 10px; font-family: monospace; font-size: 0.75rem; color: #ffecb3; resize: vertical; margin-bottom: 0.8rem; }
+        .calc-btn { background: #d4af37; border: none; padding: 8px 20px; border-radius: 2rem; font-weight: 700; cursor: pointer; color: #0a0c07; }
+        .stats-note { font-size: 0.65rem; margin-top: 8px; text-align: right; color: #a6a073; }
+        .bulk-result { margin-top: 12px; background: #0e0f0b; padding: 10px; border-radius: 1rem; }
       </style>
       <div class="bullet-calc-container">
         <div class="input-panel">
@@ -427,7 +266,6 @@
           </div>
           <div class="cost-bullet-badge car-per-bullet">💵 PER BULLET: $444,444</div>
         </div>
-
         <div class="tier-controls">
           <div class="tier-toggle">
             <label>🔪 ENABLE TIERED PRICING</label>
@@ -439,24 +277,13 @@
             <div class="tier-value-group"><span>🟢 UNDER 100 BULLETS:</span><input type="number" class="tier-input tier3-input" value="30" step="5">%</div>
           </div>
         </div>
-
         <div class="cars-table">
-          <div class="table-header">
-            <span>CAR NAME</span>
-            <span>BULLETS</span>
-            <span>YOU PAY</span>
-          </div>
+          <div class="table-header"><span>CAR NAME</span><span>BULLETS</span><span>YOU PAY</span></div>
           <div class="car-list-container"></div>
         </div>
-
         <div class="bulk-panel">
           <div style="font-weight:700; margin-bottom:8px;">📋 BULK ORDER - PASTE YOUR CAR LIST (ONE PER LINE)</div>
-          <textarea class="bulk-textarea" rows="6" placeholder="Castillon V16
-Castillon V16
-Sweet Sixteen V16 Roadster
-Braxton 8 Litre
-Castillon V16
-Hudson V12 Limousine"></textarea>
+          <textarea class="bulk-textarea" rows="6" placeholder="Castillon V16&#10;Castillon V16&#10;Sweet Sixteen V16 Roadster"></textarea>
           <button class="calc-btn calculate-bulk">💰 CALCULATE TOTAL</button>
           <div class="bulk-result" style="display: none;">
             <div>📦 TOTAL CARS: <span class="total-cars-count">0</span></div>
@@ -464,188 +291,246 @@ Hudson V12 Limousine"></textarea>
             <div style="margin-top:8px; padding-top:6px; border-top:1px solid #d4af37;">💰 TOTAL OWED: <span class="total-owed">$0</span></div>
           </div>
         </div>
-        <div class="stats-note">Each line = one car • Duplicates count separately • Matches longest names first</div>
+        <div class="stats-note">Each line = one car • Duplicates count separately</div>
       </div>
     `;
     
     container.innerHTML = bulletCalcHTML;
-    initBulletCalculator();
-  }
-
-  function initBulletCalculator() {
+    
     const carsRaw = [
-      { name: "Sweet Sixteen V16 Roadster", bullets: 550 },
-      { name: "Castillon V16 Roadster", bullets: 550 },
-      { name: "Rosenberg Type RS Phaeton LaRue", bullets: 440 },
-      { name: "Rosenberg Type RS Boattail Speedster", bullets: 305 },
-      { name: "Clausen Royal Close Coupled Sedan", bullets: 220 },
-      { name: "Everett Series R 7-Passenger Touring", bullets: 200 },
-      { name: "Martinez-Bauer 431 Supercharged Roadster", bullets: 155 },
-      { name: "Chalamet Alliance Phaeton", bullets: 45 },
-      { name: "Chalamet Liberty 1/2 Ton Pickup", bullets: 40 },
-      { name: "Porter Model 11 Touring", bullets: 40 },
-      { name: "Porter Model 6 Touring", bullets: 20 },
-      { name: "Porter Model 1 Tudor", bullets: 40 },
-      { name: "Porter Model 1 Closed Cab", bullets: 40 },
-      { name: "Harlow-Ryder Model S35", bullets: 10 },
-      { name: "Auclair Type-3 GSS", bullets: 15 },
-      { name: "Bernardi Model CE", bullets: 20 },
-      { name: "Swift Model 96", bullets: 30 },
-      { name: "Rosenberg Type-R", bullets: 340 },
-      { name: "Maynard 384 Speedster", bullets: 190 },
-      { name: "Maynard V12", bullets: 175 },
-      { name: "Hudson V12 Limousine", bullets: 475 },
-      { name: "Braxton 8 Litre", bullets: 450 },
-      { name: "Castillon V16", bullets: 675 },
-      { name: "Asher 26-6", bullets: 130 },
-      { name: "Hearse", bullets: 110 },
-      { name: "Barrett 480", bullets: 100 },
-      { name: "School Bus", bullets: 40 },
-      { name: "Milk Truck", bullets: 40 },
-      { name: "Police Car", bullets: 40 },
-      { name: "Porter V8", bullets: 40 },
-      { name: "Tree Delivery Truck", bullets: 40 }
+      { name: "Castillon V16", bullets: 675 }, { name: "Sweet Sixteen V16 Roadster", bullets: 550 },
+      { name: "Castillon V16 Roadster", bullets: 550 }, { name: "Hudson V12 Limousine", bullets: 475 },
+      { name: "Braxton 8 Litre", bullets: 450 }, { name: "Rosenberg Type RS Phaeton LaRue", bullets: 440 },
+      { name: "Rosenberg Type-R", bullets: 340 }, { name: "Maynard 384 Speedster", bullets: 190 },
+      { name: "Maynard V12", bullets: 175 }, { name: "Asher 26-6", bullets: 130 }, { name: "Hearse", bullets: 110 },
+      { name: "Barrett 480", bullets: 100 }, { name: "School Bus", bullets: 40 }, { name: "Police Car", bullets: 40 },
+      { name: "Porter Model 1 Tudor", bullets: 40 }, { name: "Swift Model 96", bullets: 30 },
+      { name: "Bernardi Model CE", bullets: 20 }, { name: "Auclair Type-3 GSS", bullets: 15 },
+      { name: "Harlow-Ryder Model S35", bullets: 10 }
     ];
     
-    const sortedCars = [...carsRaw].sort((a, b) => b.bullets - a.bullets);
+    function formatMillions(v) { let n = parseFloat(String(v).replace(/,/g, '')); if (isNaN(n)) return "0"; return (n/1000000).toFixed(2)+"M"; }
+    function parseNum(v) { let c = String(v).replace(/,/g,''); let n = parseFloat(c); return isNaN(n)?0:n; }
+    function getPerBullet() { return parseNum(document.querySelector('.car-price-input').value)/675; }
+    function getMult(b) { if(!document.querySelector('.tier-checkbox').checked) return 1; let t1=parseFloat(document.querySelector('.tier1-input').value)/100, t2=parseFloat(document.querySelector('.tier2-input').value)/100, t3=parseFloat(document.querySelector('.tier3-input').value)/100; if(b>=440) return t1; if(b>=100) return t2; return t3; }
+    function render() { let pb=getPerBullet(), html=''; for(let c of [...carsRaw].sort((a,b)=>b.bullets-a.bullets)) { let fp=pb*c.bullets*getMult(c.bullets); html+=`<div class="car-row"><span>${c.name}</span><span>${c.bullets}</span><span>$${formatMillions(fp)}</span></div>`; } document.querySelector('.car-list-container').innerHTML=html; document.querySelector('.car-per-bullet').innerHTML=`💵 PER BULLET: $${formatMillions(pb)}`; }
+    function calcBulk() { let lines=document.querySelector('.bulk-textarea').value.split(/\r?\n/), counts=new Map(); for(let l of lines) { let t=l.trim(); if(!t) continue; for(let c of carsRaw) { if(t.toLowerCase()===c.name.toLowerCase()) { counts.set(c.name,(counts.get(c.name)||0)+1); break; } } } let pb=getPerBullet(), total=0, breakdown=''; for(let [n,q] of counts) { let c=carsRaw.find(x=>x.name===n); let sub=pb*c.bullets*getMult(c.bullets)*q; total+=sub; breakdown+=`<div style="font-size:0.7rem;">${q}x ${n}: $${formatMillions(sub)}</div>`; } document.querySelector('.total-cars-count').innerHTML=Array.from(counts.values()).reduce((a,b)=>a+b,0); document.querySelector('.bulk-breakdown').innerHTML=breakdown||'<div>No cars found</div>'; document.querySelector('.total-owed').innerHTML=`$${formatMillions(total)}`; document.querySelector('.bulk-result').style.display='block'; }
+    document.querySelector('.car-price-input').addEventListener('input', render);
+    document.querySelector('.tier-checkbox').addEventListener('change', render);
+    document.querySelectorAll('.tier-input').forEach(i=>i.addEventListener('input', render));
+    document.querySelector('.calculate-bulk').addEventListener('click', calcBulk);
+    render();
+  }
+
+  // ============================================================
+  // GOLD PORTFOLIO TRACKER
+  // ============================================================
+  function loadGoldTracker() {
+    const container = document.getElementById('goldTrackerContent');
     
-    function formatMillions(value) {
-      if (!value && value !== 0) return "0";
-      let num = typeof value === 'number' ? value : parseFloat(value);
-      if (isNaN(num)) return "0";
-      let millions = num / 1000000;
-      return millions.toFixed(2) + "M";
-    }
+    const goldTrackerHTML = `
+      <style>
+        .gold-tracker { background: #12140e; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+        .stat-card { background: #1e2118; border-radius: 1rem; padding: 1rem; text-align: center; }
+        .stat-label { font-size: 0.7rem; color: #b9ae7a; letter-spacing: 1px; }
+        .stat-value { font-size: 1.5rem; font-weight: 800; color: #d4af37; font-family: monospace; }
+        .transaction-form { background: #1a1d14; border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; }
+        .form-row { display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: flex-end; margin-bottom: 0.8rem; }
+        .form-group { display: flex; flex-direction: column; gap: 4px; }
+        .form-group label { font-size: 0.7rem; color: #e0ca7c; }
+        .form-input { background: #050504; border: 1px solid #5e5536; padding: 8px 12px; border-radius: 1rem; color: #ffecb3; font-family: monospace; width: 150px; }
+        .form-select { background: #050504; border: 1px solid #5e5536; padding: 8px 12px; border-radius: 1rem; color: #ffecb3; cursor: pointer; }
+        .action-btn { background: #d4af37; border: none; padding: 8px 20px; border-radius: 2rem; font-weight: 700; cursor: pointer; color: #0a0c07; }
+        .history-table { background: #0e0f0b; border-radius: 1rem; overflow: hidden; max-height: 300px; overflow-y: auto; }
+        .history-header { display: grid; grid-template-columns: 100px 100px 120px 100px; background: #202217; padding: 0.5rem 1rem; font-size: 0.7rem; font-weight: 700; color: #e9d58b; }
+        .history-row { display: grid; grid-template-columns: 100px 100px 120px 100px; padding: 0.4rem 1rem; border-bottom: 1px solid #26291c; font-size: 0.7rem; }
+        .delete-btn { background: none; border: none; color: #ff8888; cursor: pointer; font-size: 1rem; }
+        .profit-slider { margin-top: 1rem; background: #1a1d14; border-radius: 1rem; padding: 1rem; }
+        .slider-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        input[type="range"] { flex: 1; height: 6px; -webkit-appearance: none; background: #3a3c2a; border-radius: 3px; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 16px; height: 16px; background: #d4af37; border-radius: 50%; cursor: pointer; }
+        .reset-btn { background: #552222; border: none; padding: 6px 16px; border-radius: 1rem; color: #ffaaaa; cursor: pointer; margin-top: 0.5rem; font-size: 0.7rem; }
+      </style>
+      <div class="gold-tracker">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-label">TOTAL GOLD</div><div class="stat-value" id="totalGold">0</div></div>
+          <div class="stat-card"><div class="stat-label">TOTAL INVESTED</div><div class="stat-value" id="totalInvested">$0</div></div>
+          <div class="stat-card"><div class="stat-label">AVG COST / GOLD</div><div class="stat-value" id="avgCost">$0</div></div>
+          <div class="stat-card"><div class="stat-label">BREAK EVEN (sell)</div><div class="stat-value" id="breakEven">$0</div></div>
+        </div>
+
+        <div class="transaction-form">
+          <div class="form-row">
+            <div class="form-group"><label>AMOUNT (gold)</label><input type="number" id="txnAmount" class="form-input" placeholder="10" step="any"></div>
+            <div class="form-group"><label>PRICE PER GOLD ($)</label><input type="text" id="txnPrice" class="form-input" placeholder="30,000,000"></div>
+            <div class="form-group"><label>TYPE</label><select id="txnType" class="form-select"><option value="buy">💰 BUY</option><option value="sell">💸 SELL</option><option value="loot">🎁 LOOT / FREE</option></select></div>
+            <div class="form-group"><button id="addTransactionBtn" class="action-btn">+ ADD</button></div>
+          </div>
+        </div>
+
+        <div class="profit-slider">
+          <div class="slider-row">
+            <span style="font-size:0.75rem;">💎 PROFIT TARGET PER GOLD:</span>
+            <input type="range" id="profitSlider" min="0" max="10000000" step="500000" value="2000000">
+            <span style="font-family:monospace; font-weight:700;" id="profitTargetDisplay">$2.00M</span>
+          </div>
+          <div class="stats-grid" style="margin-top: 0.5rem;">
+            <div class="stat-card"><div class="stat-label">SELL PRICE NEEDED</div><div class="stat-value" id="sellPriceNeeded">$0</div></div>
+            <div class="stat-card"><div class="stat-label">PROFIT PER GOLD AFTER FEE</div><div class="stat-value" id="profitAfterFee">$0</div></div>
+            <div class="stat-card"><div class="stat-label">TOTAL PROFIT IF SOLD</div><div class="stat-value" id="totalProfitIfSold">$0</div></div>
+          </div>
+          <div style="font-size:0.65rem; color:#8b8a5a; margin-top: 6px;">⚠️ Auction house takes 10% fee when you sell</div>
+        </div>
+
+        <div class="history-table">
+          <div class="history-header"><span>TYPE</span><span>AMOUNT</span><span>PRICE/GOLD</span><span></span></div>
+          <div id="historyList"></div>
+        </div>
+        <button id="resetAllBtn" class="reset-btn">🗑️ RESET ALL DATA</button>
+      </div>
+    `;
     
-    function parseCommaNumber(value) {
-      if (typeof value === 'string') {
-        let cleaned = value.replace(/,/g, '');
-        let parsed = parseFloat(cleaned);
-        return isNaN(parsed) ? 0 : parsed;
-      }
-      return parseFloat(value);
-    }
+    container.innerHTML = goldTrackerHTML;
     
-    function getBasePerBullet() {
-      let price = parseCommaNumber(document.querySelector('.car-price-input').value);
-      if (isNaN(price) || price <= 0) price = 300000000;
-      return price / 675;
-    }
+    // Load data from localStorage
+    let transactions = [];
+    function saveTransactions() { localStorage.setItem('minissob_gold_transactions', JSON.stringify(transactions)); }
+    function loadTransactions() { let saved = localStorage.getItem('minissob_gold_transactions'); if(saved) transactions = JSON.parse(saved); else transactions = []; renderAll(); }
     
-    function getMultiplier(bullets) {
-      const enabled = document.querySelector('.tier-checkbox').checked;
-      if (!enabled) return 1;
-      const tier1 = parseFloat(document.querySelector('.tier1-input').value) / 100;
-      const tier2 = parseFloat(document.querySelector('.tier2-input').value) / 100;
-      const tier3 = parseFloat(document.querySelector('.tier3-input').value) / 100;
-      if (bullets >= 440) return tier1;
-      if (bullets >= 100 && bullets <= 339) return tier2;
-      if (bullets <= 99) return tier3;
-      return 1;
-    }
+    function formatMoney(value) { let n = typeof value === 'number' ? value : parseFloat(value); if(isNaN(n)) return "$0"; if(n >= 1e9) return "$"+(n/1e9).toFixed(2)+"B"; if(n >= 1e6) return "$"+(n/1e6).toFixed(2)+"M"; if(n >= 1e3) return "$"+(n/1e3).toFixed(2)+"K"; return "$"+n.toFixed(0); }
+    function parsePriceInput(value) { let cleaned = String(value).replace(/,/g, ''); return parseFloat(cleaned) || 0; }
     
-    function renderCars() {
-      const perBullet = getBasePerBullet();
-      let html = '';
-      for (let car of sortedCars) {
-        const basePrice = perBullet * car.bullets;
-        const multiplier = getMultiplier(car.bullets);
-        const finalPrice = basePrice * multiplier;
-        html += `<div class="car-row"><span>${car.name}</span><span>${car.bullets}</span><span>$${formatMillions(finalPrice)}</span></div>`;
-      }
-      document.querySelector('.car-list-container').innerHTML = html;
-    }
-    
-    function updateDisplay() {
-      const perBullet = getBasePerBullet();
-      document.querySelector('.car-per-bullet').innerHTML = `💵 PER BULLET: $${formatMillions(perBullet)}`;
-      renderCars();
-    }
-    
-    function calculateBulk() {
-      const text = document.querySelector('.bulk-textarea').value;
-      const lines = text.split(/\r?\n/);
-      const counts = new Map();
-      
-      for (let line of lines) {
-        let trimmedLine = line.trim();
-        if (trimmedLine === "") continue;
-        
-        let matched = false;
-        for (let car of carsRaw) {
-          if (trimmedLine.toLowerCase() === car.name.toLowerCase()) {
-            counts.set(car.name, (counts.get(car.name) || 0) + 1);
-            matched = true;
-            break;
-          }
+    function computePortfolio() {
+      let totalGold = 0;
+      let totalCost = 0;
+      for(let t of transactions) {
+        if(t.type === 'buy') {
+          totalGold += t.amount;
+          totalCost += t.amount * t.price;
+        } else if(t.type === 'sell') {
+          totalGold -= t.amount;
+          // When selling, we reduce gold but cost basis remains (we already spent the money)
+          // For average cost, we keep original cost basis
+        } else if(t.type === 'loot') {
+          totalGold += t.amount;
+          // Free gold adds no cost
         }
-        if (!matched) {
-          for (let car of carsRaw) {
-            if (trimmedLine.toLowerCase().includes(car.name.toLowerCase())) {
-              counts.set(car.name, (counts.get(car.name) || 0) + 1);
-              break;
-            }
-          }
-        }
       }
-      
-      let total = 0;
-      let breakdown = '';
-      const perBullet = getBasePerBullet();
-      
-      for (let [name, qty] of counts) {
-        const car = carsRaw.find(c => c.name === name);
-        const basePrice = perBullet * car.bullets;
-        const price = basePrice * getMultiplier(car.bullets);
-        const subtotal = price * qty;
-        total += subtotal;
-        breakdown += `<div style="font-size:0.7rem; margin-bottom: 2px;">${qty}x ${name}: $${formatMillions(subtotal)}</div>`;
-      }
-      
-      let totalCars = 0;
-      for (let qty of counts.values()) totalCars += qty;
-      
-      document.querySelector('.total-cars-count').innerHTML = totalCars;
-      document.querySelector('.bulk-breakdown').innerHTML = breakdown || '<div>No cars found in your list</div>';
-      document.querySelector('.total-owed').innerHTML = `$${formatMillions(total)}`;
-      document.querySelector('.bulk-result').style.display = 'block';
+      let avgCost = totalGold > 0 ? totalCost / totalGold : 0;
+      let breakEven = avgCost / 0.9; // 10% fee means you need to sell at avgCost/0.9 to break even
+      return { totalGold, totalInvested: totalCost, avgCost, breakEven };
     }
     
-    document.querySelector('.car-price-input').addEventListener('input', updateDisplay);
-    document.querySelector('.tier-checkbox').addEventListener('change', updateDisplay);
-    document.querySelector('.tier1-input').addEventListener('input', updateDisplay);
-    document.querySelector('.tier2-input').addEventListener('input', updateDisplay);
-    document.querySelector('.tier3-input').addEventListener('input', updateDisplay);
-    document.querySelector('.calculate-bulk').addEventListener('click', calculateBulk);
-    updateDisplay();
+    function getProfitTarget() { return parseFloat(document.getElementById('profitSlider').value) || 0; }
+    
+    function renderAll() {
+      let portfolio = computePortfolio();
+      document.getElementById('totalGold').innerText = portfolio.totalGold.toFixed(2);
+      document.getElementById('totalInvested').innerHTML = formatMoney(portfolio.totalInvested);
+      document.getElementById('avgCost').innerHTML = formatMoney(portfolio.avgCost);
+      document.getElementById('breakEven').innerHTML = formatMoney(portfolio.breakEven);
+      
+      let profitTarget = getProfitTarget();
+      let sellPriceNeeded = (portfolio.avgCost + profitTarget) / 0.9;
+      let profitAfterFee = (sellPriceNeeded * 0.9) - portfolio.avgCost;
+      let totalProfitIfSold = profitAfterFee * portfolio.totalGold;
+      
+      document.getElementById('sellPriceNeeded').innerHTML = formatMoney(sellPriceNeeded);
+      document.getElementById('profitAfterFee').innerHTML = formatMoney(profitAfterFee);
+      document.getElementById('totalProfitIfSold').innerHTML = formatMoney(totalProfitIfSold);
+      document.getElementById('profitTargetDisplay').innerHTML = formatMoney(profitTarget);
+      
+      let historyHtml = '';
+      for(let i = transactions.length-1; i >= 0; i--) {
+        let t = transactions[i];
+        let typeLabel = t.type === 'buy' ? '💰 BUY' : (t.type === 'sell' ? '💸 SELL' : '🎁 LOOT');
+        let typeColor = t.type === 'buy' ? '#aaffaa' : (t.type === 'sell' ? '#ffaaaa' : '#aaaaff');
+        historyHtml += `
+          <div class="history-row">
+            <span style="color:${typeColor}">${typeLabel}</span>
+            <span>${t.amount.toFixed(2)}</span>
+            <span>${formatMoney(t.price)}</span>
+            <span><button class="delete-btn" data-idx="${i}">✕</button></span>
+          </div>
+        `;
+      }
+      if(historyHtml === '') historyHtml = '<div class="history-row"><span colspan="4" style="color:#6e6a4a;">No transactions yet</span></div>';
+      document.getElementById('historyList').innerHTML = historyHtml;
+      
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          let idx = parseInt(btn.getAttribute('data-idx'));
+          let actualIdx = transactions.length - 1 - idx;
+          transactions.splice(actualIdx, 1);
+          saveTransactions();
+          renderAll();
+        });
+      });
+    }
+    
+    function addTransaction() {
+      let amount = parseFloat(document.getElementById('txnAmount').value);
+      let priceRaw = document.getElementById('txnPrice').value;
+      let price = parsePriceInput(priceRaw);
+      let type = document.getElementById('txnType').value;
+      
+      if(isNaN(amount) || amount <= 0) { alert("Enter a valid amount"); return; }
+      if(type !== 'loot' && (isNaN(price) || price <= 0)) { alert("Enter a valid price"); return; }
+      if(type === 'loot') price = 0;
+      
+      transactions.push({ amount, price, type, date: Date.now() });
+      saveTransactions();
+      renderAll();
+      document.getElementById('txnAmount').value = '';
+      document.getElementById('txnPrice').value = '';
+    }
+    
+    function resetAll() {
+      if(confirm("Delete ALL your gold transaction history? This cannot be undone.")) {
+        transactions = [];
+        saveTransactions();
+        renderAll();
+      }
+    }
+    
+    document.getElementById('addTransactionBtn').addEventListener('click', addTransaction);
+    document.getElementById('resetAllBtn').addEventListener('click', resetAll);
+    document.getElementById('profitSlider').addEventListener('input', () => renderAll());
+    document.getElementById('txnPrice').addEventListener('input', function(e) {
+      let val = parsePriceInput(e.target.value);
+      if(!isNaN(val)) e.target.value = val.toLocaleString();
+    });
+    
+    loadTransactions();
   }
 
   // TOOL SELECTION
   const panel = document.getElementById('activeToolPanel');
   const panelTitle = document.getElementById('panelTitle');
+  let loadedTools = {};
 
   function openTool(toolId) {
-    document.querySelectorAll('.tool-content').forEach(content => {
-      content.classList.remove('active');
-    });
-    
+    document.querySelectorAll('.tool-content').forEach(content => content.classList.remove('active'));
     const selectedContent = document.getElementById(`${toolId}Content`);
-    if (selectedContent) {
-      selectedContent.classList.add('active');
-    }
+    if(selectedContent) selectedContent.classList.add('active');
     
-    panelTitle.innerText = '⚔️ Bullet Price Calculator';
+    if(toolId === 'bulletCalc') panelTitle.innerText = '⚔️ Bullet Price Calculator';
+    else if(toolId === 'goldTracker') panelTitle.innerText = '💎 Gold Portfolio Tracker';
+    
     panel.style.display = 'block';
     
-    if (document.getElementById('bulletCalcContent').innerHTML.includes('Loading...')) {
+    if(toolId === 'bulletCalc' && !loadedTools.bulletCalc) {
       loadBulletCalculator();
+      loadedTools.bulletCalc = true;
+    } else if(toolId === 'goldTracker' && !loadedTools.goldTracker) {
+      loadGoldTracker();
+      loadedTools.goldTracker = true;
     }
   }
 
   document.querySelectorAll('.tool-card').forEach(card => {
-    card.addEventListener('click', () => {
-      openTool('bulletCalc');
-    });
+    card.addEventListener('click', () => openTool(card.getAttribute('data-tool')));
   });
 
   document.getElementById('closePanelBtn').addEventListener('click', () => {
