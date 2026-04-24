@@ -109,6 +109,8 @@
 </div>
 
 <script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbx3qsZhd5XqGVQupA_SPg5bNwzSVzHwmE6_IDNA1jVm7Wz4SbGDe_hDaM4/exec";
+  
   let buys = [];
   let totalInvested = 0;
   let totalGold = 0;
@@ -116,6 +118,28 @@
   let transactions = [];
   let sellOrders = [];
   let nextOrderId = 1;
+  
+  // Anonymous player ID
+  let playerId = localStorage.getItem('minissob_player_id');
+  if(!playerId) {
+    playerId = "Player_" + Math.floor(Math.random() * 10000);
+    localStorage.setItem('minissob_player_id', playerId);
+  }
+  
+  async function sendToSheet(amount, price) {
+    try {
+      await fetch(API_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          playerId: playerId,
+          amount: amount,
+          price: price
+        })
+      });
+    } catch(e) { console.log("Stats save error:", e); }
+  }
   
   function saveAll() {
     localStorage.setItem('minissob_buys', JSON.stringify(buys));
@@ -166,7 +190,7 @@
     return totalGold > 0 ? totalInvested / totalGold : 0;
   }
   
-  function addTransaction() {
+  async function addTransaction() {
     let amount = parseFloat(document.getElementById('txnAmount').value);
     let priceRaw = document.getElementById('txnPrice').value;
     let price = parsePrice(priceRaw);
@@ -181,10 +205,12 @@
       totalInvested += amount * price;
       totalGold += amount;
       transactions.push({ type: 'BUY', amount: amount, price: price, date: Date.now() });
+      await sendToSheet(amount, price);
     } else if(type === 'loot') {
       buys.push({ amount: amount, price: 0 });
       totalGold += amount;
       transactions.push({ type: 'LOOT', amount: amount, price: 0, date: Date.now() });
+      await sendToSheet(amount, 0);
     }
     
     saveAll();
