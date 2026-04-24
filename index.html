@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Bootlegger • Tiered Pricing + Bulk Order Calculator</title>
+  <title>Bootlegger Tools • Calculator Hub</title>
   <style>
     * {
       margin: 0;
@@ -19,376 +19,120 @@
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
-    .ref-panel {
-      background: #14170f;
-      border-radius: 2rem;
-      padding: 1.5rem 2rem;
+    /* Header */
+    .header {
+      text-align: center;
       margin-bottom: 2rem;
-      border: 1px solid #4e482a;
-      box-shadow: 0 12px 20px -10px black;
     }
 
     h1 {
-      font-size: 1.7rem;
-      font-weight: 700;
+      font-size: 2rem;
+      font-weight: 800;
       background: linear-gradient(135deg, #f3e0a4, #d6af40);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.5rem;
     }
 
     .sub {
       color: #b9ae7a;
-      font-size: 0.8rem;
-      margin-bottom: 1.2rem;
-      border-left: 3px solid #e0b348;
-      padding-left: 12px;
-    }
-
-    .mode-toggle {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      background: #0e0f0b;
-      padding: 0.5rem;
-      border-radius: 3rem;
-      width: fit-content;
-    }
-
-    .mode-btn {
-      background: transparent;
-      border: none;
-      padding: 0.6rem 1.5rem;
-      border-radius: 2rem;
-      font-weight: 600;
       font-size: 0.85rem;
-      cursor: pointer;
-      color: #b9ae7a;
-      transition: all 0.2s;
     }
 
-    .mode-btn.active {
-      background: #d4af37;
-      color: #0a0c07;
-      box-shadow: 0 2px 8px rgba(212, 175, 55, 0.3);
-    }
-
-    .input-panel {
-      background: #1e2118;
-      border-radius: 1.5rem;
-      padding: 1rem 1.2rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.8rem;
-    }
-
-    .input-group {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 0.8rem;
-      background: #0e0f0b;
-      padding: 0.8rem 1.2rem;
-      border-radius: 1.5rem;
-    }
-
-    .input-group label {
-      font-weight: 600;
-      font-size: 0.8rem;
-      color: #e0ca7c;
-    }
-
-    .price-input {
-      background: #050504;
-      border: 1px solid #5e5536;
-      padding: 8px 14px;
-      border-radius: 3rem;
-      font-size: 1.2rem;
-      font-weight: 700;
-      font-family: monospace;
-      color: #ffecb3;
-      width: 260px;
-      text-align: center;
-    }
-
-    .price-input:focus {
-      outline: none;
-      border-color: #efc368;
-      box-shadow: 0 0 0 2px rgba(218, 173, 52, 0.3);
-    }
-
-    .cost-bullet-badge {
-      background: #2a2c1c;
-      padding: 6px 16px;
-      border-radius: 40px;
-      font-family: monospace;
-      font-weight: 800;
-      font-size: 0.9rem;
-    }
-
-    .tier-controls {
-      background: #1a1d14;
-      border-radius: 1.5rem;
-      padding: 1rem 1.2rem;
-      margin-top: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .tier-toggle {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .tier-toggle label {
-      font-weight: 600;
-      font-size: 0.85rem;
-      color: #e0ca7c;
-      cursor: pointer;
-    }
-
-    .tier-checkbox {
-      width: 44px;
-      height: 24px;
-      appearance: none;
-      background: #2a2c1f;
-      border-radius: 30px;
-      position: relative;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .tier-checkbox:checked {
-      background: #d4af37;
-    }
-
-    .tier-checkbox::before {
-      content: '';
-      width: 20px;
-      height: 20px;
-      background: #fff;
-      border-radius: 50%;
-      position: absolute;
-      top: 2px;
-      left: 3px;
-      transition: 0.2s;
-    }
-
-    .tier-checkbox:checked::before {
-      left: 21px;
-    }
-
-    .tier-values {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1.2rem;
-      align-items: center;
-    }
-
-    .tier-value-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #0e0f0b;
-      padding: 5px 12px;
-      border-radius: 2rem;
-    }
-
-    .tier-value-group span {
-      font-size: 0.7rem;
-      color: #b9ae7a;
-    }
-
-    .tier-input {
-      background: #050504;
-      border: 1px solid #5e5536;
-      padding: 4px 8px;
-      border-radius: 1.5rem;
-      font-size: 0.8rem;
-      font-weight: 600;
-      font-family: monospace;
-      color: #ffecb3;
-      width: 60px;
-      text-align: center;
-    }
-
-    .stats-note {
-      font-size: 0.7rem;
-      margin-top: 10px;
-      text-align: right;
-      color: #a6a073;
-    }
-
-    .cars-table {
-      background: #12140e;
-      border-radius: 1.6rem;
-      overflow: hidden;
-      border: 1px solid #2c2e20;
-      margin-top: 1rem;
-    }
-
-    .table-header {
+    /* Tool Grid */
+    .tools-grid {
       display: grid;
-      grid-template-columns: 2fr 0.8fr 1.2fr;
-      background: #202217;
-      padding: 0.9rem 1.2rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-      letter-spacing: 1px;
-      color: #e9d58b;
-      border-bottom: 1px solid #3f3f2c;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
     }
 
-    .car-row {
-      display: grid;
-      grid-template-columns: 2fr 0.8fr 1.2fr;
-      padding: 0.7rem 1.2rem;
-      border-bottom: 1px solid #26291c;
-      align-items: center;
-      transition: background 0.1s;
-    }
-
-    .car-row:hover {
-      background: #1c1f16;
-    }
-
-    .car-name {
-      font-weight: 500;
-      font-size: 0.85rem;
-      color: #f3e6bf;
-    }
-
-    .bullet-count {
-      font-family: monospace;
-      font-weight: 800;
-      font-size: 0.9rem;
-      color: #ffde9c;
-    }
-
-    .actual-price {
-      font-family: monospace;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: #f5c542;
-    }
-
-    .ref-highlight {
-      background: #2a3420;
-      border-left: 3px solid #f5c842;
-    }
-
-    .tier-divider {
-      background: #1e2118;
-      border-top: 2px solid #d4af37;
-      border-bottom: 2px solid #d4af37;
-    }
-
-    .divider-label {
-      font-size: 0.7rem;
-      text-align: center;
-      background: #1e2118;
-      display: inline-block;
-      padding: 5px 16px;
-      border-radius: 20px;
-      margin: 8px 0;
-      width: 100%;
-      text-align: center;
-      color: #d4af37;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-
-    .tier-badge {
-      font-size: 0.6rem;
-      padding: 2px 8px;
-      border-radius: 20px;
-      margin-left: 8px;
-    }
-
-    .tier-1-badge { background: #2a5f2a; color: #aaffaa; }
-    .tier-2-badge { background: #8b6b2a; color: #ffe6aa; }
-    .tier-3-badge { background: #6b2a2a; color: #ffbbbb; }
-
-    .bulk-panel {
-      background: #1a1d14;
+    .tool-card {
+      background: #14170f;
+      border: 1px solid #3a3c2a;
       border-radius: 1.5rem;
       padding: 1.5rem;
-      margin-top: 2rem;
-      border: 1px solid #4e482a;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
     }
 
-    .bulk-title {
-      font-size: 1.1rem;
+    .tool-card:hover {
+      border-color: #d4af37;
+      transform: translateY(-4px);
+      background: #1a1d14;
+    }
+
+    .tool-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tool-title {
+      font-size: 1.2rem;
       font-weight: 700;
       color: #f3e0a4;
-      margin-bottom: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      margin-bottom: 0.5rem;
     }
 
-    .bulk-textarea {
-      width: 100%;
-      background: #0e0f0b;
-      border: 1px solid #5e5536;
-      border-radius: 1rem;
-      padding: 12px;
-      font-family: monospace;
-      font-size: 0.8rem;
-      color: #ffecb3;
-      resize: vertical;
-      margin-bottom: 1rem;
-    }
-
-    .bulk-textarea:focus {
-      outline: none;
-      border-color: #d4af37;
-    }
-
-    .bulk-summary {
-      background: #0e0f0b;
-      border-radius: 1rem;
-      padding: 1rem;
-      margin-top: 1rem;
-    }
-
-    .bulk-total {
-      font-size: 1.4rem;
-      font-weight: 800;
-      font-family: monospace;
-      color: #f5c542;
-    }
-
-    .bulk-line-item {
+    .tool-desc {
       font-size: 0.75rem;
-      color: #b9ae7a;
-      border-bottom: 1px solid #2a2c1f;
-      padding: 4px 0;
+      color: #8b8a5a;
+    }
+
+    /* Active Tool Panel */
+    .active-tool-panel {
+      background: #12140e;
+      border-radius: 1.5rem;
+      border: 1px solid #4e482a;
+      margin-bottom: 2rem;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: #1e2118;
+      padding: 0.8rem 1.2rem;
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #3a3c2a;
     }
 
-    .footer {
-      margin-top: 1.5rem;
-      font-size: 0.7rem;
-      text-align: center;
-      color: #6e6a4a;
+    .panel-title {
+      font-weight: 700;
+      color: #d4af37;
     }
 
-    /* Counter styles */
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: #b9ae7a;
+      padding: 4px 12px;
+      border-radius: 2rem;
+    }
+
+    .close-btn:hover {
+      background: #2a2c1f;
+      color: #ff8888;
+    }
+
+    .tool-content {
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .tool-content.active {
+      display: block;
+    }
+
+    /* Counter */
     .counter-bar {
       display: flex;
       justify-content: center;
@@ -414,401 +158,569 @@
       letter-spacing: 1px;
     }
 
+    .footer {
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      text-align: center;
+      color: #6e6a4a;
+    }
+
     @media (max-width: 650px) {
-      .table-header, .car-row {
-        grid-template-columns: 1.5fr 0.7fr 1.1fr;
-        gap: 6px;
+      .tools-grid {
+        grid-template-columns: 1fr;
       }
-      .car-name { font-size: 0.7rem; }
-      .price-input { width: 100%; }
-      .input-panel { flex-direction: column; align-items: stretch; }
-      .tier-values { flex-direction: column; align-items: stretch; }
-      .tier-controls { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <div class="ref-panel">
-    <h1>⚔️ BULK ORDER CALCULATOR</h1>
-    <div class="sub">Set your price, paste any text with car names, get total owed</div>
-    
-    <div class="mode-toggle">
-      <button id="modeCarBtn" class="mode-btn active">💰 SET CAR PRICE</button>
-      <button id="modeGoldBtn" class="mode-btn">💎 SET GOLD PRICE</button>
-    </div>
-
-    <div id="carPricePanel" class="input-panel">
-      <span class="cost-bullet-badge">🏎️ CASTILLON V16 (675 bullets)</span>
-      <div class="input-group">
-        <label>💰 WHAT YOU PAY ($)</label>
-        <input type="text" id="carPriceInput" class="price-input" value="300,000,000">
-      </div>
-      <div class="cost-bullet-badge" id="carPerBulletDisplay">💵 PER BULLET: $444,444</div>
-    </div>
-
-    <div id="goldPricePanel" class="input-panel" style="display: none;">
-      <span class="cost-bullet-badge">💎 1 GOLD = 50 BULLETS</span>
-      <div class="input-group">
-        <label>💎 1 GOLD PRICE ($)</label>
-        <input type="text" id="goldPriceInput" class="price-input" value="20,000,000">
-      </div>
-      <div class="cost-bullet-badge" id="goldPerBulletDisplay">🔫 PER BULLET: $400,000</div>
-    </div>
-
-    <div class="tier-controls">
-      <div class="tier-toggle">
-        <label>🔪 ENABLE TIERED PRICING</label>
-        <input type="checkbox" id="tierToggle" class="tier-checkbox" checked>
-      </div>
-      <div class="tier-values">
-        <div class="tier-value-group"><span>🔴 440+ BULLETS:</span><input type="number" id="tier1Percent" class="tier-input" value="100" step="5">%</div>
-        <div class="tier-value-group"><span>🟡 100-339 BULLETS:</span><input type="number" id="tier2Percent" class="tier-input" value="50" step="5">%</div>
-        <div class="tier-value-group"><span>🟢 UNDER 100 BULLETS:</span><input type="number" id="tier3Percent" class="tier-input" value="30" step="5">%</div>
-      </div>
-    </div>
-    <div class="stats-note" id="modeDescription">Mode: Castillon V16 price → everything else scales</div>
+  <div class="header">
+    <h1>🔫 BOOTLEGGER TOOLS</h1>
+    <div class="sub">Select a tool below • All calculators in one place</div>
   </div>
 
-  <div class="cars-table">
-    <div class="table-header">
-      <span>🔫 CAR NAME</span>
-      <span>💀 BULLETS</span>
-      <span>💰 YOU PAY</span>
+  <!-- Tool Grid (Clickable boxes) -->
+  <div class="tools-grid">
+    <div class="tool-card" data-tool="bulletCalc">
+      <div class="tool-icon">⚔️</div>
+      <div class="tool-title">Bullet Price Calculator</div>
+      <div class="tool-desc">Set gold/car price • Bulk order • Tiered discounts</div>
     </div>
-    <div id="carListContainer"></div>
+    <div class="tool-card" data-tool="comingSoon1">
+      <div class="tool-icon">📦</div>
+      <div class="tool-title">Cargo Value Tool</div>
+      <div class="tool-desc">Coming soon • Calculate crate values</div>
+    </div>
+    <div class="tool-card" data-tool="comingSoon2">
+      <div class="tool-icon">💎</div>
+      <div class="tool-title">Gold Exchange</div>
+      <div class="tool-desc">Coming soon • Real-time gold rates</div>
+    </div>
   </div>
 
-  <div class="bulk-panel">
-    <div class="bulk-title">
-      📋 BULK ORDER CALCULATOR
-      <span style="font-size: 0.7rem; color:#8b8a5a;">Paste any text with car names (one per line or messy chat log)</span>
+  <!-- Active Tool Display Area -->
+  <div id="activeToolPanel" class="active-tool-panel" style="display: none;">
+    <div class="panel-header">
+      <span class="panel-title" id="panelTitle">Active Tool</span>
+      <button class="close-btn" id="closePanelBtn">✕ CLOSE</button>
     </div>
-    <textarea id="bulkInput" class="bulk-textarea" rows="6" placeholder="Bernardi Model CE
-Porter Model 6 Touring
-Auclair Type-3 GSS
-Harlow-Ryder Model S35"></textarea>
-    <button id="calculateBulkBtn" style="background:#d4af37; border:none; padding:8px 20px; border-radius:2rem; font-weight:700; cursor:pointer; color:#0a0c07;">💰 CALCULATE TOTAL</button>
-    <div id="bulkResult" class="bulk-summary" style="display: none;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-        <span>📦 TOTAL CARS:</span>
-        <span id="totalCarsCount" style="font-weight:800;">0</span>
+    <div id="bulletCalcContent" class="tool-content">
+      <!-- Bullet calculator will be loaded here -->
+      <div style="text-align: center; padding: 2rem;">Loading...</div>
+    </div>
+    <div id="comingSoon1Content" class="tool-content">
+      <div style="text-align: center; padding: 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+        <h3>Cargo Value Calculator</h3>
+        <p style="color: #8b8a5a; margin-top: 0.5rem;">Coming soon! Check back later.</p>
       </div>
-      <div id="bulkBreakdown"></div>
-      <div style="display: flex; justify-content: space-between; margin-top: 12px; padding-top: 8px; border-top: 1px solid #d4af37;">
-        <span>💰 TOTAL OWED:</span>
-        <span id="totalOwed" class="bulk-total">$0</span>
+    </div>
+    <div id="comingSoon2Content" class="tool-content">
+      <div style="text-align: center; padding: 2rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">💎</div>
+        <h3>Gold Exchange Tracker</h3>
+        <p style="color: #8b8a5a; margin-top: 0.5rem;">Coming soon! Check back later.</p>
       </div>
     </div>
   </div>
 
-  <!-- VISITOR COUNTER -->
+  <!-- Visitor Counter -->
   <div class="counter-bar">
-    <span class="counter-label">👁️ VISITORS</span>
+    <span class="counter-label">👁️ TOTAL SITE VISITS</span>
     <span class="counter-number" id="visitorCount">0</span>
   </div>
-
   <div class="footer">
-    📋 BULK ORDER: Scans for any car names from our list in your pasted text. Ignores prices, bullets, and extra text.<br>
-    🔪 Tiered discounts applied automatically based on each car's bullet count.
+    Select a tool above • Each tool is self-contained • Counter counts every page load
   </div>
 </div>
 
 <script>
-  const carsRaw = [
-    { name: "Castillon V16", bullets: 675 },
-    { name: "Sweet Sixteen V16 Roadster", bullets: 550 },
-    { name: "Castillon V16 Roadster", bullets: 550 },
-    { name: "Hudson V12 Limousine", bullets: 475 },
-    { name: "Braxton 8 Litre", bullets: 450 },
-    { name: "Rosenberg Type RS Phaeton LaRue", bullets: 440 },
-    { name: "Rosenberg Type-R", bullets: 340 },
-    { name: "Rosenberg Type RS Boattail Speedster", bullets: 305 },
-    { name: "Clausen Royal Close Coupled Sedan", bullets: 220 },
-    { name: "Everett Series R 7-Passenger Touring", bullets: 200 },
-    { name: "Maynard 384 Speedster", bullets: 190 },
-    { name: "Maynard V12", bullets: 175 },
-    { name: "Martinez-Bauer 431 Supercharged Roadster", bullets: 155 },
-    { name: "Asher 26-6", bullets: 130 },
-    { name: "Hearse", bullets: 110 },
-    { name: "Barrett 480", bullets: 100 },
-    { name: "Chalamet Alliance Phaeton", bullets: 45 },
-    { name: "School Bus", bullets: 40 },
-    { name: "Milk Truck", bullets: 40 },
-    { name: "Police Car", bullets: 40 },
-    { name: "Porter V8", bullets: 40 },
-    { name: "Chalamet Liberty 1/2 Ton Pickup", bullets: 40 },
-    { name: "Porter Model 1 Tudor", bullets: 40 },
-    { name: "Tree Delivery Truck", bullets: 40 },
-    { name: "Porter Model 1 Closed Cab", bullets: 40 },
-    { name: "Porter Model 11 Touring", bullets: 40 },
-    { name: "Swift Model 96", bullets: 30 },
-    { name: "Bernardi Model CE", bullets: 20 },
-    { name: "Porter Model 6 Touring", bullets: 20 },
-    { name: "Auclair Type-3 GSS", bullets: 15 },
-    { name: "Harlow-Ryder Model S35", bullets: 10 }
-  ];
-
-  const carMap = new Map();
-  for (const car of carsRaw) {
-    carMap.set(car.name, car);
-    carMap.set(car.name.toLowerCase(), car);
-  }
-
-  const sortedCars = [...carsRaw].sort((a, b) => b.bullets - a.bullets);
-  let currentMode = 'car';
-
-  // VISITOR COUNTER
+  // ============================================================
+  // VISITOR COUNTER (global, per browser)
+  // ============================================================
   function updateVisitorCounter() {
-    let count = localStorage.getItem('bootlegger_visitors');
+    let count = localStorage.getItem('bootlegger_site_visits');
     if (count === null) {
       count = 1;
     } else {
       count = parseInt(count) + 1;
     }
-    localStorage.setItem('bootlegger_visitors', count);
+    localStorage.setItem('bootlegger_site_visits', count);
     document.getElementById('visitorCount').innerText = count.toLocaleString();
   }
 
-  function formatWithCommas(value) {
-    if (value === undefined || value === null) return "0";
-    let num = typeof value === 'number' ? value : parseFloat(value);
-    if (isNaN(num)) return "0";
-    return num.toLocaleString(undefined, { maximumFractionDigits: 0 });
-  }
-
-  function formatMillions(value) {
-    if (value === undefined || value === null) return "0";
-    let num = typeof value === 'number' ? value : parseFloat(value);
-    if (isNaN(num)) return "0";
-    let millions = num / 1000000;
-    return millions.toFixed(2) + "M";
-  }
-
-  function parseCommaNumber(value) {
-    if (typeof value === 'string') {
-      let cleaned = value.replace(/,/g, '');
-      let parsed = parseFloat(cleaned);
-      return isNaN(parsed) ? 0 : parsed;
-    }
-    return parseFloat(value);
-  }
-
-  function getBasePerBullet() {
-    if (currentMode === 'car') {
-      let price = parseCommaNumber(document.getElementById('carPriceInput').value);
-      if (isNaN(price) || price <= 0) price = 300000000;
-      return price / 675;
-    } else {
-      let price = parseCommaNumber(document.getElementById('goldPriceInput').value);
-      if (isNaN(price) || price <= 0) price = 20000000;
-      return price / 50;
-    }
-  }
-
-  function getMultiplier(bullets) {
-    const enabled = document.getElementById('tierToggle').checked;
-    if (!enabled) return 1;
+  // ============================================================
+  // BULLET CALCULATOR - COMPLETE CODE INJECTED HERE
+  // ============================================================
+  function loadBulletCalculator() {
+    const container = document.getElementById('bulletCalcContent');
     
-    const tier1 = parseFloat(document.getElementById('tier1Percent').value) / 100;
-    const tier2 = parseFloat(document.getElementById('tier2Percent').value) / 100;
-    const tier3 = parseFloat(document.getElementById('tier3Percent').value) / 100;
-    
-    if (bullets >= 440) return tier1;
-    if (bullets >= 100 && bullets <= 339) return tier2;
-    if (bullets <= 99) return tier3;
-    return 1;
-  }
-
-  function getCarPrice(carName) {
-    let car = carMap.get(carName);
-    if (!car) car = carMap.get(carName.toLowerCase());
-    if (!car) return null;
-    const perBullet = getBasePerBullet();
-    const basePrice = perBullet * car.bullets;
-    const multiplier = getMultiplier(car.bullets);
-    return basePrice * multiplier;
-  }
-
-  function updateDisplay() {
-    const perBullet = getBasePerBullet();
-    if (currentMode === 'car') {
-      const refPrice = parseCommaNumber(document.getElementById('carPriceInput').value);
-      document.getElementById('carPerBulletDisplay').innerHTML = `💵 PER BULLET: $${formatMillions(perBullet)}`;
-      document.getElementById('modeDescription').innerHTML = `Mode: Castillon V16 at $${formatMillions(refPrice)} → $${formatMillions(perBullet)}/bullet`;
-    } else {
-      const goldPrice = parseCommaNumber(document.getElementById('goldPriceInput').value);
-      document.getElementById('goldPerBulletDisplay').innerHTML = `🔫 PER BULLET: $${formatMillions(perBullet)}`;
-      document.getElementById('modeDescription').innerHTML = `Mode: 1 Gold = $${formatMillions(goldPrice)} → $${formatMillions(perBullet)}/bullet`;
-    }
-  }
-
-  function renderCars() {
-    const container = document.getElementById('carListContainer');
-    if (!container) return;
-    
-    const perBullet = getBasePerBullet();
-    const tierEnabled = document.getElementById('tierToggle').checked;
-    
-    let html = '';
-    let lastTier = '';
-    
-    for (let car of sortedCars) {
-      const bullets = car.bullets;
-      const basePrice = perBullet * bullets;
-      const multiplier = getMultiplier(bullets);
-      const finalPrice = basePrice * multiplier;
-      
-      let currentTier = "";
-      if (tierEnabled) {
-        if (bullets >= 440) currentTier = "TIER1";
-        else if (bullets >= 100 && bullets <= 339) currentTier = "TIER2";
-        else if (bullets <= 99) currentTier = "TIER3";
-      }
-      
-      if (tierEnabled && lastTier !== '' && lastTier !== currentTier) {
-        let dividerText = "";
-        if (currentTier === "TIER2") dividerText = "⬇️ 100-339 BULLETS → 50% PRICE ⬇️";
-        else if (currentTier === "TIER3") dividerText = "⬇️ UNDER 100 BULLETS → 30% PRICE ⬇️";
-        if (dividerText) {
-          html += `<div class="tier-divider"><div class="divider-label">${dividerText}</div></div>`;
+    const bulletCalcHTML = `
+      <style>
+        .bullet-calc-container * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
         }
-      }
-      
-      const isReference = (car.name === "Castillon V16" && currentMode === 'car');
-      const rowClass = isReference ? 'ref-highlight' : '';
-      
-      let tierBadge = "";
-      if (tierEnabled && bullets >= 440) tierBadge = `<span class="tier-badge tier-1-badge">100%</span>`;
-      else if (tierEnabled && bullets >= 100 && bullets <= 339) tierBadge = `<span class="tier-badge tier-2-badge">50%</span>`;
-      else if (tierEnabled && bullets <= 99) tierBadge = `<span class="tier-badge tier-3-badge">30%</span>`;
-      
-      const nameDisplay = isReference ? `${car.name} ⭐` : car.name;
-      
-      html += `
-        <div class="car-row ${rowClass}">
-          <span class="car-name">${escapeHtml(nameDisplay)} ${tierBadge}</span>
-          <span class="bullet-count">${bullets.toLocaleString()}</span>
-          <span class="actual-price">$${formatMillions(finalPrice)}</span>
+        .bullet-calc-container {
+          background: #12140e;
+          padding: 0;
+          color: #ede9cf;
+        }
+        .mode-toggle {
+          display: flex;
+          gap: 1rem;
+          margin-bottom: 1.5rem;
+          background: #0e0f0b;
+          padding: 0.5rem;
+          border-radius: 3rem;
+          width: fit-content;
+        }
+        .mode-btn {
+          background: transparent;
+          border: none;
+          padding: 0.6rem 1.5rem;
+          border-radius: 2rem;
+          font-weight: 600;
+          font-size: 0.85rem;
+          cursor: pointer;
+          color: #b9ae7a;
+          transition: all 0.2s;
+        }
+        .mode-btn.active {
+          background: #d4af37;
+          color: #0a0c07;
+        }
+        .input-panel {
+          background: #1e2118;
+          border-radius: 1.5rem;
+          padding: 1rem 1.2rem;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          margin-bottom: 0.8rem;
+        }
+        .input-group {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: baseline;
+          gap: 0.8rem;
+          background: #0e0f0b;
+          padding: 0.8rem 1.2rem;
+          border-radius: 1.5rem;
+        }
+        .input-group label {
+          font-weight: 600;
+          font-size: 0.8rem;
+          color: #e0ca7c;
+        }
+        .price-input {
+          background: #050504;
+          border: 1px solid #5e5536;
+          padding: 8px 14px;
+          border-radius: 3rem;
+          font-size: 1rem;
+          font-weight: 700;
+          font-family: monospace;
+          color: #ffecb3;
+          width: 220px;
+          text-align: center;
+        }
+        .cost-bullet-badge {
+          background: #2a2c1c;
+          padding: 6px 16px;
+          border-radius: 40px;
+          font-family: monospace;
+          font-weight: 800;
+          font-size: 0.8rem;
+        }
+        .tier-controls {
+          background: #1a1d14;
+          border-radius: 1.5rem;
+          padding: 1rem 1.2rem;
+          margin-top: 1rem;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+        }
+        .tier-toggle {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .tier-checkbox {
+          width: 44px;
+          height: 24px;
+          appearance: none;
+          background: #2a2c1f;
+          border-radius: 30px;
+          position: relative;
+          cursor: pointer;
+        }
+        .tier-checkbox:checked {
+          background: #d4af37;
+        }
+        .tier-checkbox::before {
+          content: '';
+          width: 20px;
+          height: 20px;
+          background: #fff;
+          border-radius: 50%;
+          position: absolute;
+          top: 2px;
+          left: 3px;
+          transition: 0.2s;
+        }
+        .tier-checkbox:checked::before {
+          left: 21px;
+        }
+        .tier-values {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          align-items: center;
+        }
+        .tier-value-group {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          background: #0e0f0b;
+          padding: 5px 12px;
+          border-radius: 2rem;
+        }
+        .tier-value-group span {
+          font-size: 0.7rem;
+          color: #b9ae7a;
+        }
+        .tier-input {
+          background: #050504;
+          border: 1px solid #5e5536;
+          padding: 4px 8px;
+          border-radius: 1.5rem;
+          font-size: 0.8rem;
+          font-weight: 600;
+          font-family: monospace;
+          color: #ffecb3;
+          width: 60px;
+          text-align: center;
+        }
+        .cars-table {
+          background: #0e0f0b;
+          border-radius: 1rem;
+          overflow: hidden;
+          margin-top: 1rem;
+          max-height: 300px;
+          overflow-y: auto;
+        }
+        .table-header {
+          display: grid;
+          grid-template-columns: 2fr 0.8fr 1.2fr;
+          background: #202217;
+          padding: 0.5rem 1rem;
+          font-weight: 700;
+          font-size: 0.65rem;
+          color: #e9d58b;
+        }
+        .car-row {
+          display: grid;
+          grid-template-columns: 2fr 0.8fr 1.2fr;
+          padding: 0.4rem 1rem;
+          border-bottom: 1px solid #26291c;
+          font-size: 0.75rem;
+        }
+        .bulk-panel {
+          background: #1a1d14;
+          border-radius: 1rem;
+          padding: 1rem;
+          margin-top: 1rem;
+        }
+        .bulk-textarea {
+          width: 100%;
+          background: #0e0f0b;
+          border: 1px solid #5e5536;
+          border-radius: 1rem;
+          padding: 10px;
+          font-family: monospace;
+          font-size: 0.75rem;
+          color: #ffecb3;
+          resize: vertical;
+          margin-bottom: 0.8rem;
+        }
+        .calc-btn {
+          background: #d4af37;
+          border: none;
+          padding: 8px 20px;
+          border-radius: 2rem;
+          font-weight: 700;
+          cursor: pointer;
+          color: #0a0c07;
+        }
+        .stats-note {
+          font-size: 0.65rem;
+          margin-top: 8px;
+          text-align: right;
+          color: #a6a073;
+        }
+      </style>
+      <div class="bullet-calc-container">
+        <div class="mode-toggle">
+          <button class="mode-btn mode-car-btn active">💰 SET CAR PRICE</button>
+          <button class="mode-btn mode-gold-btn">💎 SET GOLD PRICE</button>
         </div>
-      `;
-      
-      lastTier = currentTier;
-    }
-    container.innerHTML = html;
+
+        <div class="input-panel car-price-panel">
+          <span class="cost-bullet-badge">🏎️ CASTILLON V16 (675 bullets)</span>
+          <div class="input-group">
+            <label>💰 WHAT YOU PAY ($)</label>
+            <input type="text" class="price-input car-price-input" value="300,000,000">
+          </div>
+          <div class="cost-bullet-badge car-per-bullet">💵 PER BULLET: $444,444</div>
+        </div>
+
+        <div class="input-panel gold-price-panel" style="display: none;">
+          <span class="cost-bullet-badge">💎 1 GOLD = 50 BULLETS</span>
+          <div class="input-group">
+            <label>💎 1 GOLD PRICE ($)</label>
+            <input type="text" class="price-input gold-price-input" value="20,000,000">
+          </div>
+          <div class="cost-bullet-badge gold-per-bullet">🔫 PER BULLET: $400,000</div>
+        </div>
+
+        <div class="tier-controls">
+          <div class="tier-toggle">
+            <label>🔪 ENABLE TIERED PRICING</label>
+            <input type="checkbox" class="tier-checkbox" checked>
+          </div>
+          <div class="tier-values">
+            <div class="tier-value-group"><span>🔴 440+:</span><input type="number" class="tier-input tier1-input" value="100" step="5">%</div>
+            <div class="tier-value-group"><span>🟡 100-339:</span><input type="number" class="tier-input tier2-input" value="50" step="5">%</div>
+            <div class="tier-value-group"><span>🟢 &lt;100:</span><input type="number" class="tier-input tier3-input" value="30" step="5">%</div>
+          </div>
+        </div>
+
+        <div class="cars-table">
+          <div class="table-header">
+            <span>CAR NAME</span>
+            <span>BULLETS</span>
+            <span>YOU PAY</span>
+          </div>
+          <div class="car-list-container"></div>
+        </div>
+
+        <div class="bulk-panel">
+          <div class="bulk-title" style="font-weight:700; margin-bottom:8px;">📋 BULK ORDER</div>
+          <textarea class="bulk-textarea" rows="3" placeholder="Paste car names..."></textarea>
+          <button class="calc-btn calculate-bulk">💰 CALCULATE TOTAL</button>
+          <div class="bulk-result" style="display: none; margin-top: 12px; background:#0e0f0b; padding:10px; border-radius:1rem;">
+            <div>📦 TOTAL CARS: <span class="total-cars-count">0</span></div>
+            <div class="bulk-breakdown"></div>
+            <div style="margin-top:8px; padding-top:6px; border-top:1px solid #d4af37;">💰 TOTAL OWED: <span class="total-owed">$0</span></div>
+          </div>
+        </div>
+        <div class="stats-note">Tiered discounts • Bulk order finds car names anywhere in text</div>
+      </div>
+    `;
+    
+    container.innerHTML = bulletCalcHTML;
+    
+    // Initialize the bullet calculator's JavaScript
+    initBulletCalculator();
   }
 
-  function calculateBulkOrder() {
-    const textarea = document.getElementById('bulkInput');
-    const rawText = textarea.value;
-    const lines = rawText.split(/\r?\n/);
+  function initBulletCalculator() {
+    const carsRaw = [
+      { name: "Castillon V16", bullets: 675 }, { name: "Sweet Sixteen V16 Roadster", bullets: 550 },
+      { name: "Castillon V16 Roadster", bullets: 550 }, { name: "Hudson V12 Limousine", bullets: 475 },
+      { name: "Braxton 8 Litre", bullets: 450 }, { name: "Rosenberg Type RS Phaeton LaRue", bullets: 440 },
+      { name: "Rosenberg Type-R", bullets: 340 }, { name: "Rosenberg Type RS Boattail Speedster", bullets: 305 },
+      { name: "Clausen Royal Close Coupled Sedan", bullets: 220 }, { name: "Everett Series R 7-Passenger Touring", bullets: 200 },
+      { name: "Maynard 384 Speedster", bullets: 190 }, { name: "Maynard V12", bullets: 175 },
+      { name: "Martinez-Bauer 431 Supercharged Roadster", bullets: 155 }, { name: "Asher 26-6", bullets: 130 },
+      { name: "Hearse", bullets: 110 }, { name: "Barrett 480", bullets: 100 }, { name: "Chalamet Alliance Phaeton", bullets: 45 },
+      { name: "School Bus", bullets: 40 }, { name: "Milk Truck", bullets: 40 }, { name: "Police Car", bullets: 40 },
+      { name: "Porter V8", bullets: 40 }, { name: "Chalamet Liberty 1/2 Ton Pickup", bullets: 40 },
+      { name: "Porter Model 1 Tudor", bullets: 40 }, { name: "Tree Delivery Truck", bullets: 40 },
+      { name: "Porter Model 1 Closed Cab", bullets: 40 }, { name: "Porter Model 11 Touring", bullets: 40 },
+      { name: "Swift Model 96", bullets: 30 }, { name: "Bernardi Model CE", bullets: 20 },
+      { name: "Porter Model 6 Touring", bullets: 20 }, { name: "Auclair Type-3 GSS", bullets: 15 },
+      { name: "Harlow-Ryder Model S35", bullets: 10 }
+    ];
     
-    const counts = new Map();
+    const sortedCars = [...carsRaw].sort((a, b) => b.bullets - a.bullets);
+    let currentMode = 'car';
     
-    function scanForCarNames(text) {
-      for (let car of carsRaw) {
-        if (text.includes(car.name)) {
-          return car.name;
-        }
-        if (text.toLowerCase().includes(car.name.toLowerCase())) {
-          return car.name;
-        }
-      }
-      return null;
+    function formatMillions(value) {
+      if (!value && value !== 0) return "0";
+      let num = typeof value === 'number' ? value : parseFloat(value);
+      if (isNaN(num)) return "0";
+      let millions = num / 1000000;
+      return millions.toFixed(2) + "M";
     }
     
-    for (let line of lines) {
-      const foundCar = scanForCarNames(line);
-      if (foundCar) {
-        counts.set(foundCar, (counts.get(foundCar) || 0) + 1);
+    function parseCommaNumber(value) {
+      if (typeof value === 'string') {
+        let cleaned = value.replace(/,/g, '');
+        let parsed = parseFloat(cleaned);
+        return isNaN(parsed) ? 0 : parsed;
+      }
+      return parseFloat(value);
+    }
+    
+    function getBasePerBullet() {
+      if (currentMode === 'car') {
+        let price = parseCommaNumber(document.querySelector('.car-price-input').value);
+        if (isNaN(price) || price <= 0) price = 300000000;
+        return price / 675;
+      } else {
+        let price = parseCommaNumber(document.querySelector('.gold-price-input').value);
+        if (isNaN(price) || price <= 0) price = 20000000;
+        return price / 50;
       }
     }
     
-    let total = 0;
-    let breakdownHtml = '';
+    function getMultiplier(bullets) {
+      const enabled = document.querySelector('.tier-checkbox').checked;
+      if (!enabled) return 1;
+      const tier1 = parseFloat(document.querySelector('.tier1-input').value) / 100;
+      const tier2 = parseFloat(document.querySelector('.tier2-input').value) / 100;
+      const tier3 = parseFloat(document.querySelector('.tier3-input').value) / 100;
+      if (bullets >= 440) return tier1;
+      if (bullets >= 100 && bullets <= 339) return tier2;
+      if (bullets <= 99) return tier3;
+      return 1;
+    }
     
-    for (let [name, qty] of counts) {
-      const pricePerCar = getCarPrice(name);
-      if (pricePerCar !== null) {
-        const subtotal = pricePerCar * qty;
+    function renderCars() {
+      const perBullet = getBasePerBullet();
+      const tierEnabled = document.querySelector('.tier-checkbox').checked;
+      let html = '';
+      for (let car of sortedCars) {
+        const basePrice = perBullet * car.bullets;
+        const multiplier = getMultiplier(car.bullets);
+        const finalPrice = basePrice * multiplier;
+        html += `<div class="car-row"><span>${car.name}</span><span>${car.bullets}</span><span>$${formatMillions(finalPrice)}</span></div>`;
+      }
+      document.querySelector('.car-list-container').innerHTML = html;
+    }
+    
+    function updateDisplay() {
+      const perBullet = getBasePerBullet();
+      if (currentMode === 'car') {
+        document.querySelector('.car-per-bullet').innerHTML = `💵 PER BULLET: $${formatMillions(perBullet)}`;
+      } else {
+        document.querySelector('.gold-per-bullet').innerHTML = `🔫 PER BULLET: $${formatMillions(perBullet)}`;
+      }
+      renderCars();
+    }
+    
+    function calculateBulk() {
+      const text = document.querySelector('.bulk-textarea').value;
+      const lines = text.split(/\r?\n/);
+      const counts = new Map();
+      for (let line of lines) {
+        for (let car of carsRaw) {
+          if (line.toLowerCase().includes(car.name.toLowerCase())) {
+            counts.set(car.name, (counts.get(car.name) || 0) + 1);
+            break;
+          }
+        }
+      }
+      let total = 0;
+      let breakdown = '';
+      const perBullet = getBasePerBullet();
+      for (let [name, qty] of counts) {
+        const car = carsRaw.find(c => c.name === name);
+        const basePrice = perBullet * car.bullets;
+        const price = basePrice * getMultiplier(car.bullets);
+        const subtotal = price * qty;
         total += subtotal;
-        breakdownHtml += `<div class="bulk-line-item"><span>${qty}x ${name}</span><span>$${formatMillions(subtotal)}</span></div>`;
+        breakdown += `<div style="font-size:0.7rem;">${qty}x ${name}: $${formatMillions(subtotal)}</div>`;
       }
+      document.querySelector('.total-cars-count').innerHTML = Array.from(counts.values()).reduce((a,b)=>a+b,0);
+      document.querySelector('.bulk-breakdown').innerHTML = breakdown || '<div>No cars found</div>';
+      document.querySelector('.total-owed').innerHTML = `$${formatMillions(total)}`;
+      document.querySelector('.bulk-result').style.display = 'block';
     }
     
-    let totalCars = 0;
-    for (let qty of counts.values()) totalCars += qty;
-    
-    document.getElementById('totalCarsCount').innerText = totalCars;
-    document.getElementById('bulkBreakdown').innerHTML = breakdownHtml || '<div class="bulk-line-item">No car names found in your text</div>';
-    document.getElementById('totalOwed').innerHTML = `$${formatMillions(total)}`;
-    document.getElementById('bulkResult').style.display = 'block';
-  }
-
-  function setupCommaFormatting(inputElement) {
-    inputElement.addEventListener('input', function(e) {
-      let raw = e.target.value.replace(/,/g, '');
-      let num = parseFloat(raw);
-      if (!isNaN(num)) {
-        e.target.value = formatWithCommas(num);
-      }
+    document.querySelector('.mode-car-btn').addEventListener('click', () => {
+      currentMode = 'car';
+      document.querySelector('.car-price-panel').style.display = 'flex';
+      document.querySelector('.gold-price-panel').style.display = 'none';
+      document.querySelector('.mode-car-btn').classList.add('active');
+      document.querySelector('.mode-gold-btn').classList.remove('active');
+      updateDisplay();
     });
-  }
-
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
+    document.querySelector('.mode-gold-btn').addEventListener('click', () => {
+      currentMode = 'gold';
+      document.querySelector('.car-price-panel').style.display = 'none';
+      document.querySelector('.gold-price-panel').style.display = 'flex';
+      document.querySelector('.mode-gold-btn').classList.add('active');
+      document.querySelector('.mode-car-btn').classList.remove('active');
+      updateDisplay();
     });
-  }
-  
-  function refresh() {
+    document.querySelector('.car-price-input').addEventListener('input', updateDisplay);
+    document.querySelector('.gold-price-input').addEventListener('input', updateDisplay);
+    document.querySelector('.tier-checkbox').addEventListener('change', updateDisplay);
+    document.querySelector('.tier1-input').addEventListener('input', updateDisplay);
+    document.querySelector('.tier2-input').addEventListener('input', updateDisplay);
+    document.querySelector('.tier3-input').addEventListener('input', updateDisplay);
+    document.querySelector('.calculate-bulk').addEventListener('click', calculateBulk);
     updateDisplay();
-    renderCars();
   }
-  
-  function setMode(mode) {
-    currentMode = mode;
-    const carPanel = document.getElementById('carPricePanel');
-    const goldPanel = document.getElementById('goldPricePanel');
-    const carBtn = document.getElementById('modeCarBtn');
-    const goldBtn = document.getElementById('modeGoldBtn');
+
+  // ============================================================
+  // TOOL SELECTION LOGIC
+  // ============================================================
+  const panel = document.getElementById('activeToolPanel');
+  const panelTitle = document.getElementById('panelTitle');
+  let currentTool = null;
+
+  function openTool(toolId) {
+    // Hide all tool contents
+    document.querySelectorAll('.tool-content').forEach(content => {
+      content.classList.remove('active');
+    });
     
-    if (mode === 'car') {
-      carPanel.style.display = 'flex';
-      goldPanel.style.display = 'none';
-      carBtn.classList.add('active');
-      goldBtn.classList.remove('active');
-    } else {
-      carPanel.style.display = 'none';
-      goldPanel.style.display = 'flex';
-      carBtn.classList.remove('active');
-      goldBtn.classList.add('active');
+    // Show selected tool content
+    const selectedContent = document.getElementById(`${toolId}Content`);
+    if (selectedContent) {
+      selectedContent.classList.add('active');
     }
-    refresh();
+    
+    // Set panel title
+    if (toolId === 'bulletCalc') panelTitle.innerText = '⚔️ Bullet Price Calculator';
+    else if (toolId === 'comingSoon1') panelTitle.innerText = '📦 Cargo Value Tool';
+    else if (toolId === 'comingSoon2') panelTitle.innerText = '💎 Gold Exchange';
+    else panelTitle.innerText = 'Tool';
+    
+    // Show panel
+    panel.style.display = 'block';
+    currentTool = toolId;
+    
+    // Load bullet calculator if needed
+    if (toolId === 'bulletCalc' && document.getElementById('bulletCalcContent').innerHTML.includes('Loading...')) {
+      loadBulletCalculator();
+    }
   }
-  
-  const carPriceInput = document.getElementById('carPriceInput');
-  const goldPriceInput = document.getElementById('goldPriceInput');
-  
-  setupCommaFormatting(carPriceInput);
-  setupCommaFormatting(goldPriceInput);
-  
-  carPriceInput.addEventListener('input', () => { if (currentMode === 'car') refresh(); });
-  goldPriceInput.addEventListener('input', () => { if (currentMode === 'gold') refresh(); });
-  document.getElementById('modeCarBtn').addEventListener('click', () => setMode('car'));
-  document.getElementById('modeGoldBtn').addEventListener('click', () => setMode('gold'));
-  document.getElementById('tierToggle').addEventListener('change', () => refresh());
-  document.getElementById('tier1Percent').addEventListener('input', () => refresh());
-  document.getElementById('tier2Percent').addEventListener('input', () => refresh());
-  document.getElementById('tier3Percent').addEventListener('input', () => refresh());
-  document.getElementById('calculateBulkBtn').addEventListener('click', () => calculateBulkOrder());
-  
-  setMode('car');
-  
+
+  // Add click handlers to tool cards
+  document.querySelectorAll('.tool-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const tool = card.getAttribute('data-tool');
+      openTool(tool);
+    });
+  });
+
+  // Close panel
+  document.getElementById('closePanelBtn').addEventListener('click', () => {
+    panel.style.display = 'none';
+    currentTool = null;
+  });
+
   // Initialize visitor counter
   updateVisitorCounter();
 </script>
