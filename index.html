@@ -5,158 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>MiniSSOB Games • Hub</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #0a0c07;
-      font-family: 'Inter', system-ui, 'Segoe UI', 'Roboto', monospace;
-      padding: 2rem 1.2rem;
-      color: #ede9cf;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      flex: 1;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #f3e0a4, #d6af40);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      margin-bottom: 0.5rem;
-    }
-
-    .sub {
-      color: #b9ae7a;
-      font-size: 0.85rem;
-    }
-
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .tool-card {
-      background: #14170f;
-      border: 1px solid #3a3c2a;
-      border-radius: 1.5rem;
-      padding: 1.5rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-      text-decoration: none;
-      display: block;
-    }
-
-    .tool-card:hover {
-      border-color: #d4af37;
-      transform: translateY(-4px);
-      background: #1a1d14;
-    }
-
-    .tool-icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .tool-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #f3e0a4;
-      margin-bottom: 0.5rem;
-    }
-
-    .tool-desc {
-      font-size: 0.75rem;
-      color: #8b8a5a;
-    }
-
-    /* FOOTER STYLES */
-    .site-footer {
-      margin-top: 3rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid #2a2c1f;
-      text-align: center;
-    }
-
-    .footer-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.8rem;
-    }
-
-    .copyright {
-      font-size: 0.7rem;
-      color: #6e6a4a;
-      letter-spacing: 0.5px;
-    }
-
-    .copyright a {
-      color: #8b8a5a;
-      text-decoration: none;
-    }
-
-    .copyright a:hover {
-      color: #d4af37;
-    }
-
-    /* Counter styling */
-    .counter-wrapper {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      background: #1a1d14;
-      padding: 6px 16px;
-      border-radius: 40px;
-      border: 1px solid #3a3c2a;
-      margin-bottom: 0.5rem;
-    }
-
-    .counter-label {
-      font-size: 0.65rem;
-      color: #b9ae7a;
-      letter-spacing: 1px;
-    }
-
-    /* Hide Statcounter default styling and reposition */
-    .statcounter {
-      display: inline-block !important;
-    }
-    
-    /* Make the statcounter image fit nicely */
-    .statcounter img {
-      margin: 0 !important;
-      vertical-align: middle !important;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0c07; font-family: 'Inter', system-ui, monospace; padding: 2rem 1.2rem; color: #ede9cf; min-height: 100vh; display: flex; flex-direction: column; }
+    .container { max-width: 1200px; margin: 0 auto; flex: 1; }
+    .header { text-align: center; margin-bottom: 2rem; }
+    h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #f3e0a4, #d6af40); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 0.5rem; }
+    .sub { color: #b9ae7a; font-size: 0.85rem; }
+    .nav-bar { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
+    .nav-link { background: #1e2118; padding: 0.5rem 1.2rem; border-radius: 2rem; text-decoration: none; color: #b9ae7a; font-size: 0.85rem; transition: all 0.2s; border: 1px solid #3a3c2a; }
+    .nav-link:hover { background: #d4af37; color: #0a0c07; border-color: #d4af37; }
+    .tools-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .tool-card { background: #14170f; border: 1px solid #3a3c2a; border-radius: 1.5rem; padding: 1.5rem; cursor: pointer; transition: all 0.2s ease; text-align: center; text-decoration: none; display: block; }
+    .tool-card:hover { border-color: #d4af37; transform: translateY(-4px); background: #1a1d14; }
+    .tool-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .tool-title { font-size: 1.2rem; font-weight: 700; color: #f3e0a4; margin-bottom: 0.5rem; }
+    .tool-desc { font-size: 0.75rem; color: #8b8a5a; }
+    .site-footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #2a2c1f; text-align: center; }
+    .footer-content { display: flex; flex-direction: column; align-items: center; gap: 0.8rem; }
+    .copyright { font-size: 0.7rem; color: #6e6a4a; }
+    .counter-wrapper { display: flex; justify-content: center; align-items: center; gap: 8px; background: #1a1d14; padding: 6px 16px; border-radius: 40px; border: 1px solid #3a3c2a; margin-bottom: 0.5rem; }
+    .counter-label { font-size: 0.65rem; color: #b9ae7a; letter-spacing: 1px; }
+    .statcounter { display: inline-block !important; }
+    .statcounter img { margin: 0 !important; vertical-align: middle !important; }
   </style>
 </head>
 <body>
 <div class="container">
   <div class="header">
-    <h1>🎮 MINISSOB GAMES</h1>
+    <h1>🪙 MINISSOB GAMES</h1>
     <div class="sub">Select a tool below</div>
   </div>
-
+  <div class="nav-bar">
+    <a href="stats.html" class="nav-link">📊 GLOBAL STATS</a>
+  </div>
   <div class="tools-grid">
     <a href="bullet.html" class="tool-card">
       <div class="tool-icon">⚔️</div>
@@ -164,18 +45,16 @@
       <div class="tool-desc">Set car price • Bulk order • Tiered discounts</div>
     </a>
     <a href="gold.html" class="tool-card">
-      <div class="tool-icon">💎</div>
+      <div class="tool-icon">🪙</div>
       <div class="tool-title">Gold Portfolio & Trader</div>
       <div class="tool-desc">Track buys/sells • Average cost • Sell orders</div>
     </a>
   </div>
 </div>
-
 <footer class="site-footer">
   <div class="footer-content">
     <div class="counter-wrapper">
       <span class="counter-label">👁️ VISITORS</span>
-      <!-- Statcounter code -->
       <script type="text/javascript">
         var sc_project=13224045;
         var sc_invisible=0;
@@ -183,20 +62,10 @@
         var scJsHost = "https://";
         document.write("<sc" + "ript type='text/javascript' src='" + scJsHost + "statcounter.com/counter/counter.js'></" + "script>");
       </script>
-      <noscript>
-        <div class="statcounter">
-          <a title="Web Analytics" href="https://statcounter.com/" target="_blank">
-            <img class="statcounter" src="https://c.statcounter.com/13224045/0/d02faac4/0/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade">
-          </a>
-        </div>
-      </noscript>
-      <!-- End Statcounter code -->
+      <noscript><div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/13224045/0/d02faac4/0/" alt="Web Analytics" referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
     </div>
-    <div class="copyright">
-      © 2026 MiniSSOB Games • Your data saves locally in YOUR browser
-    </div>
+    <div class="copyright">© 2026 MiniSSOB Games • Your data saves locally in YOUR browser</div>
   </div>
 </footer>
-
 </body>
 </html>
