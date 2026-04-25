@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Gravity Glitch</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <style>
+        :root {
+            --main-color: #00ff00;
+            --secondary-color: #00aa00;
+        }
+        html,body{height:100%;margin:0;background:#222;color:var(--main-color);font-family:Verdana, sans-serif;}
+        #container{width:100%;max-width:980px;padding:12px;box-sizing:border-box;margin:0 auto;display:flex;flex-direction:column;align-items:center;}
+        canvas#gameCanvas{border:3px solid var(--main-color);background:#111;display:block;max-width:100%;cursor: pointer;}
+        #controls{margin:10px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+        button{background:var(--secondary-color);color:#002200;border:none;padding:8px 12px;cursor:pointer;font-weight:bold;}
+        a.back{color:var(--main-color);text-decoration:none;}
+        #score,#status,#lives,#timer,#inactivityTimer{font-size:16px;text-shadow:0 0 5px var(--main-color);}
+        #overlay{position:fixed;left:0;right:0;top:0;bottom:0;display:none;align-items:center;justify-content:center;}
+        #overlay .panel{pointer-events:auto;background:rgba(0,0,0,0.92);border:2px solid var(--main-color);padding:20px;color:var(--main-color);text-align:center;}
+        #leaderboardWrap{margin-top:12px;width:100%;display:flex;justify-content:center;overflow:hidden;}
+        #leaderboardCanvas{background:#000;border:1px solid #003300;width:660px;height:330px;display:block;}
+        footer{margin-top:12px;color:var(--main-color);font-size:12px;}
+        .player-info{font-size:16px;margin-bottom:10px;padding:5px 10px;background:#003300;border:1px solid var(--main-color);border-radius:5px;}
+        .visitor-counter{font-size:12px;color:var(--main-color);margin-top:5px;}
+        
+        /* Color Picker Styles */
+        .color-picker {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .color-toggle {
+            background: #222;
+            color: var(--main-color);
+            border: 2px solid var(--main-color);
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .color-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: #222;
+            border: 2px solid var(--main-color);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 5px;
+            min-width: 150px;
+        }
+        .color-option {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            background: #333;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 3px;
+            cursor: pointer;
+            text-align: left;
+        }
+        .color-option:hover {
+            background: #444;
+        }
+        .color-preview {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .no-ui{outline:none}
+
+        /* Global Leaderboard Indicator */
+        .global-indicator {
+            background: #002200;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="color-picker">
+        <div class="color-toggle" onclick="toggleColorOptions()">🎨 Theme</div>
+        <div class="color-options" id="colorOptions">
+            <button class="color-option" onclick="setColor('#00ff00')"><span class="color-preview" style="background:#00ff00"></span>Green</button>
+            <button class="color-option" onclick="setColor('#ff0000')"><span class="color-preview" style="background:#ff0000"></span>Red</button>
+            <button class="color-option" onclick="setColor('#0000ff')"><span class="color-preview" style="background:#0000ff"></span>Blue</button>
+            <button class="color-option" onclick="setColor('#ffff00')"><span class="color-preview" style="background:#ffff00"></span>Yellow</button>
+            <button class="color-option" onclick="setColor('#ff00ff')"><span class="color-preview" style="background:#ff00ff"></span>Magenta</button>
+            <button class="color-option" onclick="setColor('#00ffff')"><span class="color-preview" style="background:#00ffff"></span>Cyan</button>
+            <button class="color-option" onclick="setColor('#ff8800')"><span class="color-preview" style="background:#ff8800"></span>Orange</button>
+            <button class="color-option" onclick="setColor('#ffffff')"><span class="color-preview" style="background:#ffffff"></span>White</button>
+        </div>
+    </div>
+
+    <div id="container">
+        <h1>Gravity Glitch <span class="global-indicator">🌐 Global Leaderboard</span></h1>
+
+        <div class="player-info">
+            Player: <span id="currentPlayerName">Loading...</span>
+        </div>
+
+        <div id="controls">
+            <button id="startBtn">Start Game</button>
+            <div>Score: <span id="score">0</span></div>
+            <div>Time: <span id="timer">0:00.00</span></div>
+            <div>Lives: <span id="lives">3</span></div>
+            <div>Inactivity: <span id="inactivityTimer">6.0s</span></div>
+            <div>Status: <span id="status">Press Start or Space to begin</span></div>
+        </div>
+
+        <canvas id="gameCanvas" class="no-ui" width="800" height="600"></canvas>
+
+        <p style="margin:8px 0;">Use A/D to move, Space to flip gravity, collect green orbs, avoid red spikes!</p>
+        <p><a class="back" href="index.html">← Back to Home</a></p>
+
+        <div id="leaderboardWrap">
+            <canvas id="leaderboardCanvas" width="660" height="330" class="no-ui"></canvas>
+        </div>
+
+        <footer>© 2024 MiniBOSS GAMES (MBG)</footer>
+        <div class="visitor-counter">Game Visits: <span id="gameVisits">0</span> | Unique Visitors: <span id="uniqueVisitors">0</span></div>
+    </div>
+
+    <div id="overlay">
+        <div class="panel">
+            <div id="gameOverText" style="font-size:20px;margin-bottom:8px;"></div>
+            <button id="restartBtn">Play Again</button>
+            <div style="margin-top:8px;font-size:12px;">Press Space or click Play Again to restart</div>
+        </div>
+    </div>
+
+    <script>
+        // === FIREBASE CONFIGURATION ===
+        // REPLACE THESE VALUES WITH YOUR ACTUAL FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        let db;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.firestore();
+            console.log("Firebase initialized successfully for game");
+        } catch (error) {
+            console.log("Firebase initialization failed:", error);
+        }
+
+        // Color customization system
+        const COLOR_STORAGE_KEY = 'minibossThemeColor';
+        
+        function loadColor() {
+            try {
+                return localStorage.getItem(COLOR_STORAGE_KEY) || '#00ff00';
+            } catch (e) {
+                return '#00ff00';
+            }
+        }
+        
+        function saveColor(color) {
+            try {
+                localStorage.setItem(COLOR_STORAGE_KEY, color);
+                return true;
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        function setColor(color) {
+            document.documentElement.style.setProperty('--main-color', color);
+            // Calculate a slightly darker version for secondary elements
+            const secondaryColor = adjustColorBrightness(color, -30);
+            document.documentElement.style.setProperty('--secondary-color', secondaryColor);
+            saveColor(color);
+            toggleColorOptions();
+        }
+        
+        function adjustColorBrightness(color, percent) {
+            const num = parseInt(color.slice(1), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+        
+        function toggleColorOptions() {
+            const options = document.getElementById('colorOptions');
+            options.style.display = options.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        // Apply saved color on load
+        const savedColor = loadColor();
+        setColor(savedColor);
+
+        // Close color picker when clicking outside
+        document.addEventListener('click', function(event) {
+            const colorPicker = document.querySelector('.color-picker');
+            if (!colorPicker.contains(event.target)) {
+                document.getElementById('colorOptions').style.display = 'none';
+            }
+        });
+
+        // Elements
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreDisplay = document.getElementById('score');
+        const timerDisplay = document.getElementById('timer');
+        const statusDisplay = document.getElementById('status');
+        const overlay = document.getElementById('overlay');
+        const gameOverText = document.getElementById('gameOverText');
+        const restartBtn = document.getElementById('restartBtn');
+        const currentPlayerNameDisplay = document.getElementById('currentPlayerName');
+
+        const startBtn = document.getElementById('startBtn');
+        const livesDisplay = document.getElementById('lives');
+        const inactivityTimerDisplay = document.getElementById('inactivityTimer');
+        const gameVisitsDisplay = document.getElementById('gameVisits');
+        const uniqueVisitorsDisplay = document.getElementById('uniqueVisitors');
+
+        const lbCanvas = document.getElementById('leaderboardCanvas');
+        const lbCtx = lbCanvas.getContext('2d');
+
+        // Player name system
+        const PLAYER_NAME_KEY = 'minibossPlayerName';
+        let currentPlayerName = '';
+
+        function loadPlayerName() {
+            try {
+                return localStorage.getItem(PLAYER_NAME_KEY);
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function checkPlayerName() {
+            const name = loadPlayerName();
+            if (!name) {
+                alert('Please set your player name on the main page first!');
+                window.location.href = 'index.html';
+                return false;
+            }
+            currentPlayerName = name;
+            currentPlayerNameDisplay.textContent = name;
+            return true;
+        }
+
+        // === FIREBASE FUNCTIONS FOR GAME ===
+        async function submitScoreToFirebase(score, timeMs) {
+            if (!db) {
+                console.log("Firebase not available, using local storage");
+                return;
+            }
+
+            try {
+                const scoreData = {
+                    playerName: currentPlayerName,
+                    score: score,
+                    timeMs: timeMs,
+                    game: 'gravity-glitch',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                    version: '1.0'
+                };
+
+                await db.collection('gameScores').add(scoreData);
+                console.log("Score submitted to Firebase");
+            } catch (error) {
+                console.log("Error submitting score to Firebase:", error);
+            }
+        }
+
+        async function getGlobalLeaderboard() {
+            if (!db) {
+                return getLocalLeaderboard();
+            }
+
+            try {
+                const snapshot = await db.collection('gameScores')
+                    .where('game', '==', 'gravity-glitch')
+                    .orderBy('score', 'desc')
+                    .limit(50)
+                    .get();
+
+                const leaderboard = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    leaderboard.push({
+                        name: data.playerName,
+                        score: data.score,
+                        timeMs: data.timeMs,
+                        date: data.timestamp?.toDate?.() || new Date()
+                    });
+                });
+
+                return leaderboard;
+            } catch (error) {
+                console.log("Error fetching global leaderboard:", error);
+                return getLocalLeaderboard();
+            }
+        }
+
+        async function trackGameVisit() {
+            if (!db) return;
+
+            try {
+                const visitData = {
+                    playerName: currentPlayerName,
+                    game: 'gravity-glitch',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('gameVisits').add(visitData);
+            } catch (error) {
+                console.log("Error tracking game visit:", error);
+            }
+        }
+
+        // Visitor counter system
+        const GAME_VISITOR_STORAGE_KEY = 'gravityGlitchVisitors_v2';
+        const GAME_VISITOR_SESSION_KEY = 'gravityGlitchSession_v2';
+        
+        function initVisitorCounter() {
+            let visitorData = loadVisitorData();
+            const currentSessionId = generateSessionId();
+            
+            const lastSessionId = sessionStorage.getItem(GAME_VISITOR_SESSION_KEY);
+            if (!lastSessionId) {
+                visitorData.totalVisits++;
+                sessionStorage.setItem(GAME_VISITOR_SESSION_KEY, currentSessionId);
+                
+                const visitorFingerprint = getVisitorFingerprint();
+                if (!visitorData.uniqueVisitors.includes(visitorFingerprint)) {
+                    visitorData.uniqueVisitors.push(visitorFingerprint);
+                }
+                
+                saveVisitorData(visitorData);
+
+                // Track game visit in Firebase
+                trackGameVisit();
+            }
+            
+            gameVisitsDisplay.textContent = visitorData.totalVisits;
+            uniqueVisitorsDisplay.textContent = visitorData.uniqueVisitors.length;
+        }
+        
+        function loadVisitorData() {
+            try {
+                const data = localStorage.getItem(GAME_VISITOR_STORAGE_KEY);
+                if (data) {
+                    return JSON.parse(data);
+                }
+            } catch (e) {}
+            
+            return {
+                totalVisits: 0,
+                uniqueVisitors: []
+            };
+        }
+        
+        function saveVisitorData(data) {
+            try {
+                localStorage.setItem(GAME_VISITOR_STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {}
+        }
+        
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        function getVisitorFingerprint() {
+            return btoa(navigator.userAgent + screen.width + screen.height + screen.colorDepth);
+        }
+
+        // Responsive canvas sizing - FIXED: Player starts on floor
+        function resizeCanvas() {
+            const maxWidth = Math.max(400, Math.floor(window.innerWidth * 0.8));
+            const maxHeight = Math.max(240, Math.floor(window.innerHeight * 0.6));
+            
+            const targetWidth = Math.min(maxWidth, maxHeight * 1.33);
+            const targetHeight = Math.min(maxHeight, maxWidth * 0.75);
+            
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            
+            // FIX: Position player on the floor
+            player.x = 50;
+            player.y = canvas.height - player.height - 10; // 10px from bottom
+            
+            renderLeaderboardCanvas();
+            clampPlayerInside();
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // Player - FIXED: Start on floor
+        const player = { 
+            x: 50, 
+            y: 0, // Will be set properly in resizeCanvas
+            width: 30, 
+            height: 30, 
+            speedX: 0, 
+            speedY: 0, 
+            gravity: 0.5, 
+            onGround: false 
+        };
+
+        // State
+        let score = 0;
+        let gravityDirection = 1;
+        let gravityScale = 1;
+        let orbs = [], spikes = [], powerups = [];
+        let gameOver = false, gameStarted = false;
+        let lives = 3; const MAX_LIVES = 10;
+        let loopRunning = false;
+        let gameStartTime = 0;
+        let powerupTimerId = null;
+
+        // FIXED: Spike spawn tracking to prevent speed increase
+        let lastSpikeSpawnScore = 0;
+        let spikeSpawnInterval = 23; // Spawn spikes another 30% faster (from 33 to 23)
+
+        // Game over reason tracking
+        let gameOverReason = '';
+
+        // Inactivity timer
+        let inactivityTime = 6.0;
+        let lastMovementTime = 0;
+        let inactivityTimerId = null;
+
+        // Chain for airborne collections
+        let chain = 0;
+
+        // Timer
+        let startTime = 0, elapsedMs = 0;
+        function formatTime(ms){
+            const totalSec = Math.floor(ms/10)/100;
+            const minutes = Math.floor(totalSec/60);
+            const seconds = Math.floor(totalSec%60);
+            const hundredths = Math.floor((totalSec - Math.floor(totalSec))*100);
+            return `${minutes}:${String(seconds).padStart(2,'0')}.${String(hundredths).padStart(2,'0')}`;
+        }
+
+        // Leaderboard - UPDATED WITH FIREBASE
+        const STORAGE_KEY = 'gravityGlitchLeaderboard_final_v2';
+        const LB_VISIBLE = 10, LB_MAX = 50;
+        
+        function loadLeaderboard(){ 
+            try{ 
+                const r = localStorage.getItem(STORAGE_KEY); 
+                return r ? JSON.parse(r) : []; 
+            } catch(e) { return []; }
+        }
+        
+        function saveLeaderboard(list){ 
+            try{ 
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); 
+            } catch(e){} 
+        }
+        
+        function getLocalLeaderboard(){ 
+            const list = loadLeaderboard().slice(0); 
+            list.sort((a,b)=> b.score - a.score || a.timeMs - b.timeMs); 
+            return list.slice(0, LB_MAX); 
+        }
+
+        function updateLocalLeaderboard(newEntry) {
+            let list = loadLeaderboard();
+            
+            const existingIndex = list.findIndex(entry => 
+                entry.name.toLowerCase() === newEntry.name.toLowerCase()
+            );
+            
+            if (existingIndex !== -1) {
+                if (newEntry.score > list[existingIndex].score) {
+                    list[existingIndex] = newEntry;
+                }
+                else if (newEntry.score === list[existingIndex].score && 
+                         newEntry.timeMs < list[existingIndex].timeMs) {
+                    list[existingIndex] = newEntry;
+                }
+            } else {
+                list.push(newEntry);
+            }
+            
+            list.sort((a,b) => b.score - a.score || a.timeMs - b.timeMs);
+            saveLeaderboard(list.slice(0, LB_MAX));
+        }
+
+        // UPDATED: Render leaderboard with Firebase data
+        async function renderLeaderboardCanvas(){
+            const list = await getGlobalLeaderboard();
+            const w = lbCanvas.width, h = lbCanvas.height;
+            lbCtx.clearRect(0,0,w,h);
+            lbCtx.fillStyle = '#001100'; 
+            lbCtx.fillRect(0,0,w,h);
+            lbCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim() || '#00ff00';
+            lbCtx.font = '18px Verdana'; 
+            lbCtx.textBaseline='top';
+            lbCtx.fillText('🌐 Global Leaderboard — Top ' + LB_VISIBLE, 10, 8);
+            const startY = 36;
+            const rowH = Math.floor((h - startY - 10) / LB_VISIBLE);
+            for(let i=0;i<LB_VISIBLE;i++){
+                const idx = i;
+                const y = startY + i*rowH;
+                lbCtx.fillStyle = (i%2===0)?'rgba(0,255,0,0.04)':'rgba(0,255,0,0.02)';
+                lbCtx.fillRect(6,y,w-12,rowH-2);
+                if(idx < list.length){
+                    const e = list[idx];
+                    // Highlight current player
+                    if (e.name === currentPlayerName) {
+                        lbCtx.fillStyle = '#ffff00';
+                    } else {
+                        lbCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim() || '#00ff00';
+                    }
+                    lbCtx.font = '14px Verdana';
+                    lbCtx.fillText((idx+1)+'.', 12, y+6);
+                    lbCtx.fillText((e.name||'Anon').slice(0,18), 56, y+6);
+                    lbCtx.textAlign = 'center';
+                    lbCtx.fillText(formatTime(e.timeMs||0), Math.floor(w/2), y+6);
+                    lbCtx.textAlign = 'right';
+                    lbCtx.fillText(String(e.score), w-12, y+6);
+                    lbCtx.textAlign = 'left';
+                } else {
+                    lbCtx.fillStyle = 'rgba(0,255,0,0.06)'; 
+                    lbCtx.font = '13px Verdana';
+                    lbCtx.fillText('-', 12, y+6);
+                }
+            }
+        }
+
+        // Entities - UPDATED: Use theme color for orbs
+        class Orb { 
+            constructor(){ 
+                this.radius=10; 
+                this.x=Math.random()*(canvas.width-20)+10; 
+                this.y=Math.random()*(canvas.height-20)+10; 
+                this.spawnTime = Date.now();
+                this._despawnId = setTimeout(() => {
+                    const idx = orbs.indexOf(this);
+                    if (idx !== -1) orbs.splice(idx, 1);
+                }, 60000);
+            } 
+            draw(){ 
+                ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim() || '#00ff00';
+                ctx.beginPath(); 
+                ctx.arc(this.x,this.y,this.radius,0,Math.PI*2); 
+                ctx.fill(); 
+            } 
+        }
+        
+        class Spike {
+            constructor(){ this.width=20; this.height=20; this.y = Math.random()<0.5 ? 0 : canvas.height; this.x = this.randomSafeX(); }
+            randomSafeX(){ const safe=100; let x,att=0; do{ x=Math.random()*(canvas.width-this.width); att++; if(att>80) break; } while(Math.abs(x + this.width/2 - (player.x + player.width/2)) < safe); return x; }
+            draw(){ ctx.fillStyle='#ff0000'; ctx.beginPath(); if(this.y===0){ ctx.moveTo(this.x,this.y); ctx.lineTo(this.x+this.width/2,this.y+this.height); ctx.lineTo(this.x+this.width,this.y);} else { ctx.moveTo(this.x,this.y); ctx.lineTo(this.x+this.width/2,this.y-this.height); ctx.lineTo(this.x+this.width,this.y);} ctx.closePath(); ctx.fill(); }
+        }
+        
+        class PowerUp {
+            constructor(type){ 
+                this.type=type; 
+                this.radius=12; 
+                const safe=100; 
+                let att=0; 
+                do{ 
+                    this.x=Math.random()*(canvas.width-40)+20; 
+                    this.y=Math.random()*(canvas.height-40)+20; 
+                    att++; 
+                    if(att>80) break;
+                } while(Math.hypot(this.x-(player.x+player.width/2), this.y-(player.y+player.height/2))<safe); 
+                this._despawnId = null; 
+            }
+            draw(){ 
+                let c;
+                if (this.type === 'clearSpikes') c = '#ff8800';
+                else if (this.type === 'magnetOrbs') c = '#00ffff';
+                else if (this.type === 'extraLife') c = '#ff00ff';
+                
+                ctx.fillStyle=c; 
+                ctx.beginPath(); 
+                ctx.arc(this.x,this.y,this.radius,0,Math.PI*2); 
+                ctx.fill(); 
+                ctx.fillStyle='#002200'; 
+                ctx.font='12px Verdana'; 
+                ctx.textAlign='center'; 
+                ctx.textBaseline='middle'; 
+                const l = this.type==='clearSpikes'?'C':this.type==='magnetOrbs'?'M':this.type==='extraLife'?'L':'S';
+                ctx.fillText(l,this.x,this.y+1); 
+            }
+        }
+
+        // Input handling - FIXED: Global event listeners
+        let keys = {};
+        
+        function handleKeyDown(e) {
+            if(e.code === 'Space') e.preventDefault();
+            keys[e.code] = true;
+
+            if (e.code === 'KeyA' || e.code === 'KeyD' || e.code === 'Space') {
+                resetInactivityTimer();
+            }
+
+            if(e.code === 'Space'){
+                if(overlay.style.display === 'flex' || gameOver){
+                    restartFromOverlay();
+                    return;
+                }
+                if(!gameStarted && !gameOver){
+                    startGame();
+                    return;
+                }
+                if(!gameOver && gameStarted){
+                    gravityDirection *= -1;
+                    player.speedY = 0;
+                    gravityScale = 0.5;
+                    clearTimeout(window._restoreGravityTimer);
+                    window._restoreGravityTimer = setTimeout(()=>gravityScale=1,700);
+                }
+            }
+        }
+
+        function handleKeyUp(e) {
+            keys[e.code] = false;
+        }
+
+        // Focus management
+        function focusCanvas() {
+            canvas.focus();
+        }
+
+        canvas.addEventListener('click', focusCanvas);
+        startBtn.addEventListener('click', focusCanvas);
+        restartBtn.addEventListener('click', focusCanvas);
+
+        // Reset/Start/End - FIXED: Player starts on floor
+        function resetGameState(){
+            if(powerupTimerId){ clearTimeout(powerupTimerId); powerupTimerId = null; }
+            orbs = []; spikes = []; 
+            for(const p of powerups){ if(p && p._despawnId) clearTimeout(p._despawnId); }
+            powerups = [];
+            score = 0; gameOver = false; gameStarted = false;
+            gravityDirection = 1; gravityScale = 1;
+            player.width = 30; player.height = 30;
+            player.speedX = 0; player.speedY = 0;
+            keys = {}; 
+            gameOverReason = '';
+            lives = 3; statusDisplay.textContent = 'Press Start or Space to begin';
+            statusDisplay.style.color = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim() || '#00ff00';
+            overlay.style.display = 'none';
+            livesDisplay.textContent = lives; scoreDisplay.textContent = score;
+            startTime = 0; elapsedMs = 0; timerDisplay.textContent = formatTime(0);
+            stopInactivityTimer();
+            inactivityTime = 6.0;
+            updateInactivityDisplay();
+            
+            // FIXED: Reset spike spawn tracking completely
+            lastSpikeSpawnScore = 0;
+            spikeSpawnInterval = 23; // Reset interval
+            
+            // Chain
+            chain = 0;
+            
+            // FIX: Position player on floor
+            player.x = 50;
+            player.y = canvas.height - player.height - 10;
+            
+            for(let i=0;i<4;i++) spawnOrb();
+            for(let i=0;i<3;i++) spawnSpike();
+            clampPlayerInside();
+            renderLeaderboardCanvas();
+            gameStartTime = Date.now();
+            schedulePowerupNext();
+            
+            // Clear any pending gravity restore timer
+            clearTimeout(window._restoreGravityTimer);
+            
+            // Cancel any pending animation frame to prevent multiple loops
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+            loopRunning = false;
+            
+            setTimeout(focusCanvas, 100);
+        }
+
+        let rafId = null;
+
+        function startGame(){
+            if(!loopRunning) { 
+                loopRunning = true; 
+                rafId = requestAnimationFrame(gameLoop); 
+            }
+            gameStarted = true; 
+            startTime = Date.now(); 
+            elapsedMs = 0;
+            gameStartTime = Date.now();
+            startInactivityTimer();
+            focusCanvas();
+        }
+
+        // UPDATED: End game with Firebase submission
+        function endGame(){
+            if(gameOver) return;
+            gameOver = true;
+            overlay.style.display = 'flex';
+            
+            if (gameOverReason === 'timeout') {
+                gameOverText.textContent = 'Game Over! Inactivity Timeout - Score: ' + score;
+                statusDisplay.textContent = 'Inactivity Timeout';
+            } else {
+                gameOverText.textContent = 'Game Over! Score: ' + score;
+                statusDisplay.textContent = 'Game Over';
+            }
+            
+            stopInactivityTimer();
+            
+            // Submit to Firebase AND local storage
+            submitScoreToFirebase(score, elapsedMs);
+            updateLocalLeaderboard({ 
+                name: currentPlayerName, 
+                score: score, 
+                timeMs: elapsedMs || 0, 
+                date: new Date().toISOString() 
+            });
+            
+            renderLeaderboardCanvas();
+            if(powerupTimerId){ clearTimeout(powerupTimerId); powerupTimerId = null; }
+            for(const p of powerups) if(p && p._despawnId){ clearTimeout(p._despawnId); p._despawnId = null; }
+        }
+
+        // Inactivity timer functions
+        function startInactivityTimer() {
+            resetInactivityTimer();
+            inactivityTimerId = setInterval(updateInactivityTimer, 100);
+        }
+
+        function stopInactivityTimer() {
+            if (inactivityTimerId) {
+                clearInterval(inactivityTimerId);
+                inactivityTimerId = null;
+            }
+        }
+
+        function resetInactivityTimer() {
+            inactivityTime = 6.0;
+            lastMovementTime = Date.now();
+            updateInactivityDisplay();
+        }
+
+        function updateInactivityTimer() {
+            if (!gameStarted || gameOver) return;
+            
+            const now = Date.now();
+            inactivityTime = Math.max(0, 6.0 - (now - lastMovementTime) / 1000);
+            updateInactivityDisplay();
+            
+            if (inactivityTime <= 0) {
+                gameOverReason = 'timeout';
+                endGame();
+            }
+        }
+
+        function updateInactivityDisplay() {
+            inactivityTimerDisplay.textContent = inactivityTime.toFixed(1) + 's';
+        }
+
+        // Spawn functions
+        function spawnOrb() {
+            orbs.push(new Orb());
+        }
+
+        function spawnSpike() {
+            spikes.push(new Spike());
+        }
+
+        function spawnPowerUp(type) {
+            const powerup = new PowerUp(type);
+            powerup._despawnId = setTimeout(() => {
+                const idx = powerups.indexOf(powerup);
+                if (idx !== -1) powerups.splice(idx, 1);
+            }, 10000);
+            powerups.push(powerup);
+        }
+
+        // Power-up scheduling
+        function schedulePowerupNext() {
+            if (powerupTimerId) clearTimeout(powerupTimerId);
+            powerupTimerId = setTimeout(spawnRandomPowerup, 15000 + Math.random() * 15000);
+        }
+
+        function spawnRandomPowerup() {
+            if (gameOver || !gameStarted) {
+                schedulePowerupNext();
+                return;
+            }
+            
+            const types = ['clearSpikes', 'magnetOrbs', 'extraLife'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            spawnPowerUp(type);
+            schedulePowerupNext();
+        }
+
+        // Game mechanics
+        function clampPlayerInside() {
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+            if (player.y < 0) player.y = 0;
+            if (player.y + player.height > canvas.height) player.y = canvas.height - player.height;
+        }
+
+        function restartFromOverlay() {
+            resetGameState();
+            startGame();
+        }
+
+        // Collision detection - FIXED: Spike collision behavior
+        function checkCollisions() {
+            // Check orb collisions
+            for (let i = orbs.length - 1; i >= 0; i--) {
+                const orb = orbs[i];
+                const dx = (player.x + player.width/2) - orb.x;
+                const dy = (player.y + player.height/2) - orb.y;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < player.width/2 + orb.radius) {
+                    let points;
+                    if (player.onGround) {
+                        points = 5;
+                    } else {
+                        chain++;
+                        points = 10 * chain;
+                    }
+                    score += points;
+                    scoreDisplay.textContent = score;
+                    orbs.splice(i, 1);
+                    clearTimeout(orb._despawnId);
+                    spawnOrb();
+                    
+                    // FIXED: Spike spawn logic - spawn 50% faster
+                    if (score - lastSpikeSpawnScore >= spikeSpawnInterval && spikes.length < 8) {
+                        spawnSpike();
+                        lastSpikeSpawnScore = score;
+                    }
+                }
+            }
+            
+            // Check spike collisions - FIXED: Destroy spike and keep player position
+            for (let i = spikes.length - 1; i >= 0; i--) {
+                const spike = spikes[i];
+                let collided = false;
+                
+                if (spike.y === 0) { // Top spike
+                    if (player.y < spike.height && 
+                        player.x + player.width > spike.x && 
+                        player.x < spike.x + spike.width) {
+                        collided = true;
+                    }
+                } else { // Bottom spike
+                    if (player.y + player.height > canvas.height - spike.height && 
+                        player.x + player.width > spike.x && 
+                        player.x < spike.x + spike.width) {
+                        collided = true;
+                    }
+                }
+                
+                if (collided) {
+                    // Remove the spike that was hit
+                    spikes.splice(i, 1);
+                    
+                    lives--;
+                    livesDisplay.textContent = lives;
+                    
+                    if (lives <= 0) {
+                        endGame();
+                        return;
+                    }
+                    
+                    // FIXED: Don't reset player position - keep them where they are
+                    // Just give a small knockback effect instead
+                    player.speedY = -gravityDirection * 8; // Small bounce effect
+                    
+                    statusDisplay.textContent = 'Hit! Lives: ' + lives;
+                    setTimeout(() => {
+                        if (!gameOver) statusDisplay.textContent = 'Playing...';
+                    }, 1000);
+                }
+            }
+            
+            // Check power-up collisions
+            for (let i = powerups.length - 1; i >= 0; i--) {
+                const powerup = powerups[i];
+                const dx = (player.x + player.width/2) - powerup.x;
+                const dy = (player.y + player.height/2) - powerup.y;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                
+                if (distance < player.width/2 + powerup.radius) {
+                    clearTimeout(powerup._despawnId);
+                    
+                    switch(powerup.type) {
+                        case 'clearSpikes':
+                            spikes = [];
+                            statusDisplay.textContent = 'Spikes Cleared!';
+                            break;
+                        case 'magnetOrbs':
+                            // Attract all orbs to player
+                            for (let orb of orbs) {
+                                const dx = (player.x + player.width/2) - orb.x;
+                                const dy = (player.y + player.height/2) - orb.y;
+                                const distance = Math.sqrt(dx*dx + dy*dy);
+                                if (distance < 300) {
+                                    orb.x += dx * 0.1;
+                                    orb.y += dy * 0.1;
+                                }
+                            }
+                            statusDisplay.textContent = 'Magnet Active!';
+                            break;
+                        case 'extraLife':
+                            if (lives < MAX_LIVES) {
+                                lives++;
+                                livesDisplay.textContent = lives;
+                                statusDisplay.textContent = 'Extra Life!';
+                            } else {
+                                statusDisplay.textContent = 'Max Lives!';
+                            }
+                            break;
+                    }
+                    
+                    setTimeout(() => {
+                        if (!gameOver) statusDisplay.textContent = 'Playing...';
+                    }, 2000);
+                    
+                    powerups.splice(i, 1);
+                }
+            }
+        }
+
+        // Main game loop
+        function gameLoop() {
+            if (!loopRunning) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Update game state if playing
+            if (gameStarted && !gameOver) {
+                // Update timer
+                elapsedMs = Date.now() - startTime;
+                timerDisplay.textContent = formatTime(elapsedMs);
+                
+                // Apply gravity
+                player.speedY += player.gravity * gravityDirection * gravityScale;
+                
+                // Handle input
+                if (keys['KeyA']) {
+                    player.speedX = -5;
+                } else if (keys['KeyD']) {
+                    player.speedX = 5;
+                } else {
+                    player.speedX *= 0.9; // Friction
+                }
+                
+                // Update player position
+                player.x += player.speedX;
+                player.y += player.speedY;
+                
+                // Check if player is on ground/ceiling
+                player.onGround = false;
+                if (gravityDirection > 0 && player.y + player.height >= canvas.height) {
+                    player.y = canvas.height - player.height;
+                    player.speedY = 0;
+                    player.onGround = true;
+                    chain = 0;
+                } else if (gravityDirection < 0 && player.y <= 0) {
+                    player.y = 0;
+                    player.speedY = 0;
+                    player.onGround = true;
+                    chain = 0;
+                }
+                
+                // Keep player in bounds
+                clampPlayerInside();
+                
+                // Check collisions
+                checkCollisions();
+                
+            }
+            
+            // Draw player
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--main-color').trim() || '#00ff00';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+            
+            // Draw orbs
+            for (let orb of orbs) {
+                orb.draw();
+            }
+            
+            // Draw spikes
+            for (let spike of spikes) {
+                spike.draw();
+            }
+            
+            // Draw power-ups
+            for (let powerup of powerups) {
+                powerup.draw();
+            }
+            
+            // Continue the game loop
+            rafId = requestAnimationFrame(gameLoop);
+        }
+
+        // Initialize the game
+        if (checkPlayerName()) {
+            // Set up global event listeners
+            window.addEventListener('keydown', handleKeyDown);
+            window.addEventListener('keyup', handleKeyUp);
+            window.addEventListener('blur', ()=>{ keys = {}; });
+            
+            // Set up button event listeners
+            startBtn.addEventListener('click', startGame);
+            restartBtn.addEventListener('click', restartFromOverlay);
+            
+            resizeCanvas();
+            resetGameState();
+            renderLeaderboardCanvas();
+            initVisitorCounter();
+            
+            // Focus canvas after a short delay
+            setTimeout(focusCanvas, 500);
+        }
+    </script>
+</body>
+</html>
