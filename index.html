@@ -12,7 +12,6 @@
     h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #f3e0a4, #d6af40); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 0.5rem; }
     .sub { color: #b9ae7a; font-size: 0.85rem; margin-bottom: 1.5rem; }
     
-    /* Navbar Styles */
     .nav-bar { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
     .nav-link { background: #1e2118; padding: 0.5rem 1.2rem; border-radius: 2rem; text-decoration: none; color: #b9ae7a; font-size: 0.85rem; transition: all 0.2s; border: 1px solid #3a3c2a; }
     .nav-link:hover { background: #d4af37; color: #0a0c07; border-color: #d4af37; }
@@ -30,6 +29,7 @@
     .counter-label { font-size: 0.65rem; color: #b9ae7a; letter-spacing: 1px; }
     .statcounter { display: inline-block !important; }
     .statcounter img { margin: 0 !important; vertical-align: middle !important; }
+    .loading { text-align: center; padding: 2rem; color: #8b8a5a; }
   </style>
 </head>
 <body>
@@ -43,17 +43,8 @@
     <a href="stats.html" class="nav-link">📊 GLOBAL STATS</a>
   </div>
   
-  <div class="tools-grid">
-    <a href="bullet.html" class="tool-card">
-      <div class="tool-icon">⚔️</div>
-      <div class="tool-title">Bullet Price Calculator</div>
-      <div class="tool-desc">Set car price • Bulk order • Tiered discounts</div>
-    </a>
-    <a href="gold.html" class="tool-card">
-      <div class="tool-icon">💰</div>
-      <div class="tool-title">Gold Portfolio & Trader</div>
-      <div class="tool-desc">Track buys/sells • Average cost • Profit/Loss</div>
-    </a>
+  <div id="toolsGrid" class="tools-grid">
+    <div class="loading">Loading tools...</div>
   </div>
 </div>
 <footer class="site-footer">
@@ -72,5 +63,34 @@
     <div class="copyright">© 2026 MiniSSOB Games • Your data saves locally in YOUR browser</div>
   </div>
 </footer>
+
+<script>
+  async function loadTools() {
+    try {
+      const response = await fetch('tools.json');
+      const tools = await response.json();
+      
+      const grid = document.getElementById('toolsGrid');
+      grid.innerHTML = '';
+      
+      for(let tool of tools) {
+        const card = document.createElement('a');
+        card.href = tool.url;
+        card.className = 'tool-card';
+        card.innerHTML = `
+          <div class="tool-icon">${tool.icon}</div>
+          <div class="tool-title">${tool.name}</div>
+          <div class="tool-desc">${tool.desc}</div>
+        `;
+        grid.appendChild(card);
+      }
+    } catch(e) {
+      document.getElementById('toolsGrid').innerHTML = '<div class="loading">Error loading tools. Make sure tools.json exists.</div>';
+      console.error(e);
+    }
+  }
+  
+  loadTools();
+</script>
 </body>
 </html>
